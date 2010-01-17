@@ -1,0 +1,284 @@
+<project name="gwOptics Ant Build" default="build" basedir="../">
+    
+	<description>
+		This file is a base copy of the build file, it contains all the necessary Ant tags
+		to build the gwoptics library. To use, first make a local copy of this file that is
+		not added to the svn, next you must alter the processing property to specify
+		the output location.
+		
+		Note depending on changes made to library update the version number.
+		
+        Builds the gwOptics library Jar along with examples and reference website
+		
+		Created by Daniel Brown
+		
+		Template used from processing library template
+		http://code.google.com/p/processing-library-template/
+    </description>
+	
+	<!-- Alter this property with the location of the output directory required -->
+	<property name="outputDir" location=""/>	
+	
+	<!-- Version number has date and time appended to it to distinguish different builds ot the same version  -->
+	<tstamp>
+		<format property="versionNumber" pattern="0.4.1.ddMMhhmm" offset="0" unit="hour"/>
+	</tstamp>
+	
+	<!-- _________________________________________________________________________________
+		|                                                                                 |
+		|                   *  No changes required beyond this point  *                   |
+		|_________________________________________________________________________________|-->
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="./resources/code/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>	
+
+	<property name="libraryClasspath"  location="libs"/>	
+	
+	<if>
+		<equals arg1="${outputDir}" arg2="${basedir}" />
+		<then>
+			<fail message="You have not specified a location to compile the library too"/>
+		</then>
+	</if>	
+	
+	<path id="library-classpath">
+		<fileset dir="${libraryClasspath}" >		
+			<include name="core.jar"/>	
+			<include name="guicomponents.jar"/>
+		</fileset>
+	</path>		
+	
+	<property name="javaVersion" value="1.5"/>		
+	<property name="author" value="Andreas Freise and Daniel Brown"/>	
+	<property name="copyright" value="(c) 2009"/>
+	<property name="libraryName"  value="gwoptics"/>	
+	<property name="yourLink"  value="http://www.gwoptics.org" />	
+	<property name="keywords"  value="?" />	
+	<property name="tested:platform"  value="?" />	
+	<property name="tested:processingVersion"  value="?" />	
+	<property name="tested:dependencies"  value="?" />	
+	<property name="source:host"  value="" />
+	<property name="source:url"  value="" />
+	<property name="source:repository"  value="" />
+	
+	<property name="jarFile" value="${libraryName}.jar"/>
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="reference" location="reference"/>
+	<property name="dist" location="distribution"/>	
+	
+	<target name="init">
+	<echo>Properties initialized.
+	src path			${src}
+	bin path 			${bin}
+	libraryClasspath		${libraryClasspath}
+	processing Libraries	${outputDir}
+	java version		${javaVersion}
+	</echo>			
+		
+	<echo>building library ...</echo>
+	<!-- Create the time stamp -->
+	<tstamp> 
+		<format property="date" pattern="MM/dd/yyyy" offset="0" unit="hour"/>
+	</tstamp>
+	<mkdir dir="${dist}"/>
+  </target>
+  
+	<!-- compile the library -->
+  <target name="compile" depends="init" description="compile the source" >  	
+		<javac srcdir="${src}" destdir="${bin}" source="${javaVersion}">
+			<classpath>
+				<path refid="library-classpath"/>
+			</classpath>
+		</javac>
+  </target>
+
+	<!-- build the distribution of the library -->
+  <target name="build" depends="compile" description="generate the distribution" >
+  	<!-- delete the previous content of the ${dist} folder -->
+  	<delete dir="${dist}" />
+  	
+  	<!-- build the structure for ${dist} -->
+  	<mkdir dir="${dist}" />
+  	<mkdir dir="${dist}/library" />
+  	<mkdir dir="${dist}/examples" />
+  	<mkdir dir="${dist}/reference" />
+  	<mkdir dir="${dist}/src" />
+  	
+  	<jar jarfile="${dist}/library/${jarFile}" basedir="${bin}">
+		<manifest>
+	      <attribute name="Implementation-Version" value="${versionNumber}"/> 
+	  	</manifest>
+	</jar>
+  	
+  	<copy todir="${dist}/examples">
+  		<fileset dir="examples"/>
+  	</copy>
+  	<copy todir="${dist}/src">
+  		<fileset dir="src"/>
+  	</copy> 
+  	
+	<!-- create the java reference of the library -->
+ 	<mkdir dir="${reference}" />
+ 	<javadoc bottom="processing library ${libraryName} by ${author}. ${copyright}" 
+ 			 classpath="${libraryClasspath}/core.jar" 
+ 			 destdir="${reference}" 
+ 			 verbose="true" 
+ 			 stylesheetfile="resources/stylesheet.css" 
+ 			 doctitle="Javadocs: ${libraryName}" 
+ 			 public="true" version="false" 
+ 			 windowtitle="Javadocs: ${libraryName}">
+ 		<taglet name="ExampleTaglet" path="resources/code" />
+ 		<fileset dir="${src}" defaultexcludes="yes">
+ 			<!-- #### (9) add packages to be added to reference. #### -->
+			<include name="../libs/guicomponents.jar"/>
+			<include name="**/*"/>
+ 			<exclude name="**/*.png"/>
+ 			<exclude name="**/*.vlw"/>
+			<exclude name="**/*.jpg"/>
+		</fileset>
+ 	</javadoc>
+ 	
+	<copy todir="${dist}/reference">
+		<fileset dir="${reference}" />
+	</copy>
+  	
+  	<!-- copy the jar file to processing's libraries -->
+  	<mkdir dir="${outputDir}/${libraryName}" />
+	<copy todir="${outputDir}/${libraryName}">
+		<fileset dir="${dist}"/>
+	</copy> 
+
+  	<!-- zip the distribution of the library -->
+  	<zip destfile="${dist}/${libraryName}.zip"
+  	       basedir="${dist}"
+  	       excludes="**/_DS.Store"
+	/>
+  	
+  	<!-- <rename src="${dist}/${libraryName}.zip" dest="${dist}/${libraryName}_${versionNumber}.zip" /> -->
+ 	
+  	<!-- organize the ${dist} folder -->
+  	<mkdir dir="${dist}/web" />
+  	
+  	<move todir="${dist}/web/reference">
+  		<fileset dir="${dist}/reference" />
+  	</move>
+  	
+  	<move todir="${dist}/web/examples">
+  		<fileset dir="${dist}/examples" />
+  	</move>
+  	
+  	<delete dir="${dist}/library" />
+  	
+   	<copy todir="${dist}/web">
+  		<fileset dir="web" />
+  	</copy>
+  	
+  	<!--
+  	format the index.html file. 
+  	regular expressions are used to parse the web index.html file. 
+  	key words starting and ending with ## are replaced by values 
+  	defined earlier in the beginning of this build file.
+  	-->
+  	
+  	<replaceregexp file="${dist}/web/index.html"
+  	                         match="##yourLibrary##"
+  	                         replace="${libraryName}"
+  	                         flags="g" />
+  	
+  	<replaceregexp file="${dist}/web/index.html"
+							match="##author##"
+							replace="${author}"
+							flags="g" />
+  	
+  	<replaceregexp file="${dist}/web/index.html"
+							match="##versionNumber##"
+							replace="${versionNumber}"
+							flags="g" />
+  	
+	<replaceregexp file="${dist}/web/index.html"
+							match="##yourLink##"
+  							replace="${yourLink}"
+							flags="g" />
+  	
+  	<replaceregexp file="${dist}/web/index.html"
+  							match="##date##"
+  	  						replace="${date}"
+  	  						flags="g" />
+  	  						
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##keywords##"
+  	  						replace="${keywords}"
+  	  						flags="g" />
+  	  						
+  	  						
+  	  						
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##tested:platform##"
+  	  						replace="${tested:platform}"
+  	  						flags="g" />
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##tested:processingVersion##"
+  	  						replace="${tested:processingVersion}"
+  	  						flags="g" />
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##tested:dependencies##"
+  	  						replace="${tested:dependencies}"
+  	  						flags="g" />
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##source:host##"
+  	  						replace="${source:host}"
+  	  						flags="g" />
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##source:url##"
+  	  						replace="${source:url}"
+  	  						flags="g" />
+  	 <replaceregexp file="${dist}/web/index.html"
+  							match="##source:repository##"
+  	  						replace="${source:repository}"
+  	  						flags="g" />
+
+  	
+  	<echo>---------------------</echo>
+  	<antcall target="processExamples" />
+  	<echo>---------------------</echo>
+  	
+  	<replaceregexp file="${dist}/web/index.html"
+  	  							match="##examples##"
+  	  	  						replace=""
+  	  	  						flags="g" />
+  	  	  						
+  	  	  						
+  	<!-- finish organizating library's distribution -->
+  	<mkdir dir="${dist}/web/download" />
+  	<copy file="${dist}/${libraryName}.zip" todir="${dist}/web/download" />
+  	
+  	<copy todir="${outputDir}/${libraryName}/reference">
+		<fileset dir="${reference}" />
+	</copy>
+  	
+  	<!-- done, finished. -->
+  	<echo>done, finished.</echo>
+ </target>
+ 
+ 
+ 	
+	<!-- parsing the examples folder -->
+	<target name="processExamples">
+		<dirset id="examples.contents" dir="examples" excludes="*/*"/>
+		<property name="examples.list" refid="examples.contents"/>
+		<foreach list="${examples.list}" target="addExamples" param="exampleDir" delimiter=";">
+		</foreach>
+	</target>
+		
+	<target name="addExamples">
+		<replaceregexp file="${dist}/web/index.html"
+	  					match="(##examples##)"
+	  	  				replace="&lt;li&gt;&lt;a href=&quot;examples/${exampleDir}/${exampleDir}.pde&quot;&gt;${exampleDir}&lt;/a&gt;&lt;/li&gt; \1"
+	  	  				flags="g" />
+		</target>
+</project>
+

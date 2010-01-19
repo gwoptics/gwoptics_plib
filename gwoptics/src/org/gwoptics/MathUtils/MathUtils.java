@@ -1,4 +1,25 @@
-package org.gwoptics.mathutils;
+    /**
+     *  Copyright notice
+     *  
+     *  This file is part of the Processing library `gwoptics' 
+     *  http://www.gwoptics.org/processing/gwoptics_p5lib/
+     *  
+     *  Copyright (C) 2009 onwards Daniel Brown and Andreas Freise
+     *  
+     *  This library is free software; you can redistribute it and/or modify it under 
+     *  the terms of the GNU Lesser General Public License version 2.1 as published 
+     *  by the Free Software Foundation.
+     *  
+     *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+     *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+     *  See the GNU Lesser General Public License for more details.
+     *  
+     *  You should have received a copy of the GNU Lesser General Public License along with 
+     *  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, 
+     *  Suite 330, Boston, MA 02111-1307 USA 
+     */
+    
+    package org.gwoptics.mathutils;
 
 //Todo: create factorial LUT, test speed against logFactorial.
 
@@ -7,7 +28,7 @@ package org.gwoptics.mathutils;
  * operations.
  * 
  * History
- * 0.3.5 Added lookup tables for factorial and binomial functions, added gamma function aswell. 
+ * 0.3.5 Added lookup tables for factorial and binomial functions, added gamma function as well. 
  * 
  * @author Andreas Freise 05/6/2009
  * @since 0.1.1

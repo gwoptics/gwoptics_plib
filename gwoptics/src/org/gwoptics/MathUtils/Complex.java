@@ -5,10 +5,11 @@ package org.gwoptics.mathutils;
 /* TODO: 
  * - ask a student to do a proper test of all functions, probably in a dedicated
  * processing sketch, e.g. define 6 complex numbers 0,-1,i,1-i,34.3 + 0.1 i
- * and compare the Java function results against precomputed (Matlab) values.
- * Probably start with the scroll-bar example and use println statements such as:
- * computing sqrt:
- * - expected: 0.3 - 4 i, result: 0.30000 - 4.0000 i
+ * and compare the Java function results against precomputed (Matlab) values
+ * (or maybe against the Apache math library).
+ * Probably use println statements such as:
+ *   computing sqrt:
+ *   - expected: 0.3 - 4 i, result: 0.30000 - 4.0000 i
  */
 
 /**

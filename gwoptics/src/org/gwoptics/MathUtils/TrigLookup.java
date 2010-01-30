@@ -1,4 +1,4 @@
-package org.gwoptics.mathutils;
+package org.gwoptics.MathUtils;
 /**
  * This class provides access to a much faster version of the cos and sin functions.
  * It generates a table of sin values from 0 to 90 to an accuracy of 0.01 degrees. 

@@ -2,7 +2,7 @@ package org.gwoptics.graphics.colourmap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import org.gwoptics.graphics.Colour;
  */
 public class RGBColourmap implements IColourmap {
 	
-	private Colour[] _cColourmapLookup;
+	private GWColour[] _cColourmapLookup;
 	private int[] _iColourmapLookup;
 	private ArrayList<ColourmapNode> _nodes;
 	private float _dLoc; //difference in location between each value on the colourmap, dependent on resolution
@@ -41,7 +41,7 @@ public class RGBColourmap implements IColourmap {
 	 * Standard constructor that sets a default resolution of 100 steps in the lookup table.
 	 */
 	public RGBColourmap(){
-		_cColourmapLookup = new Colour[100];
+		_cColourmapLookup = new GWColour[100];
 		_nodes = new ArrayList<ColourmapNode>();
 		_dLoc = 1.0f/63f;
 		_iColourmapLookup = new int[64];
@@ -55,7 +55,7 @@ public class RGBColourmap implements IColourmap {
 	 * @param resolution defines number of steps in colourmap lookup table.
 	 */
 	public RGBColourmap(int resolution){
-		_cColourmapLookup = new Colour[resolution];
+		_cColourmapLookup = new GWColour[resolution];
 		_nodes = new ArrayList<ColourmapNode>();
 		_dLoc = 1.0f/(resolution-1);
 		_iColourmapLookup = new int[resolution];
@@ -127,7 +127,7 @@ public class RGBColourmap implements IColourmap {
 	 * a integer lookup table and a Colour lookup table. The integer being for faster access so no need
 	 * to convert each Colour object.
 	 * 
-	 * @see Colour
+	 * @see GWColour
 	 * @see getColourAtLocation
 	 * @see getIntAtLocation
 	 * @see addNode()
@@ -168,19 +168,19 @@ public class RGBColourmap implements IColourmap {
 					float dBlue = (n2.colour.B - n1.colour.B)/steps;
 					
 					for (int j = 0; j < i2 - i1 + 1; j++) {
-						_cColourmapLookup[j + i1] = new Colour(n1.colour.A + j*dAlpha, n1.colour.R + j*dRed, n1.colour.G + j*dGreen,n1.colour.B + j*dBlue);
-						_iColourmapLookup[j + i1] = Colour.convertColourToInt(_cColourmapLookup[j + i1]);
+						_cColourmapLookup[j + i1] = new GWColour(n1.colour.A + j*dAlpha, n1.colour.R + j*dRed, n1.colour.G + j*dGreen,n1.colour.B + j*dBlue);
+						_iColourmapLookup[j + i1] = GWColour.convertColourToInt(_cColourmapLookup[j + i1]);
 					}
 				}
 			}	
 		}else if(nodeArray.length == 1){
 			ColourmapNode node = nodeArray[0];
 			for (int i = 0; i < _cColourmapLookup.length; i++) {
-				_cColourmapLookup[i] = new Colour(node.colour.A,node.colour.R,node.colour.G,node.colour.B);
+				_cColourmapLookup[i] = new GWColour(node.colour.A,node.colour.R,node.colour.G,node.colour.B);
 			}
 		}else{
 			for (int i = 0; i < _cColourmapLookup.length; i++) {
-				_cColourmapLookup[i] = new Colour(0,0,0);
+				_cColourmapLookup[i] = new GWColour(0,0,0);
 			}
 		}
 		
@@ -193,7 +193,7 @@ public class RGBColourmap implements IColourmap {
 	 * @param l Normalised location input (between 0.0f and 1.0f) 
 	 * @return Colour at location.
 	 */
-	public Colour getColourAtLocation(float l){
+	public GWColour getColourAtLocation(float l){
 		if(_needsGenerating){throw new MapNeedsGeneratingException();}
 		
 		float loc;

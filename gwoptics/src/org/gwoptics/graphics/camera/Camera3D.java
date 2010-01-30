@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 //import org.eclipse.tptp.trace.arm.internal.model.ArmWrapper;
 //import org.gwoptics.mathutils.TrigLookup;
-import org.gwoptics.mathutils.VectorUtils;
+import org.gwoptics.MathUtils.VectorUtils;
 
 import processing.core.PApplet;
 import processing.core.PConstants;

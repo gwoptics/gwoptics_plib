@@ -19,7 +19,7 @@
      *  Suite 330, Boston, MA 02111-1307 USA 
      */
     
-    package org.gwoptics.mathutils;
+    package org.gwoptics.MathUtils;
 
 //Todo: create factorial LUT, test speed against logFactorial.
 

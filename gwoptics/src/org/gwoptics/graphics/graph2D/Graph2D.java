@@ -1,13 +1,11 @@
 package org.gwoptics.graphics.graph2D;
 
 import java.util.ArrayList;
-
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.Renderable;
 import org.gwoptics.graphics.graph2D.Axis2D.Alignment;
 import org.gwoptics.graphics.graph2D.backgrounds.IGraph2DBackground;
-import org.gwoptics.graphics.graph2D.traces.IGraphTrace;
-
+import org.gwoptics.graphics.graph2D.traces.IGraph2DTrace;
 import processing.core.*;
 
 /**
@@ -15,23 +13,21 @@ import processing.core.*;
  * Graph2D is a collection of Axis2D objects and IGraphTrace's. It is the basis of a 2D graph and
  * can have multiple traces added to it, with access to various methods to alter the look and feel
  * of the graph axes and layout.
- * </p>
- * 
+ * </p> 
  * <p>
  * The traces that this graph excepts must conform to the IGraphTrace interface and must fully
  * implement it correctly. The graph also allows full control over the X and Y axes through controls
  * that begin with setXAxis and setYaxis. Also available is the option to display a border and major
  * grid lines.
  * </p>
- * 
  * @author Daniel Brown 13/7/09
  * @since 0.4.0
  */
 public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	protected Axis2D _ax, _ay;
 	protected float _xLength, _yLength;
-	protected Colour _border;
-	protected ArrayList<IGraphTrace> _traces;
+	protected GWColour _border;
+	protected ArrayList<IGraph2DTrace> _traces;
 	protected boolean _crossAxesAtZero;
 	protected IGraph2DBackground _back;
 	
@@ -58,9 +54,9 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	/** Sets number of minor ticks to show on the Y-Axis**/
 	public void setYAxisMinorTicks(int n) {_ay.setMinorTicks(n);}
 	/** Sets the colour of the X and Y axes, through RGB values**/
-	public void setAxisColour(int R,int G, int B){setAxisColour(new Colour(R,G,B));}
+	public void setAxisColour(int R,int G, int B){setAxisColour(new GWColour(R,G,B));}
 	/** Sets the colour of the X and Y axes, through a Colour object**/
-	public void setAxisColour(Colour c){
+	public void setAxisColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		
@@ -68,9 +64,9 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_ay.setAxisColour(c);
 	}	
 	/** Sets the colour of the X and Y axes fonts, through RGB values**/
-	public void setFontColour(int R,int G, int B){setFontColour(new Colour(R,G,B));}	
+	public void setFontColour(int R,int G, int B){setFontColour(new GWColour(R,G,B));}	
 	/** Sets the colour of the X and Y fonts, through a Colour object**/
-	public void setFontColour(Colour c){
+	public void setFontColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		
@@ -86,13 +82,13 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	/** Removes border **/
 	public void setNoBorder(){_border = null;}
 	/** Sets the colour of the border surrounding the graph object**/
-	public void setBorderColour(int R, int G, int B){_border = new Colour(R, G, B);}
+	public void setBorderColour(int R, int G, int B){_border = new GWColour(R, G, B);}
 	/** Sets an IGraph2DBackground to use to fill the graph background */
 	public void setBackground(IGraph2DBackground bk){
 		_back = bk;
 		_back.setParent(_parent);
 		_back.setAxes(_ax, _ay);
-		_back.setDimensions(_ay.getLength(), _ax.getLength());
+		_back.setDimensions(_ax.getLength(), _ay.getLength());
 		}
 	
 	/**
@@ -113,12 +109,13 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_xLength = xLength;
 		_yLength = yLength;
 		
-		_border = new Colour(0,0,0);
+		_border = new GWColour(0,0,0);
 		
 		_ax = new Axis2D(parent, xLength);
 		_ax.setTickLabelAlignment(Alignment.CENTER);
 		_ax.setAxesDirection(new PVector(1, 0));
 		_ax.setLabelDirection(new PVector(0, 1));
+		_ax.setAxisLabel("X-Axis");
 		
 		_ay = new Axis2D(parent, yLength);
 		_ay.setTickLabelAlignment(Alignment.RIGHT);
@@ -126,11 +123,12 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_ay.setLabelDirection(new PVector(-1, 0));
 		_ay.setLabelRotation(-PI/2);
 		_ay.setOffsetLabelByTickLength(true);
+		_ay.setAxisLabel("Y-Axis");
 		
 		if(_crossAxesAtZero)
 			_alignAxesToZero();
 		
-		_traces = new ArrayList<IGraphTrace>();
+		_traces = new ArrayList<IGraph2DTrace>();
 	}
 	
 	/** Internal function called to realign axes */
@@ -150,9 +148,8 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	 * the array the trace is stored in.
 	 * 
 	 * @param trace IGraphTrace
-	 * @return int Index that the trace is stored in the control
-	 */
-	public int addTrace(IGraphTrace trace){
+	 * @return int Index that the trace is stored in the control */
+	public int addTrace(IGraph2DTrace trace){
 		if(trace == null)
 			throw new NullPointerException("Trace object can not be null.");
 
@@ -175,7 +172,7 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	 *  
 	 * @param trace
 	 */
-	public void removeTrace(IGraphTrace trace){
+	public void removeTrace(IGraph2DTrace trace){
 		synchronized (_traces) {			
 			trace.onRemoveTrace();
 			_traces.remove(trace);
@@ -187,7 +184,7 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	 * @param index
 	 */
 	public void generateTrace(int index){
-		IGraphTrace t = _traces.get(index);
+		IGraph2DTrace t = _traces.get(index);
 		t.generate();
 	}
 	
@@ -207,28 +204,25 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_parent.translate(position.x, position.y + _yLength);		
 		
 		//From the bottom up draw background
-		if(_back != null){
-			_back.draw();
-		}
+		if(_back != null){_back.draw();	}
 
 		if(_border != null){
 			_parent.stroke(_border.toInt());
 			_parent.noFill();
 			_parent.rect(0, 0, _xLength, -_yLength);
 		}
-		
-		_ax.draw();
-		_ay.draw();
 
 		//put a lock on the traces object so other threads
 		//cant change values whilst were drawing
 		synchronized (_traces) {
-			for (IGraphTrace t : _traces) {
-				t.draw();
-			}
+			for (IGraph2DTrace t : _traces) {t.draw();}
 		}
+
+		_ax.draw();
+		_ay.draw();
 		
 		_parent.popStyle();
 		_parent.popMatrix();
+		_parent.flush();
 	}
 }

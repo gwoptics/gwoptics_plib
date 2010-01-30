@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import org.gwoptics.ValueType;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.IRenderable;
 import org.gwoptics.gui.GUIException;
 
@@ -122,8 +122,8 @@ public class gwSlider extends GSlider implements IRenderable {
 	protected boolean _mousePressedOverThumb;
 	protected int[] _tickPositions;
 	protected float[] _tickValues;
-	protected Colour _tickColour;	
-	protected Colour _fontColour;	
+	protected GWColour _tickColour;	
+	protected GWColour _fontColour;	
 	
 	protected float init;
 	protected float maxValue;
@@ -193,13 +193,13 @@ public class gwSlider extends GSlider implements IRenderable {
 	 * Accepts RGB values between 0 and 255 to state the colour of the ticks
 	 */
 	public void setTickColour(int R,int G, int B){
-		setTickColour(new Colour(R,G,B));
+		setTickColour(new GWColour(R,G,B));
 	}
 	/**
 	 * Accepts a Colour object to specify the colour of the ticks
-	 * @see Colour
+	 * @see GWColour
 	 */
-	public void setTickColour(Colour c){
+	public void setTickColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");
 		
@@ -209,14 +209,14 @@ public class gwSlider extends GSlider implements IRenderable {
 	 * Accepts RGB values between 0 and 255 to state the colour of the label fonts
 	 */
 	public void setFontColour(int R,int G, int B){
-		setFontColour(new Colour(R,G,B));
+		setFontColour(new GWColour(R,G,B));
 	}
 
 	/**
 	 * Accepts a Colour object to specify the colour of the label fonts
-	 * @see Colour
+	 * @see GWColour
 	 */
-	public void setFontColour(Colour c){
+	public void setFontColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");
 		
@@ -294,8 +294,8 @@ public class gwSlider extends GSlider implements IRenderable {
 		_stickToTicks = false;
 		_precision = 2;
 		_valueType = ValueType.INTEGER;
-		_tickColour = new Colour(0,0,0);
-		_fontColour = new Colour(0,0,0);
+		_tickColour = new GWColour(0,0,0);
+		_fontColour = new GWColour(0,0,0);
 		
 		unit = "";
 		

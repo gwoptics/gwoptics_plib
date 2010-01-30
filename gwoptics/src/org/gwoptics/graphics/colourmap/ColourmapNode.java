@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.colourmap;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 /**
  * <p>
@@ -14,11 +14,11 @@ import org.gwoptics.graphics.Colour;
  */
 
 public final class ColourmapNode implements Comparable<ColourmapNode>{		
-	public Colour colour;
+	public GWColour colour;
 	public float location;
 
 	public ColourmapNode(){
-		colour  = new Colour();
+		colour  = new GWColour();
 		location = 0.0f;
 	}
 	
@@ -31,12 +31,12 @@ public final class ColourmapNode implements Comparable<ColourmapNode>{
 	 * @param l Value between 0.0f and 1.0f relating to the location of the colour on the colourmap.
 	 */
 	public ColourmapNode(float R,float G, float B, float l){
-		colour  = new Colour(1f,R,G,B);
+		colour  = new GWColour(1f,R,G,B);
 		location = l;
 	}
 	
 	public ColourmapNode(float Alpha, float R,float G, float B, float l){
-		colour  = new Colour(Alpha,R,G,B);
+		colour  = new GWColour(Alpha,R,G,B);
 		location = l;
 	}
 	

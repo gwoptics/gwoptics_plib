@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.colourmap;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 /**
  * EquationColourmap implements the IColourmap interface to generate a colourmap
@@ -13,7 +13,7 @@ import org.gwoptics.graphics.Colour;
  * 
  * @author Daniel Brown 18/6/09
  * @since 0.2.4
- * @see Colour
+ * @see GWColour
  * @see IColourmapEquation
  * @see IColourmap
  * @see RGBColourmap
@@ -21,7 +21,7 @@ import org.gwoptics.graphics.Colour;
  */
 
 public class EquationColourmap implements IColourmap {
-	private Colour[] _cColourmapLookup;
+	private GWColour[] _cColourmapLookup;
 	private int[] _iColourmapLookup;
 	private boolean _needsGenerating;
 	private IColourmapEquation _eq;
@@ -38,7 +38,7 @@ public class EquationColourmap implements IColourmap {
 	public EquationColourmap(IColourmapEquation eq){
 		if(eq == null){throw new NullPointerException("Object requires a non null IColourmapEquation.");}
 		
-		_cColourmapLookup = new Colour[64];
+		_cColourmapLookup = new GWColour[64];
 		_iColourmapLookup = new int[64];
 		_dLoc = 1.0f/(63);
 	}
@@ -55,7 +55,7 @@ public class EquationColourmap implements IColourmap {
 		if(resolution < 1){resolution = 1;}
 		
 		_eq = eq;
-		_cColourmapLookup = new Colour[resolution];
+		_cColourmapLookup = new GWColour[resolution];
 		_iColourmapLookup = new int[resolution];
 		_dLoc = 1.0f/(resolution-1);
 	}
@@ -70,7 +70,7 @@ public class EquationColourmap implements IColourmap {
 	 */
 	public void generateColourmap() {
 		for (int i = 0; i < _cColourmapLookup.length; i++) {
-			Colour val = _eq.colourmapEquation(_dLoc * i);
+			GWColour val = _eq.colourmapEquation(_dLoc * i);
 			_cColourmapLookup[i] = val;
 			_iColourmapLookup[i] = val.toInt();
 		}
@@ -83,7 +83,7 @@ public class EquationColourmap implements IColourmap {
 	 * @param l Normalised location input (between 0.0f and 1.0f) 
 	 * @return Colour at location.
 	 */
-	public Colour getColourAtLocation(float l){
+	public GWColour getColourAtLocation(float l){
 		if(_needsGenerating){throw new MapNeedsGeneratingException();}
 		
 		float loc;

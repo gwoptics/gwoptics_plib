@@ -3,7 +3,7 @@ package org.gwoptics.gui.button;
 import guicomponents.GButton;
 //import guicomponents.*;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.IRenderable;
 
 import processing.core.PApplet;
@@ -22,7 +22,7 @@ public class gwButton extends GButton implements IRenderable {
 		super(theApplet, text, x, y, width, height);
 	}
 	
-	public void setColours(Colour normal, Colour mouseOver, Colour pressed){
+	public void setColours(GWColour normal, GWColour mouseOver, GWColour pressed){
 		this.col[0] = normal.toInt();
 		this.col[1] = mouseOver.toInt();
 		this.col[2] = pressed.toInt();

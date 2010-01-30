@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
 
 import processing.core.PApplet;
@@ -15,21 +16,21 @@ import processing.core.PApplet;
  */
 public class RollingLine2DTrace extends Line2DTrace{
 
-	protected int _drawPoint;
 	protected ReentrantLock _lock;
 	protected boolean _doDraw;
 	protected Timer _timer;
 	protected long _refreshRate;
+	protected float _xTickIncr;
 	protected boolean _isMaster;
 	protected RollingLine2DTrace[] _slaveTraces;
+	protected double[] _eqDataX;
 	
 	protected class RollingTick extends TimerTask{
 		@Override
 		public void run() {
 			if(_isMaster){
 				try {
-					_lock.lock();
-				
+					_lock.lock();					
 					_doDraw = true;
 					_timer.schedule(new RollingTick(), _refreshRate);
 				} finally {
@@ -41,15 +42,23 @@ public class RollingLine2DTrace extends Line2DTrace{
 	
 	public long getRefreshRate(){return _refreshRate;}
 	protected boolean isMaster(){return _isMaster;}
-	
-	public RollingLine2DTrace(ILine2DEquation eq, long RefreshRate) {
+
+	/**
+	 * Creates a new {@link RollingLine2DTrace} to be added to a {@link Graph2D} instance. A rolling graph is able
+	 * to update itself automatically after a user defined period in milliseconds indefinitely. All {@link RollingLine2DTrace}
+	 * traces that are added to a {@link Graph2D} instance should have the same update rate or an exception will be thrown.
+	 * 
+	 * @param eq Equation that is to be used to generate the trace.
+	 * @param msRefreshRate Rate at which trace is updated in milliseconds
+	 * @param xTickIncr The amount the X-Axis value should increase every update
+	 */
+	public RollingLine2DTrace(ILine2DEquation eq, long msRefreshRate, float xTickIncr) {
 		super(eq);
-		_refreshRate = RefreshRate;
+		_refreshRate = msRefreshRate;
+		_xTickIncr = xTickIncr;
 		_timer = new Timer();
 		_isMaster = true; //true unless otherwise found it isnt in preCheck
 		_lock = new ReentrantLock();
-		_drawPoint = (int) Float.NaN;
-		_drawPoint = Integer.MAX_VALUE;
 		_slaveTraces = new RollingLine2DTrace[0];
 	}		
 
@@ -62,16 +71,27 @@ public class RollingLine2DTrace extends Line2DTrace{
 	@Override
 	public void setGraph(IGraph2D grph) {
 		super.setGraph(grph);
-		//pointdata is recreated depending on the x-axis length so the 
-		//draw point also needs to be checked to see if its in range.
-		_drawPoint = PApplet.constrain(_drawPoint, 0, _pointData.length - 1);		
+		_eqDataX = new double[_ax.getLength()];	
+		
+		for (int i = 0; i < _eqDataX.length; i++) {
+			_eqDataX[i] = _ax.positionToValue(i);
+			_eqDataY[i] = Float.NaN;
+			
+			if(i>0){
+				if(_eqDataX[i] <= _eqDataX[i-1]){
+					PApplet.println("length of the X-Axis and the range of values used is" +
+							" conflicting so that 2 pixels on the X-Axis have the" +
+							" same value. Please change the axis range or length of graph");
+				}
+			}
+				
+		}
 	}
 	
 	/**
 	 * Here we override the onAddTrace method to see if any Rolling2DTraces
 	 * have been previously added. Then check to see if our refresh rate
-	 * is the same as the others
-	 */
+	 * is the same as the others */
 	@Override
 	public void onAddTrace(Object traces[]){		
 		if(traces != null){
@@ -119,7 +139,7 @@ public class RollingLine2DTrace extends Line2DTrace{
 		}
 	}
 	
-	protected static void _changeMasterTrace(RollingLine2DTrace prev, RollingLine2DTrace next){
+	private static void _changeMasterTrace(RollingLine2DTrace prev, RollingLine2DTrace next){
 		if(prev.isMaster() && !next.isMaster()){
 			try {
 				prev._lock.lock();
@@ -182,17 +202,53 @@ public class RollingLine2DTrace extends Line2DTrace{
 		if(_ax == null || _ay == null)
 			throw new RuntimeException("One of the axis objects are null, set them using setAxes().");
 		
+		//increment the x-axis bounds
+		if(isMaster()){
+			_ax.setMaxValue(_ax.getMaxValue() + _xTickIncr);
+			_ax.setMinValue(_ax.getMinValue() + _xTickIncr);
+		}
+		
+		int endPX = _eqDataY.length - 1;
+		int endNewPos = _ax.valueToPosition(_eqDataX[endPX]);
+		int startPos = endPX-endNewPos;
+		int lastPosChange = startPos - _ax.valueToPosition(_eqDataX[startPos]);
+		
+		for(int k=startPos;k<=endPX;k++){
+			//using the x value of this point determine its new pixel location
+			//on the offsetted x axis 
+			int kpos = _ax.valueToPosition(_eqDataX[k]);
+			//if the amount this pixel has changed isnt the same as the one before we
+			//could end up missing pixels out or overwriting values. so here we find
+			//where the pixel should go.
+			if(lastPosChange - (k - kpos) != 0){
+				kpos = k - lastPosChange; //using the last pixels shifted position amount
+			}
+			
+			lastPosChange = k - kpos;
+			
+			if(kpos >= 0 & kpos != k){
+				_eqDataX[kpos] = _eqDataX[k];
+				_eqDataY[kpos] = _eqDataY[k];	
+			}
+		}
+		
+		if(endNewPos < endPX){
+
+			for(int l = endNewPos+1; l <= endPX;l++){
+				float x = _ax.positionToValue(l);
+				_eqDataX[l] = x;
+				_eqDataY[l] = Float.NaN;
+			}
+			
+			_eqDataX[endPX] = _ax.getMaxValue();
+			_eqDataY[endPX] = _cb.computePoint(_eqDataX[endPX], endPX);
+		}
+		
 		for (int i = 0; i < _pointData.length; i++) {
-			if(i < _drawPoint){
-				_eqData[i] = _eqData[i+1];
-				_pointData[i] = _pointData[i+1];
-			}else if(i == _drawPoint){
-				_eqData[i] =  _cb.computePoint(_drawPoint, i);
-				_pointData[i] = _ay.valueToPosition((float) _eqData[i]);
-			}else if(i > _drawPoint){
-				_eqData[i] = Float.NaN;
+			if(Double.isNaN(_eqDataY[i]))
 				_pointData[i] = Float.NaN;
-			}				
+			else
+				_pointData[i] = _ay.valueToPosition((float) _eqDataY[i]);
 		}
 	}
 	
@@ -213,16 +269,5 @@ public class RollingLine2DTrace extends Line2DTrace{
 		} finally {
 			_lock.unlock();
 		}		
-	}
-	
-	@Override
-	public void draw() {		
-		if(_ax != null){
-			_ax.setDrawTickLabels(false);
-			_ax.setDrawTicks(false);
-			_ax.setAxisLabel("Time");
-		}
-		
-		super.draw();	
 	}
 }

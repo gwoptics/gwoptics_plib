@@ -170,10 +170,10 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 		
 		for (int i = 0; i < _pointData.length; i++) {
 			if(i == _drawPoint){
-				_eqData[i] =  _cb.computePoint(_drawPoint,i);
-				_pointData[i] = _ay.valueToPosition((float) _eqData[i]);
+				_eqDataY[i] =  _cb.computePoint(_drawPoint,i);
+				_pointData[i] = _ay.valueToPosition((float) _eqDataY[i]);
 			}else if(i > _drawPoint){
-				_eqData[i] = Float.NaN;
+				_eqDataY[i] = Float.NaN;
 				_pointData[i] = Float.NaN;
 			}				
 		}

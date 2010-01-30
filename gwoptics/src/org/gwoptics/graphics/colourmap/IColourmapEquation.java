@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.colourmap;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 /**
  * Simple interface which acts as a callback object for EquationColourmap
@@ -11,8 +11,8 @@ import org.gwoptics.graphics.Colour;
  * @since 0.2.4
  * @see IColourmapEquation
  * @see EquationColourmap
- * @see Colour
+ * @see GWColour
  */
 public interface IColourmapEquation {
-	public Colour colourmapEquation(float loc);
+	public GWColour colourmapEquation(float loc);
 }

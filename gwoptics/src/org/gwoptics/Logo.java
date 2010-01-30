@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.gwoptics.graphics.Renderable;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -72,7 +72,7 @@ public class Logo extends Renderable {
 			_parent.image(_logo, position.x, position.y);
 	}
 	
-	public void clearBackground(int borderSize, Colour bgColor) {
+	public void clearBackground(int borderSize, GWColour bgColor) {
 		//_parent.pushMatrix();
 		_parent.pushStyle();
 		_parent.noStroke();

@@ -1,4 +1,4 @@
-package org.gwoptics.mathutils;
+package org.gwoptics.MathUtils;
 
 import processing.core.PVector;
 

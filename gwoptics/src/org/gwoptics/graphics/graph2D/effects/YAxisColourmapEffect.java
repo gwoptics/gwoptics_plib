@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.graph2D.effects;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.colourmap.IColourmap;
 
 /**
@@ -15,7 +15,7 @@ public class YAxisColourmapEffect extends AxisColourmapEffect {
 		super(map);
 	}
 
-	public Colour getPixelColour(int pos, int pos2, float xVal, float yVal) {
+	public GWColour getPixelColour(int pos, int pos2, float xVal, float yVal) {
 		if(!_xaxisDataSet || !_yaxisDataSet)
 			throw new RuntimeException("Axis data has not been set. Set using setXAxisValues and setYAxisValues before using.");
 		
@@ -43,6 +43,6 @@ public class YAxisColourmapEffect extends AxisColourmapEffect {
 			return _map.getColourAtLocation(Math.abs((yVal-yMin)/(yMax-yMin)));			
 		}
 		
-		return new Colour(0,0,0);
+		return new GWColour(0,0,0);
 	}
 }

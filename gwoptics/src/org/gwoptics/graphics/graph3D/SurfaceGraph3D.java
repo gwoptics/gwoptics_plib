@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.gwoptics.ArgumentException;
 import org.gwoptics.ValueType;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.Renderable;
 import org.gwoptics.graphics.colourmap.IColourmap;
 
@@ -146,8 +146,8 @@ public final class SurfaceGraph3D extends Renderable {
 		_az.setDrawAxisLabel(value);
 	}
 	
-	public void setAxisColour(int R,int G, int B){setAxisColour(new Colour(R,G,B));}	
-	public void setAxisColour(Colour c){
+	public void setAxisColour(int R,int G, int B){setAxisColour(new GWColour(R,G,B));}	
+	public void setAxisColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		
@@ -156,8 +156,8 @@ public final class SurfaceGraph3D extends Renderable {
 		_az.setAxisColour(c);
 	}	
 	
-	public void setFontColour(int R,int G, int B){setFontColour(new Colour(R,G,B));}	
-	public void setFontColour(Colour c){
+	public void setFontColour(int R,int G, int B){setFontColour(new GWColour(R,G,B));}	
+	public void setFontColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		
@@ -351,7 +351,7 @@ public final class SurfaceGraph3D extends Renderable {
 	 * @param index index of trace
 	 * @param c colour of wireframe
 	 */
-	public void setTraceStroke(int index,Colour c){
+	public void setTraceStroke(int index,GWColour c){
 		if(_traces.size() <= index){throw new ArrayIndexOutOfBoundsException();}
 		
 		SurfaceTrace3D t = _traces.get(index);
@@ -369,7 +369,7 @@ public final class SurfaceGraph3D extends Renderable {
 	 * @param index index of trace
 	 * @param c colour to fill surface
 	 */
-	public void setTraceFill(int index,Colour c){
+	public void setTraceFill(int index,GWColour c){
 		if(_traces.size() <= index){throw new ArrayIndexOutOfBoundsException();}
 		
 		SurfaceTrace3D t = _traces.get(index);

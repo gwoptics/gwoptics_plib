@@ -1,16 +1,16 @@
 package org.gwoptics.graphics.graph2D.backgrounds;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 public class GridBackground extends SolidColourBackground {
-	protected Colour _gridColour;
+	protected GWColour _gridColour;
 	
 	/** Sets the colour of the major grid lines **/
-	public void setGridColour(int R, int G, int B){_gridColour = new Colour(R, G, B);}
+	public void setGridColour(int R, int G, int B){_gridColour = new GWColour(R, G, B);}
 	/** Removes major grid lines **/
 	public void setNoGrid(){_gridColour = null;}
 	
-	public GridBackground(Colour gridColour, Colour background){
+	public GridBackground(GWColour gridColour, GWColour background){
 		super(background);
 		_gridColour = gridColour;
 	}

@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.graph2D.traces;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.graph2D.Axis2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
 import org.gwoptics.graphics.graph2D.backgrounds.IGraph2DBackground;
@@ -162,24 +162,25 @@ import processing.core.PVector;
  * @author Daniel Brown 13/7/09
  * @since 0.4.0
  */
-public class Line2DTrace implements IGraphTrace{
+public class Line2DTrace implements IGraph2DTrace{
 	protected Axis2D _ax, _ay;
 	protected IGraph2DBackground _back;
 	protected PApplet _parent;
 	protected ILine2DEquation _cb;
-	protected double[] _eqData; 
+	protected double[] _eqDataY; 
 	protected float[] _pointData; 
 	protected boolean _yAutoRange;
 	protected PVector _pos;
-	protected Colour _traceColour; 
+	protected GWColour _traceColour; 
 	protected ITraceColourEffect _effect;
-		
+	protected int _lineWidth;
+	
 	/** Default constructor accepting a callback object implementing the ILineEquation interface.
 	 *  The object should then accept an x value and return a y.*/
 	public Line2DTrace(ILine2DEquation eq){
 		_cb = eq;
 		_pos = new PVector(0,0);
-		_traceColour = new Colour(0,0,0);
+		_traceColour = new GWColour(0,0,0);
 	}
 	
 	public void setGraph(IGraph2D grp) {
@@ -191,7 +192,7 @@ public class Line2DTrace implements IGraphTrace{
 		_back = grp.getGraphBackground();
 		
 		_pointData = new float[_ax.getLength()];
-		_eqData = new double[_ax.getLength()];
+		_eqDataY = new double[_ax.getLength()];
 	}
 	
 	/** Sets the parent PApplet object */
@@ -210,9 +211,7 @@ public class Line2DTrace implements IGraphTrace{
 	
 	/** Sets the callback object implementing the ILineEquation interface.
 	 *  The object should then accept an x value and return a y.*/
-	public void setEquationCallback(ILine2DEquation equation) {
-		_cb = equation;
-	}
+	public void setEquationCallback(ILine2DEquation equation) {_cb = equation;}
 
 	/** Uses the ILineEquation object provided to fill the internal arrays. The arrays
 	 * are then used to plot the data in the draw method. */
@@ -225,10 +224,10 @@ public class Line2DTrace implements IGraphTrace{
 			double highestValue = 0;
 			double lowestValue = 0;
 			
-			for (int i = 0; i < _eqData.length; i++) {
+			for (int i = 0; i < _eqDataY.length; i++) {
 				double val = _cb.computePoint(_ax.getMinValue() + i * dRes,i);
 
-				_eqData[i] = val;
+				_eqDataY[i] = val;
 				
 				if(_yAutoRange){
 					if(val > highestValue)
@@ -244,61 +243,74 @@ public class Line2DTrace implements IGraphTrace{
 				_ay.setMinValue((float) lowestValue);
 				_ay.setMaxValue((float) highestValue);
 				
-				for (int i = 0; i < _eqData.length; i++) {
-					_pointData[i] = _ay.valueToPosition((float)_eqData[i]); 
+				for (int i = 0; i < _eqDataY.length; i++) {
+					_pointData[i] = _ay.valueToPosition((float)_eqDataY[i]); 
 				}
 			}
 		}
 	}
+	
 	 /** Uses the data that generate produced beforehand to plot the final trace line.
 	  * Also applies any colour of effect to the trace. */
 	public void draw() {
 		if(_parent == null)
 			throw new NullPointerException("Set parent object before plotting.");
-			
-		float y1,y2;
-		boolean b1,b2;
+
 		float dRes = (_ax.getMaxValue() - _ax.getMinValue()) / (_ax.getLength() - 1);
-		Colour cTrace;
+		GWColour cTrace;
 		
 		_parent.pushMatrix();
 		_parent.pushStyle();
 		_parent.translate(_pos.x, _pos.y);
-				
-		for (int i = 1; i < _pointData.length; i++) {
-			b1 = true;
-			b2 = true;
-			y1 = _pointData[i-1];
-			y2 = _pointData[i];
+		_parent.strokeWeight(_lineWidth);
+		
+		if(_pointData.length > 0){
+			int prevX = 0;
+			float prevY = 0;
+			int startPos = 0;
 			
-			if(!(Float.isNaN(y1) || Float.isNaN(y2))){
+			for(int j=0;j < _pointData.length; j++){
+				if(!Float.isNaN(_pointData[j])){
+					prevX = j;
+					prevY = _pointData[j];
+					startPos = j+1;
+					break;
+				}
+			}
+			
+			float ypos = 0;
+			prevY = _pointData[startPos - 1];
+			
+ 			for(int i = startPos; i < _pointData.length; i++){
+				ypos     =  _pointData[i];
 				
-				if(y1 > _ay.getLength()){
-					y1 = _ay.getLength();
-				}else if(y1 < 0){
-					y1 = 0;
-				}else
-					b1 = false;
-				
-				if(y2 > _ay.getLength()){
-					y2 = _ay.getLength();
-				}else if(y2 < 0){
-					y2 = 0;
-				}else
-					b2 = false;
-				
-				if(!(b1 && b2)){
-					if(_effect != null)
-						cTrace = _effect.getPixelColour(i-1, (int) y1,
-															_ax.getMinValue() + i * dRes,
-															(float)_eqData[i-1]);
-					else
-						cTrace = _traceColour;
+				if(!(Float.isNaN(ypos) || Float.isNaN(prevY))){						
+
+					if(ypos < 0)
+						ypos = 0;
+					else if(ypos > _ay.getLength())
+						ypos = _ay.getLength();
 					
-					_parent.stroke(cTrace.R * 255,cTrace.G * 255,cTrace.B * 255,cTrace.A * 255);
-					//_parent.stroke(cTrace.toInt());
-					_parent.strokeWeight(1);
-					_parent.line(i-1, -y1, i, -y2);
+					if(prevY < 0)
+						prevY = 0;
+					else if(prevY > _ay.getLength())
+						prevY = _ay.getLength();
+					
+					if(_effect != null){
+						cTrace = _effect.getPixelColour(i-1, (int) ypos,
+															_ax.getMinValue() + i * dRes,
+															(float)_eqDataY[i-1]);
+						_parent.stroke(cTrace.R * 255,
+									   cTrace.G * 255,
+									   cTrace.B * 255,
+									   cTrace.A * 255);
+					}else
+						_parent.stroke(_traceColour.R * 255,_traceColour.G * 255,_traceColour.B * 255,_traceColour.A * 255);
+					
+					_parent.line(prevX, -prevY, i, -ypos);
+
+					prevX = i;
+					prevY = ypos;
 				}
 			}
 		}
@@ -307,9 +319,14 @@ public class Line2DTrace implements IGraphTrace{
 		_parent.popMatrix();
 	}
 
+	public void onAddTrace(Object[] traces) {}//No checks are required so add away
+	public void onRemoveTrace() {}//No checks are required so add away
+	
 	public void setTraceColour(int R, int G, int B) {
-		_traceColour = new Colour(R,G,B);		
+		_traceColour = new GWColour(R,G,B);		
 	}
+	
+	public void setLineWidth(int width){_lineWidth = width;}
 
 	public void removeEffect() {
 		_effect = null;		
@@ -328,11 +345,4 @@ public class Line2DTrace implements IGraphTrace{
 		}
 	}
 
-	public void onAddTrace(Object[] traces) {
-		//No checks are required so add away
-	}
-
-	public void onRemoveTrace() {
-		//No checks are required so add away
-	}
 }

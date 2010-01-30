@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.graph2D.effects;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 /**
  * <p>
@@ -27,21 +27,18 @@ public interface ITraceColourEffect {
 	 * @param yPos
 	 * @param xVal
 	 * @param yVal
-	 * @return
-	 */
-	Colour getPixelColour(int xPos, int yPos, float xVal, float yVal);
+	 * @return	 */
+	GWColour getPixelColour(int xPos, int yPos, float xVal, float yVal);
 	/**
 	 * Accepts values relating to the axes the trace is being plotted on.
 	 * @param axisLength
 	 * @param minValue
-	 * @param maxValue
-	 */
+	 * @param maxValue	 */
 	void setXAxisValues(int axisLength, float minValue, float maxValue);
 	/**
 	 * Accepts values relating to the axes the trace is being plotted on.
 	 * @param axisLength
 	 * @param minValue
-	 * @param maxValue
-	 */
+	 * @param maxValue	 */
 	void setYAxisValues(int axisLength, float minValue, float maxValue);
 }

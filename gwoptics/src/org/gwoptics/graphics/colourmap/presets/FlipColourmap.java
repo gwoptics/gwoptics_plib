@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.colourmap.presets;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.colourmap.*;
 
 /**
@@ -20,7 +20,7 @@ import org.gwoptics.graphics.colourmap.*;
 public final class FlipColourmap extends EquationColourmap {
 
 	private static IColourmapEquation FlipEquation = new IColourmapEquation(){
-		public Colour colourmapEquation(float _x) {
+		public GWColour colourmapEquation(float _x) {
 			//float xt=1.0f-_x; // flip color so that positive values are red
 			float xt=_x;
 			double _y=Math.abs(1-2*xt);
@@ -31,7 +31,7 @@ public final class FlipColourmap extends EquationColourmap {
 			double _f15=Math.abs(Math.sin(2*Math.PI*_y));
 			double _flip76=0.5*((Math.signum(xt-0.5)+1)*_f7+(1-Math.signum(xt-0.5))*_f6);
 			double _flip59=0.5*((Math.signum(xt-0.5)+1)*_f5+(1-Math.signum(xt-0.5))*_f9);
-			return new Colour((float)_flip76, (float)_flip59, (float)_f15);
+			return new GWColour((float)_flip76, (float)_flip59, (float)_f15);
 		}		
 	};
 	

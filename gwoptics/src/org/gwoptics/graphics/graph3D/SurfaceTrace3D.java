@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.graph3D;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.Renderable;
 import org.gwoptics.graphics.colourmap.IColourmap;
 
@@ -40,9 +40,9 @@ public class SurfaceTrace3D extends Renderable {
 	//Setters - These setters seem fairly obvious from their names what they do...
 	public void setCallback(IGraph3DCallback cb){_callback = cb; _updateGrid = true;}	
 	public void setIsSurfacedStroked(boolean b){_grid.isStroked = b;}
-	public void setSurfaceStroke(Colour c){_grid.strokeColour = c;}
+	public void setSurfaceStroke(GWColour c){_grid.strokeColour = c;}
 	public void setIsSurfaceFilled(boolean b){_grid.isFilled = b;}
-	public void setSurfaceFill(Colour c){_grid.fillColour = c;}
+	public void setSurfaceFill(GWColour c){_grid.fillColour = c;}
 	public void setAutoRangeZAxis(boolean value){_autoRangeZaxis = value;}
 	
 	//Getters

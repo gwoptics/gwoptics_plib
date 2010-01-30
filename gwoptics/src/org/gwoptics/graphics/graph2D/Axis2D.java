@@ -3,7 +3,7 @@ package org.gwoptics.graphics.graph2D;
 import java.util.ArrayList;
 
 import org.gwoptics.ValueType;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.Renderable;
 //import org.gwoptics.graphics.camera.Camera3D;
 
@@ -49,14 +49,14 @@ public class Axis2D extends Renderable implements PConstants  {
 	protected Alignment _axisTickLblAlign;
 	protected float _axisLblRotation;
 	protected float _axisLblOffset;
-	protected Colour _axisColour;
-	protected Colour _fontColour;
+	protected GWColour _axisColour;
+	protected GWColour _fontColour;
 	protected boolean _drawTicks;
 	protected boolean _drawTickLabels;
 	protected boolean _drawName;
 	protected ValueType _tickLblType;
 	protected int _accuracy;	
-	private float _posConv;
+	private float _posConv;	/** Value is the number of pixels a value of 1 unit represents, eg 50 means 1unit is 50pixels along the axis */
 	protected float _longestLabel = 0;
 	protected ArrayList<Integer> _majorTickPositions;
 	protected ArrayList<Float> _majorTickLabels;
@@ -84,17 +84,17 @@ public class Axis2D extends Renderable implements PConstants  {
 		public int getValue(){return value;}
 	}
 	/** Sets the axis line colour from RGB values */
-	public void setAxisColour(int R,int G, int B){setAxisColour(new Colour(R,G,B));}	
+	public void setAxisColour(int R,int G, int B){setAxisColour(new GWColour(R,G,B));}	
 	/** Sets the axis line colour from a Colour object */
-	public void setAxisColour(Colour c){
+	public void setAxisColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		_axisColour = c;
 	}	
 	/** Sets the labels font colour from RGB values */
-	public void setFontColour(int R,int G, int B){setFontColour(new Colour(R,G,B));}	
+	public void setFontColour(int R,int G, int B){setFontColour(new GWColour(R,G,B));}	
 	/** Sets the labels font colour from a Colour object */
-	public void setFontColour(Colour c){
+	public void setFontColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		_fontColour = c;
@@ -151,13 +151,13 @@ public class Axis2D extends Renderable implements PConstants  {
 	/** Sets the maximum value to show on the axis */
 	public void setMaxValue(float val) {		
 		_maxShow = val;				
-		_posConv = _length / (_maxShow - _minShow);
+		_posConv = (_length-1) / (_maxShow - _minShow);
 		_generateTicks = true;			
 	}
 	/** Sets the minimum value to show on the axis */
 	public void setMinValue(float val) {
 		_minShow = val;				
-		_posConv = _length / (_maxShow - _minShow);
+		_posConv = (_length-1) / (_maxShow - _minShow);
 		_generateTicks = true;
 	}	
 
@@ -193,8 +193,8 @@ public class Axis2D extends Renderable implements PConstants  {
 	public Axis2D(PApplet parent, int length) {
 		super(parent);
 		
-		_axisColour = new Colour(0,0,0);
-		_fontColour = new Colour(0,0,0);
+		_axisColour = new GWColour(0,0,0);
+		_fontColour = new GWColour(0,0,0);
 		
 		_drawTicks = true;
 		_drawTickLabels = true;
@@ -226,18 +226,22 @@ public class Axis2D extends Renderable implements PConstants  {
 		_posConv = _length / (_maxShow - _minShow);
 		_offsetByLabelWidth = false;
 		
+		parent.registerPre(this);
+		
 		if(_font == null) {//Font is a static member so only load if noone has before
 			_font = parent.loadFont("Arial-BoldMT-12.vlw");
 		}
 	}	
-
-	@Override
-	public void draw() {
-		
+	
+	public void pre(){
 		if(_generateTicks){
 			_generateTicks();
 			_generateTicks = false;
 		}
+	}
+	
+	@Override
+	public void draw() {		
 		
 		_parent.pushMatrix();
 		_parent.pushStyle();
@@ -258,11 +262,11 @@ public class Axis2D extends Renderable implements PConstants  {
 	}
 	
 	/** For a given graph value it provides the position it is on the axis to the nearest pixel */
-	public int valueToPosition(float value){
-		float pos;
-		pos = (value - _minShow) * _posConv;		
-		return Math.round(pos);
-	}
+	public int valueToPosition(float value){return Math.round((value - _minShow) * _posConv);}
+	public int valueToPosition(double value){return (int) Math.round((value - _minShow) * _posConv);}
+	
+	/** For a given number of pixels along the axis, the value it represents is returned*/
+	public float positionToValue(int pixel){return _minShow + ((float)(pixel)/(_posConv));}
 	
 	/** Internal method too draw the main axis line */
 	protected void _drawAxisLine(){
@@ -342,8 +346,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		if(_axisTickLblAlign == null)
 			_parent.textAlign(CENTER);
 		else
-			_parent.textAlign(_axisTickLblAlign.getValue());
-		
+			_parent.textAlign(_axisTickLblAlign.getValue());		
 		
 		for (int i = 0; i < _majorTickPositions.size(); i++) {
 			int pos = _majorTickPositions.get(i);
@@ -352,7 +355,7 @@ public class Axis2D extends Renderable implements PConstants  {
 			// position of tick along the axis
 			tickPos = PVector.mult(_unitVec, pos);
 			//also determine point where the tick should end, based on label direction and length
-			tickEnd = PVector.add(tickPos, PVector.mult(_labelDirection,_majorTickSize));
+			tickEnd = PVector.add(tickPos, PVector.mult(_labelDirection,-_majorTickSize));
 			
 			//next draw the tick label
 			if(_drawTickLabels){			
@@ -365,7 +368,7 @@ public class Axis2D extends Renderable implements PConstants  {
 						tickLbl = String.format("%." + _accuracy + "E",(float)(val));				
 						break;
 					case INTEGER:	
-						tickLbl = String.format("%d",Math.round(val));				
+						tickLbl = String.format("%d", Math.round(val));				
 						break;
 				}
 				
@@ -404,7 +407,7 @@ public class Axis2D extends Renderable implements PConstants  {
 			for (Integer i : _minorTickPositions) {				
 				//same as with major ticks, get start and end points
 				tickPosMinor = PVector.mult(_unitVec, i);
-				tickEndMinor = PVector.add(tickPosMinor, PVector.mult(_labelDirection, _minorTickSize));
+				tickEndMinor = PVector.add(tickPosMinor, PVector.mult(_labelDirection, -_minorTickSize));
 
 				_parent.beginShape(PConstants.LINE);
 				_parent.vertex(tickPosMinor.x, tickPosMinor.y);

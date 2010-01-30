@@ -1,6 +1,6 @@
 package org.gwoptics.graphics.colourmap;
 
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ public interface IColourmap {
 	 * 
 	 * @param l location to get colour
 	 */
-	Colour getColourAtLocation(float l);
+	GWColour getColourAtLocation(float l);
 	/**
 	 * Gets an integer form of a Colour from the colourmap
 	 * @param l

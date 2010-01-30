@@ -1,7 +1,7 @@
 package org.gwoptics.graphics.graph3D;
 
 import org.gwoptics.ValueType;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.Renderable;
 import org.gwoptics.graphics.camera.Camera3D;
 
@@ -44,8 +44,8 @@ public class Axis3D extends Renderable implements PConstants {
 	private PVector _axisTickLblRotation  = new PVector(0,0,0);
 	private PVector _axisLblRotation = new PVector(0,0,0);
 	private float _axisLblOffset = 20;
-	private Colour _axisColour;
-	private Colour _fontColour;
+	private GWColour _axisColour;
+	private GWColour _fontColour;
 	private boolean _drawTicks;
 	private boolean _drawTickLabels;
 	private boolean _drawName;
@@ -59,14 +59,14 @@ public class Axis3D extends Renderable implements PConstants {
 	//PMatrix3D proj;
 	
 	// Setter properties
-	public void setAxisColour(int R,int G, int B){setAxisColour(new Colour(R,G,B));}	
-	public void setAxisColour(Colour c){
+	public void setAxisColour(int R,int G, int B){setAxisColour(new GWColour(R,G,B));}	
+	public void setAxisColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		_axisColour = c;
 	}	
-	public void setFontColour(int R,int G, int B){setFontColour(new Colour(R,G,B));}	
-	public void setFontColour(Colour c){
+	public void setFontColour(int R,int G, int B){setFontColour(new GWColour(R,G,B));}	
+	public void setFontColour(GWColour c){
 		if(c == null)
 			throw new NullPointerException("Colour argument cannot be null");		
 		_fontColour = c;
@@ -130,8 +130,8 @@ public class Axis3D extends Renderable implements PConstants {
 	
 	public Axis3D(PApplet parent) {
 		super(parent);
-		_axisColour = new Colour(0,0,0);
-		_fontColour = new Colour(0,0,0);
+		_axisColour = new GWColour(0,0,0);
+		_fontColour = new GWColour(0,0,0);
 		_drawTicks = true;
 		_drawTickLabels = true;
 		_drawName = true;

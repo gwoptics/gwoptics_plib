@@ -1,5 +1,5 @@
 package org.gwoptics.graphics.graph3D;
-import org.gwoptics.graphics.Colour;
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.Renderable;
 
 import processing.core.PApplet;
@@ -42,7 +42,7 @@ public class SquareGridMesh extends Renderable {
 	/**
 	 * If no colourmap is provided this is the stroke colour for the grid. Only applies if isColoured is false.
 	 */
-	public Colour strokeColour;
+	public GWColour strokeColour;
 	/**
 	 * States whether to fill the grid using fillColour. Only applies if isColoured is false.
 	 */
@@ -50,7 +50,7 @@ public class SquareGridMesh extends Renderable {
 	/**
 	 * If no colourmap is provided this is the fill colour for the grid. Only applies if isColoured is false.
 	 */
-	public Colour fillColour;
+	public GWColour fillColour;
 	/**
 	 * States whether to stroke the grid using strokeColour. Only applies if isColoured is false.
 	 */
@@ -79,8 +79,8 @@ public class SquareGridMesh extends Renderable {
 		isColoured = false;
 		isFilled = false;
 		isStroked = true;
-		strokeColour = new Colour(1,1,1);
-		fillColour = new Colour(0.5f,0.5f,0.5f);
+		strokeColour = new GWColour(1,1,1);
+		fillColour = new GWColour(0.5f,0.5f,0.5f);
 		
 		_vertexs = new float[_X_size][_Y_size][3];
 		_colour = new int[_X_size][_Y_size][3];
@@ -114,7 +114,7 @@ public class SquareGridMesh extends Renderable {
 	 * @param Y
 	 * @param c
 	 */
-	public void setVertexColour(int X, int Y, Colour c) {		
+	public void setVertexColour(int X, int Y, GWColour c) {		
 		if(X < 0 || Y < 0 || X > _X_size - 1 || Y > _Y_size - 1) {throw new ArrayIndexOutOfBoundsException();}
 		_colour[X][Y][0] = (int)(c.R * 255);
 		_colour[X][Y][1] = (int)(c.G * 255);
@@ -155,7 +155,7 @@ public class SquareGridMesh extends Renderable {
 			_parent.noStroke();
 		}
 		
-		for(int i=0; i< _vertexs.length-1; i++) {			
+		for(int i=0; i < _vertexs.length-1; i++) {			
 			_parent.beginShape(PConstants.TRIANGLE_STRIP);
 						
 			for(int j=0; j < _vertexs[0].length; j++) {	
@@ -169,9 +169,7 @@ public class SquareGridMesh extends Renderable {
 		}
 	}
 	
-	/**
-	 * This function is used when a colourmap is given
-	 */
+	/**This function is used when colours have been applied to each vertex */
 	private void _ColouredDraw(){
 		int k;
 		_parent.noStroke();

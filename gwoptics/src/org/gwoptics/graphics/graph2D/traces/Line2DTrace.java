@@ -278,39 +278,41 @@ public class Line2DTrace implements IGraph2DTrace{
 				}
 			}
 			
-			float ypos = 0;
-			prevY = _pointData[startPos - 1];
-			
- 			for(int i = startPos; i < _pointData.length; i++){
-				ypos     =  _pointData[i];
+			if(startPos != 0){
+				float ypos = 0;
+				prevY = _pointData[startPos - 1];
 				
-				if(!(Float.isNaN(ypos) || Float.isNaN(prevY))){						
-
-					if(ypos < 0)
-						ypos = 0;
-					else if(ypos > _ay.getLength())
-						ypos = _ay.getLength();
+	 			for(int i = startPos; i < _pointData.length; i++){
+					ypos = _pointData[i];
 					
-					if(prevY < 0)
-						prevY = 0;
-					else if(prevY > _ay.getLength())
-						prevY = _ay.getLength();
-					
-					if(_effect != null){
-						cTrace = _effect.getPixelColour(i-1, (int) ypos,
-															_ax.getMinValue() + i * dRes,
-															(float)_eqDataY[i-1]);
-						_parent.stroke(cTrace.R * 255,
-									   cTrace.G * 255,
-									   cTrace.B * 255,
-									   cTrace.A * 255);
-					}else
-						_parent.stroke(_traceColour.R * 255,_traceColour.G * 255,_traceColour.B * 255,_traceColour.A * 255);
-					
-					_parent.line(prevX, -prevY, i, -ypos);
-
-					prevX = i;
-					prevY = ypos;
+					if(!(Float.isNaN(ypos) || Float.isNaN(prevY))){						
+	
+						if(ypos < 0)
+							ypos = 0;
+						else if(ypos > _ay.getLength())
+							ypos = _ay.getLength();
+						
+						if(prevY < 0)
+							prevY = 0;
+						else if(prevY > _ay.getLength())
+							prevY = _ay.getLength();
+						
+						if(_effect != null){
+							cTrace = _effect.getPixelColour(i-1, (int) ypos,
+																_ax.getMinValue() + i * dRes,
+																(float)_eqDataY[i-1]);
+							_parent.stroke(cTrace.R * 255,
+										   cTrace.G * 255,
+										   cTrace.B * 255,
+										   cTrace.A * 255);
+						}else
+							_parent.stroke(_traceColour.R * 255,_traceColour.G * 255,_traceColour.B * 255,_traceColour.A * 255);
+						
+						_parent.line(prevX, -prevY, i, -ypos);
+	
+						prevX = i;
+						prevY = ypos;
+					}
 				}
 			}
 		}

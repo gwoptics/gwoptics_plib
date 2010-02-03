@@ -32,6 +32,13 @@ public class RollingLine2DTrace extends Line2DTrace{
 				try {
 					_lock.lock();					
 					_doDraw = true;
+					
+					//increment the x-axis bounds if we are the master trace.
+					if(isMaster()){
+						_ax.setMaxValue(_ax.getMaxValue() + _xTickIncr);
+						_ax.setMinValue(_ax.getMinValue() + _xTickIncr);
+					}
+					
 					_timer.schedule(new RollingTick(), _refreshRate);
 				} finally {
 					_lock.unlock();
@@ -60,6 +67,7 @@ public class RollingLine2DTrace extends Line2DTrace{
 		_isMaster = true; //true unless otherwise found it isnt in preCheck
 		_lock = new ReentrantLock();
 		_slaveTraces = new RollingLine2DTrace[0];
+		
 	}		
 
 	@Override
@@ -83,8 +91,7 @@ public class RollingLine2DTrace extends Line2DTrace{
 							" conflicting so that 2 pixels on the X-Axis have the" +
 							" same value. Please change the axis range or length of graph");
 				}
-			}
-				
+			}	
 		}
 	}
 	
@@ -101,9 +108,7 @@ public class RollingLine2DTrace extends Line2DTrace{
 						_isMaster = false;
 						RollingLine2DTrace rt = (RollingLine2DTrace)t;
 						
-						if(rt.isMaster()){
-							rt._addTraceToMaster(this);
-						}
+						if(rt.isMaster()){rt._addTraceToMaster(this);}
 						
 						//check to see if our refresh rates match
 						if(rt.getRefreshRate() != _refreshRate)
@@ -202,47 +207,44 @@ public class RollingLine2DTrace extends Line2DTrace{
 		if(_ax == null || _ay == null)
 			throw new RuntimeException("One of the axis objects are null, set them using setAxes().");
 		
-		//increment the x-axis bounds
-		if(isMaster()){
-			_ax.setMaxValue(_ax.getMaxValue() + _xTickIncr);
-			_ax.setMinValue(_ax.getMinValue() + _xTickIncr);
-		}
-		
 		int endPX = _eqDataY.length - 1;
 		int endNewPos = _ax.valueToPosition(_eqDataX[endPX]);
 		int startPos = endPX-endNewPos;
+		
+		if(startPos >= _eqDataX.length)
+			throw new RuntimeException("The RollingGraphTrace is moving too fast to" +
+					" process. Either reduce the tick increase rate or increase the" +
+					" range of the X-Axis on the graph.");
+		
 		int lastPosChange = startPos - _ax.valueToPosition(_eqDataX[startPos]);
 		
 		for(int k=startPos;k<=endPX;k++){
 			//using the x value of this point determine its new pixel location
-			//on the offsetted x axis 
+			//on the off set x axis 
 			int kpos = _ax.valueToPosition(_eqDataX[k]);
-			//if the amount this pixel has changed isnt the same as the one before we
-			//could end up missing pixels out or overwriting values. so here we find
-			//where the pixel should go.
-			if(lastPosChange - (k - kpos) != 0){
-				kpos = k - lastPosChange; //using the last pixels shifted position amount
-			}
 			
-			lastPosChange = k - kpos;
+			if(k - kpos != lastPosChange){
+				kpos = k - lastPosChange;
+				_eqDataX[k] = _ax.positionToValue(kpos);
+			}
 			
 			if(kpos >= 0 & kpos != k){
 				_eqDataX[kpos] = _eqDataX[k];
-				_eqDataY[kpos] = _eqDataY[k];	
+				_eqDataY[kpos] = _eqDataY[k];
+				_eqDataY[k] = Float.NaN;
 			}
 		}
 		
 		if(endNewPos < endPX){
-
 			for(int l = endNewPos+1; l <= endPX;l++){
 				float x = _ax.positionToValue(l);
 				_eqDataX[l] = x;
 				_eqDataY[l] = Float.NaN;
-			}
-			
-			_eqDataX[endPX] = _ax.getMaxValue();
-			_eqDataY[endPX] = _cb.computePoint(_eqDataX[endPX], endPX);
+			}	
 		}
+		
+		_eqDataX[endPX] = _ax.getMaxValue();
+		_eqDataY[endPX] = _cb.computePoint(_eqDataX[endPX], endPX);
 		
 		for (int i = 0; i < _pointData.length; i++) {
 			if(Double.isNaN(_eqDataY[i]))

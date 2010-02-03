@@ -12,13 +12,13 @@ import processing.core.PApplet;
  * @since 0.1.1
  *
  */
-public final class Colour{
+public final class GWColour{
 	public float A;
 	public float R;
 	public float G;
 	public float B;
 	
-	public Colour(){
+	public GWColour(){
 		A = 1;
 		R = 0;
 		G = 0;
@@ -32,14 +32,14 @@ public final class Colour{
 	 * @param Green Green value between 0.0f and 1.0f.
 	 * @param Blue Blue value between 0.0f and 1.0f.
 	 */
-	public Colour(float Red, float Green, float Blue){
+	public GWColour(float Red, float Green, float Blue){
 		A = 1;
 		R = PApplet.constrain(Red, 0f, 1f);
 		G = PApplet.constrain(Green, 0f, 1f);
 		B = PApplet.constrain(Blue, 0f, 1f);
 	}
 	
-	public Colour(float Alpha, float Red, float Green, float Blue){
+	public GWColour(float Alpha, float Red, float Green, float Blue){
 		A = PApplet.constrain(Alpha, 0f, 1f);;
 		R = PApplet.constrain(Red, 0f, 1f);
 		G = PApplet.constrain(Green, 0f, 1f);
@@ -53,14 +53,14 @@ public final class Colour{
 	 * @param Green Green value between 0 and 255. 
 	 * @param Blue Blue value between 0 and 255.
 	 */
-	public Colour(int Red, int Green, int Blue){
+	public GWColour(int Red, int Green, int Blue){
 		A = 1;
 		R = PApplet.constrain(Red/255f,0f,1f);
 		G = PApplet.constrain(Green/255f,0f,1f);
 		B = PApplet.constrain(Blue/255f,0f,1f);
 	}
 	
-	public Colour(int alpha, int Red, int Green, int Blue){
+	public GWColour(int alpha, int Red, int Green, int Blue){
 		A = PApplet.constrain(alpha/255f,0f,1f);
 		R = PApplet.constrain(Red/255f,0f,1f);
 		G = PApplet.constrain(Green/255f,0f,1f);
@@ -105,7 +105,7 @@ public final class Colour{
 	 * @param c Colour object
 	 * @return Integer with 4 bytes in the form ARGB
 	 */
-	public static int convertColourToInt(Colour c){
+	public static int convertColourToInt(GWColour c){
 		return (((int)(c.A*255) << 24) | (int)(c.R*255) << 16) | ((int)(c.G*255) << 8) | (int)(c.B*255);
 	}
 	
@@ -115,8 +115,8 @@ public final class Colour{
 	 * @param iC Integer to convert
 	 * @return Colour object relating to integer
 	 */
-	public static Colour convertIntToColour(int iC){
-		Colour c = new Colour();
+	public static GWColour convertIntToColour(int iC){
+		GWColour c = new GWColour();
 		//bit mask and shift
 		c.B = (iC & 0xFF)/255f;
 		c.G = ((iC >> 8)& 0xFF)/255f;
@@ -128,8 +128,8 @@ public final class Colour{
 	/**
 	 * Adds 2 colours
 	 */
-	public static Colour add(Colour c1, Colour c2){
-		Colour c = new Colour(c1.A * c1.R + c2.A * c2.R,
+	public static GWColour add(GWColour c1, GWColour c2){
+		GWColour c = new GWColour(c1.A * c1.R + c2.A * c2.R,
 							c1.A * c1.G + c2.A * c2.G,
 							c1.A * c1.B + c2.A * c2.B);
 		c.A = 1;
@@ -139,8 +139,8 @@ public final class Colour{
 	/**
 	 * Multiplies 2 colours 
 	 */
-	public static Colour multiply(Colour c1, Colour c2){
-		Colour c = new Colour(c1.A * c1.R * c2.A * c2.R,
+	public static GWColour multiply(GWColour c1, GWColour c2){
+		GWColour c = new GWColour(c1.A * c1.R * c2.A * c2.R,
 							c1.A * c1.G * c2.A * c2.G,
 							c1.A * c1.B * c2.A * c2.B);
 		c.A = 1;
@@ -150,7 +150,7 @@ public final class Colour{
 	/**
 	 * Returns int version of a Colour but applies, alpha to each channel
 	 */
-	public static int getAlphaRGB(Colour c){
+	public static int getAlphaRGB(GWColour c){
 		return ((int)(c.R*c.A*255) << 16) | ((int)(c.G*c.A*255) << 8) | (int)(c.B*c.A*255);
 	}
 	

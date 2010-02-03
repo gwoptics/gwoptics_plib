@@ -26,7 +26,7 @@ import org.gwoptics.graphics.graph2D.effects.ITraceColourEffect;
  * @see ITraceColourEffect
  * @see ILine2DEquation
  */
-public interface IGraphTrace extends IRenderable {
+public interface IGraph2DTrace extends IRenderable {
 	/** Sets an internal variable to store a reference to the graph object the
 	 * trace is being plotted on */
 	void setGraph(IGraph2D grp);

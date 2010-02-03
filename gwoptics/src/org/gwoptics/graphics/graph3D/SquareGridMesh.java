@@ -35,26 +35,19 @@ public class SquareGridMesh extends Renderable {
 	private float _dy = 10; //z distance between points
 	protected float[][][] _vertexs;
 	protected int[][][] _colour;
-	/**
-	 * Specifies whether to use a colourmap to colour each vertex
-	 */
+	/** Specifies whether to use a colourmap to colour each vertex */
 	public boolean isColoured ;
-	/**
-	 * If no colourmap is provided this is the stroke colour for the grid. Only applies if isColoured is false.
-	 */
+	/**If no colourmap is provided this is the stroke colour for the grid. Only applies if isColoured is false. */
 	public GWColour strokeColour;
-	/**
-	 * States whether to fill the grid using fillColour. Only applies if isColoured is false.
-	 */
+	/** States whether to fill the grid using fillColour. Only applies if isColoured is false.*/
 	public boolean isFilled;
-	/**
-	 * If no colourmap is provided this is the fill colour for the grid. Only applies if isColoured is false.
-	 */
+	/** If no colourmap is provided this is the fill colour for the grid. Only applies if isColoured is false. */
 	public GWColour fillColour;
-	/**
-	 * States whether to stroke the grid using strokeColour. Only applies if isColoured is false.
-	 */
+	/**States whether to stroke the grid using strokeColour. Only applies if isColoured is false. */
 	public boolean isStroked;
+	
+	public float getWidth(){return _dx * (_X_size-1);}
+	public float getLength(){return _dy * (_Y_size-1);}
 	
 	/**
 	 * Allows user to specify dimensions of the grid needed. By default the grid is rendered in
@@ -191,13 +184,9 @@ public class SquareGridMesh extends Renderable {
 		}
 	}
 	
-	/**
-	 * Returns number of squares along X side.
-	 */
+	/** Returns number of squares along X side.	 */
 	public int sizeX() {return _X_size-1;}//1 is subtracted as we added one in the constructor
 										  //for the total number of points rather than squares.
-	/**
-	 * Returns number of squares along Z side.
-	 */
+	/** Returns number of squares along Z side.	 */
 	public int sizeY() {return _Y_size-1;}
 }

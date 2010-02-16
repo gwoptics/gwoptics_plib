@@ -156,9 +156,11 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		int ix = -1;
 		
 		synchronized (_traces) {
-			trace.onAddTrace(_traces.toArray());
-			trace.setGraph(this);
+			//reorder of the methods here to make sure that all
+			//methods down the line have access to the parent PApplet
 			trace.setParent(_parent);
+			trace.setGraph(this);
+			trace.onAddTrace(_traces.toArray());
 			trace.generate();
 			_traces.add(trace);
 			ix = _traces.size() - 1;

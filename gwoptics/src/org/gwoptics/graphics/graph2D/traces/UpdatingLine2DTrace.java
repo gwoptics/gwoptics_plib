@@ -13,9 +13,10 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 	protected boolean _doDraw;
 	protected Timer _timer;
 	protected long _refreshRate;
+	protected float _xTickIncr;
 	protected boolean _isMaster;
 	protected UpdatingLine2DTrace[] _slaveTraces;
-	protected int _drawPoint;
+	protected double _drawPoint;
 	
 	protected boolean isMaster(){return _isMaster;}
 	public long getRefreshRate(){return _refreshRate;}
@@ -27,6 +28,31 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 				try {
 					_lock.lock();
 				
+					_drawPoint += _xTickIncr;
+					
+					//if new draw position is greater than the max then we 
+					//need to shift the x axis along a bit.
+					if(_drawPoint > _ax.getMaxValue()){
+						double xAxisRange = _ax.getMaxValue() - _ax.getMinValue();
+						_ax.setMinValue((float) (_ax.getMinValue() + xAxisRange));
+						_ax.setMaxValue((float) (_ax.getMaxValue() + xAxisRange));
+						
+						int newPos = _ax.valueToPosition(_drawPoint);
+						
+						if(newPos < 0)
+							_drawPoint = _ax.positionToValue(0);
+						else if(newPos > 0){
+							for(int i = 0;i<newPos;i++){
+								_pointData[i] = Float.NaN;
+								_eqDataY[i] = Float.NaN;
+							}
+						}
+					}
+					
+					for (UpdatingLine2DTrace t : _slaveTraces ) {
+						t._drawPoint = _drawPoint;
+					}
+					
 					_doDraw = true;
 					_timer.schedule(new RollingTick(), _refreshRate);
 				} finally {
@@ -36,10 +62,11 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 		}		
 	}
 	
-	public UpdatingLine2DTrace(ILine2DEquation eq, long RefreshRate) {
+	public UpdatingLine2DTrace(ILine2DEquation eq, long msRefreshRate, float xTickIncr) {
 		super(eq);
 		
-		_refreshRate = RefreshRate;
+		_xTickIncr = xTickIncr;
+		_refreshRate = msRefreshRate;
 		_timer = new Timer();
 		_isMaster = true; //true unless otherwise found it isnt in preCheck
 		_lock = new ReentrantLock();
@@ -115,7 +142,7 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 				
 				updating2DTrace._isMaster = false;
 				next._isMaster = true;
-				
+				next._drawPoint = updating2DTrace._drawPoint;
 				next._slaveTraces = updating2DTrace._slaveTraces;
 				next._timer = new Timer();
 				next._timer.schedule(next.new RollingTick(), next._refreshRate);
@@ -168,20 +195,17 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 		if(_ax == null || _ay == null)
 			throw new RuntimeException("One of the axis objects are null, set them using setAxes().");
 		
+		int newPos = _ax.valueToPosition(_drawPoint);
+		
 		for (int i = 0; i < _pointData.length; i++) {
-			if(i == _drawPoint){
+			if(i == newPos){
 				_eqDataY[i] =  _cb.computePoint(_drawPoint,i);
 				_pointData[i] = _ay.valueToPosition((float) _eqDataY[i]);
-			}else if(i > _drawPoint){
+			}else if(i > newPos){
 				_eqDataY[i] = Float.NaN;
 				_pointData[i] = Float.NaN;
 			}				
 		}
-		
-		_drawPoint ++;
-		
-		if(_drawPoint > _pointData.length - 1)
-			_drawPoint = 0;
 	}
 	
 	public void pre(){
@@ -206,11 +230,5 @@ public class UpdatingLine2DTrace extends Line2DTrace {
 	@Override
 	public void draw() {			
 		super.draw();
-		
-		if(_ax != null){
-			_ax.setDrawTickLabels(false);
-			_ax.setDrawTicks(false);
-			_ax.setAxisLabel("Time");
-		}
 	}
 }

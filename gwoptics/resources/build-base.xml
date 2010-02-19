@@ -114,6 +114,9 @@
 	  	</manifest>
 	</jar>
   	
+ 	<copy todir="${dist}/src/">
+  		<file file="license.txt"/>
+    </copy>	
   	<copy todir="${dist}/examples">
   		<fileset dir="examples"/>
   	</copy>

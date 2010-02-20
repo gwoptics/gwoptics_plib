@@ -29,8 +29,6 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	protected GWColour _border;
 	protected ArrayList<IGraph2DTrace> _traces;
 	protected boolean _crossAxesAtZero;
-	protected boolean _drawBorder;
-	protected boolean _drawBackground;
 	protected IGraph2DBackground _back;
 	
 	public void setXAxisTickSpacing(float s){_ax.setTickSpacing(s);}
@@ -89,11 +87,9 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 	/** Removes border **/
 	public void setNoBorder(){_border = null;}
 	/** Sets the colour of the border surrounding the graph object**/
+	public void setNoBackground(){_back = null;}
+	/** Sets the colour of the border surrounding the graph object**/
 	public void setBorderColour(int R, int G, int B){_border = new GWColour(R, G, B);}
-    /** Set whether border should be drawn **/
-	public void setDrawBorder(boolean drawBorder){_drawBorder = drawBorder;}
-    /** Set whether background should be drawn **/
-	public void setDrawBackground(boolean drawBackground){_drawBackground = drawBackground;}
 	/** Sets an IGraph2DBackground to use to fill the graph background */
 	public void setBackground(IGraph2DBackground bk){
 		_back = bk;
@@ -121,8 +117,6 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_yLength = yLength;
 		
 		_border = new GWColour(0,0,0);
-		_drawBorder = true;
-		_drawBackground = true;
 		
 		_ax = new Axis2D(parent, xLength);
 		_ax.setTickLabelAlignment(Alignment.CENTER);
@@ -219,9 +213,9 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_parent.translate(position.x, position.y + _yLength);		
 		
 		//From the bottom up draw background
-		if(_drawBackground && _back != null){_back.draw();	}
+		if(_back != null){_back.draw();	}
 
-		if(_drawBorder && _border != null){
+		if (_border != null){
 			_parent.stroke(_border.toInt());
 			_parent.noFill();
 			_parent.rect(0, 0, _xLength, -_yLength);

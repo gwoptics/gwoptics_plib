@@ -328,15 +328,15 @@ public class Axis3D extends Renderable implements PConstants {
 				// Write tick label
 				switch (_tickLblType) {
 				case DECIMAL:
-					tickLbl = String.format("%." + _accuracy + "f",
+					tickLbl = String.format("% ." + _accuracy + "f",
 							(float) (_minShow + i * dValue));
 					break;
 				case EXPONENT:
-					tickLbl = String.format("%." + _accuracy + "E",
+					tickLbl = String.format("% ." + _accuracy + "E",
 							(float) (_minShow + i * dValue));
 					break;
 				case INTEGER:
-					tickLbl = String.format("%d", Math.round(_minShow + i
+					tickLbl = String.format("% d", Math.round(_minShow + i
 							* dValue));
 					break;
 				}
@@ -428,8 +428,6 @@ public class Axis3D extends Renderable implements PConstants {
 				// position of tick along the axis
 				tickPos.add(dvTick);
 			}
-
-			//_parent.popMatrix();
 		}
 
 		if (_drawName) {

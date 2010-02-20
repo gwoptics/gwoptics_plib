@@ -368,13 +368,13 @@ public class Axis2D extends Renderable implements PConstants  {
 				// Make tick label
 				switch (_tickLblType) {
 					case DECIMAL:			
-						tickLbl = String.format("%." + _accuracy + "f",(float)(val));		
+						tickLbl = String.format(" %." + _accuracy + "f",(float)(val));		
 						break;
 					case EXPONENT:	
-						tickLbl = String.format("%." + _accuracy + "E",(float)(val));				
+						tickLbl = String.format(" %." + _accuracy + "E",(float)(val));				
 						break;
 					case INTEGER:	
-						tickLbl = String.format("%d", Math.round(val));				
+						tickLbl = String.format(" %d", Math.round(val));				
 						break;
 				}
 				

@@ -1,6 +1,7 @@
 import org.gwoptics.graphics.*;
 import org.gwoptics.graphics.camera.*;
 import org.gwoptics.graphics.graph3D.*;
+import org.gwoptics.ValueType;
 import org.gwoptics.graphics.colourmap.presets.*;
 
 Camera3D cam;
@@ -16,7 +17,7 @@ standingWave gcb = new standingWave();
 
 void setup() {
   size(800, 800, P3D); //Use P3D for now, openGl seems to have some issues
-
+  frameRate(10);
   cam = new Camera3D(this);
   PVector cam_pos = new PVector(0f,540f,-10f);
   cam.setPosition(cam_pos);
@@ -31,7 +32,9 @@ void setup() {
   g3d.setZAxisMax(1);		
   g3d.setYAxisMin(-2);		
   g3d.setYAxisMax(2);	
-
+  g3d.setXAxisLabelType(ValueType.DECIMAL);
+  g3d.setYAxisLabelType(ValueType.DECIMAL);
+  
   //There are several colourmap presets to try such as: HotColourmap, WarmColourmap or
   // GrayScaleColourmap
   g3d.addSurfaceTrace(gcb, 100, 100, new FlipColourmap(true));

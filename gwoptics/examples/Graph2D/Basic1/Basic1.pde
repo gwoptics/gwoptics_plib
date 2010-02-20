@@ -1,6 +1,6 @@
 /**
  *  this is sketch that uses the Graph2D object from the library.
- *  It plots a static sin function, and shows how to use all the
+ *  It plots a static sin function, and shows how to use 
  *  various methods available to alter the graph
  **/
 
@@ -22,38 +22,28 @@ public class eq implements ILine2DEquation{
 }
 
 void setup(){
-  size(500,300);
-
-  //The following the basic methods that alter the layout of the graph.
-
-  //arguments are the parent object, xsize, ysize, cross axes at zero point
-  g = new Graph2D(this, 400, 200, true); 
-  // 400,200 define the size of the plotting area, and the last parameter 'false'
-  // defined that the axes should not cross at zero (i.e. we use boxed axes)
+  size(500,270);
   
-  g.setDrawBorder(false);
+  // Ceating the Grpag2D object:
+  //arguments are the parent object, xsize, ysize, cross axes at zero point
+  g = new Graph2D(this, 400, 200, false); 
+  
+  // Defining the main properties of the X and Y-Axis
   g.setYAxisMin(-1);
   g.setYAxisMax(1);
-  g.setXAxisMin(-1*PI);
+  g.setXAxisMin(-2*PI);
   g.setXAxisMax(2*PI);
-
   g.setXAxisLabel("X-Axis");
   g.setYAxisLabel("Y-Axis");
-
-  g.setXAxisLabelPos(LabelPos.END);
-  g.setYAxisLabelPos(LabelPos.OUTSIDE);
-
-
-  g.setXAxisLabelAccuracy(1);//dp to show
-  g.setYAxisLabelAccuracy(1);
-
   g.setXAxisTickSpacing(PI/2);
-
   g.setYAxisTickSpacing(0.25);
-
-  g.position.y = 50;
-  g.position.x = 60;
-
+  
+  // Offset of the top left corner of the plotting area
+  // to the sketch origin (should not be zero in order to
+  // see the y-axis label
+  g.position.x = 70;
+  g.position.y = 20;
+ 
   //Here we create a new trace and set a colour for
   //it, along with passing the equation object to it.
   Line2DTrace trace = new Line2DTrace(new eq());

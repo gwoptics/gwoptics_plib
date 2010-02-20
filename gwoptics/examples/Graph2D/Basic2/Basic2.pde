@@ -1,7 +1,7 @@
 /**
  *  this is sketch that uses the Graph2D object from the library.
- *  It plots a static sin function, and shows how to use all the
- *  various methods available to alter the graph
+ *  It plots two functions, and shows how some more
+ *  methods available to alter the graph
  **/
 
 import org.gwoptics.graphics.graph2D.Graph2D;
@@ -15,55 +15,58 @@ Graph2D g;
  *  Equations that are to be plot must be encapsulated into a 
  * class implementing the IGraph2DCallback interface.
  **/
-public class eq implements ILine2DEquation{
+public class eq1 implements ILine2DEquation{
   public double computePoint(double x,int pos) {
     return Math.sin(x);
   }		
 }
+public class eq2 implements ILine2DEquation{
+  public double computePoint(double x,int pos) {
+    return Math.cos(x);
+  }		
+}
+
 
 void setup(){
   size(500,300);
 
-  //The following the basic methods that alter the layout of the graph.
-
-  //arguments are the parent object, xsize, ysize, cross axes at zero point
+  // Graph2D object, arguments are 
+  // the parent object, xsize, ysize, cross axes at zero point
   g = new Graph2D(this, 400, 200, true); 
-  // 400,200 define the size of the plotting area, and the last parameter 'false'
-  // defined that the axes should not cross at zero (i.e. we use boxed axes)
-  
-  g.setDrawBorder(false);
+
+  // setting attributes for the X and Y-Axis
   g.setYAxisMin(-1);
   g.setYAxisMax(1);
   g.setXAxisMin(-1*PI);
   g.setXAxisMax(2*PI);
-
   g.setXAxisLabel("X-Axis");
   g.setYAxisLabel("Y-Axis");
-
-  g.setXAxisLabelPos(LabelPos.END);
-  g.setYAxisLabelPos(LabelPos.OUTSIDE);
-
-
-  g.setXAxisLabelAccuracy(1);//dp to show
+  g.setXAxisLabelAccuracy(1);
   g.setYAxisLabelAccuracy(1);
-
   g.setXAxisTickSpacing(PI/2);
-
   g.setYAxisTickSpacing(0.25);
+
+  // switching of the border, and changing the label positions
+  g.setNoBorder(); 
+  g.setXAxisLabelPos(LabelPos.END);
+  g.setYAxisLabelPos(LabelPos.END);
 
   g.position.y = 50;
   g.position.x = 60;
 
-  //Here we create a new trace and set a colour for
-  //it, along with passing the equation object to it.
-  Line2DTrace trace = new Line2DTrace(new eq());
-  trace.setTraceColour(255,0,0);
-  //add the trace to the graph
-  g.addTrace(trace);
+  Line2DTrace trace1 = new Line2DTrace(new eq1());
+  Line2DTrace trace2 = new Line2DTrace(new eq2());
+
+  trace1.setTraceColour(255,0,0);
+  trace2.setTraceColour(0,0,255);
+
+  g.addTrace(trace1);
+  g.addTrace(trace2);
 }
 
 void draw(){
   background(255);
   g.draw();
 }
+
 

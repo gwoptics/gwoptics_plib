@@ -130,6 +130,12 @@ public final class SurfaceGraph3D extends Renderable {
 		_az.setTickLabelBillboarding(value);
 	}
 	
+	public void setDrawLines(boolean value){
+		_ax.setDrawLine(value);
+		_ay.setDrawLine(value);
+		_az.setDrawLine(value);
+	}
+	
 	public void setDrawTickLabels(boolean value){
 		_ax.setDrawTickLabels(value);
 		_ay.setDrawTickLabels(value);
@@ -229,14 +235,22 @@ public final class SurfaceGraph3D extends Renderable {
 	public SurfaceGraph3D(PApplet p, float xLength, float yLength, float zLength, boolean setAxisCrossAtZero) {
 		super(p);
 		
+		_az = new Axis3D(_parent);
+		_ax = new Axis3D(_parent);
+		_ay = new Axis3D(_parent);
+		
 		if(xLength < 1) {_xLength = 1;}else {_xLength = xLength;}
-		if(zLength < 1) {_zLength = 1;}else {_zLength = zLength;}
+		if(zLength < 1) {
+			_zLength = 1;
+			_az.setDraw(false);
+			}
+		else {_zLength = zLength;}
 		if(yLength < 1) {_yLength = 1;}else {_yLength = yLength;}
 		
 		_traces = new ArrayList<SurfaceTrace3D>();
 		_autoRangeSurfaceIX = -1;
 		
-		_az = new Axis3D(_parent);
+		
 		_az.setAxesDirection(new PVector(0,1,0)); //z axis plotted in y direction
 		_az.setAxisLabel("Z-Axis");
 		_az.position = new PVector(0,0,0);
@@ -250,7 +264,6 @@ public final class SurfaceGraph3D extends Renderable {
 	
 		//These settings are mostly trial and error to get the 
 		//best looking results
-		_ax = new Axis3D(_parent);
 		_ax.setAxesDirection(new PVector(1,0,0));
 		_ax.setAxisLabel("X-Axis");
 		//_ax.setLabelYRotation(PConstants.PI);
@@ -263,7 +276,6 @@ public final class SurfaceGraph3D extends Renderable {
 		_ax.position = new PVector(0,0,0);
 		_ax.setTickLabelBillboarding(false);
 		
-		_ay = new Axis3D(_parent);
 		_ay.setAxesDirection(new PVector(0,0,1)); //y axis plotted in z direction
 		_ay.setAxisLabel("Y-Axis");
 		_ay.setLength(_yLength);

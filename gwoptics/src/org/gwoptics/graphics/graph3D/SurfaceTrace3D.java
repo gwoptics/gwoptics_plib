@@ -88,7 +88,13 @@ public class SurfaceTrace3D extends Renderable {
 									y.getLength()/_gridYResolution,
 									parent);		
 
-		if(map != null){_grid.isColoured = true;}
+		if(map != null){
+			_grid.isColoured = true;
+			// added 200210 adf
+			if (map.isGenerated() == false){
+				map.generateColourmap();
+				}
+			}
 		calculateSpacing();
 		_updateGrid = true;
 	}

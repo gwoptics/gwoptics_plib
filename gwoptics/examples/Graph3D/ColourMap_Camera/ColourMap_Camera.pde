@@ -10,10 +10,7 @@ import org.gwoptics.graphics.graph3D.*;
 
 Camera3D cam;
 SurfaceGraph3D g3d[];
-
-// The following is used to print fps rate
-PGraphics3D g3; // Used to remember PGraphics3D transformation matrix
-float[] rotations = new float[3]; // store camera angles
+PGraphics3D g3; 
 
 IGraph3DCallback gcb = new IGraph3DCallback(){
   public float computePoint(float X, float Y) {
@@ -22,12 +19,15 @@ IGraph3DCallback gcb = new IGraph3DCallback(){
 };
 
 void setup() {
-  size(800, 800, P3D); //Use P3D for now, openGl seems to have some issues
+  size(800, 800, P3D); 
+
+  g3 = (PGraphics3D) g; 
 
   cam = new Camera3D(this);
-  g3 = (PGraphics3D)g; // for printing fps rate
+  PVector cam_pos = new PVector(800f,800f,800f);
+  cam.setPosition(cam_pos);
+
   PFont myFont;
-  
   myFont = createFont("FFScala", 32);
   textFont(myFont);
 
@@ -67,28 +67,28 @@ void draw() {
   background(204);
 
   pushMatrix();
-  translate(-250,0,-250);
+  translate(-450,0,-450);
   g3d[0].draw();
   popMatrix();
 
   pushMatrix();
-  translate(250,0,250);
+  translate(50,0,50);
   g3d[1].draw();
   popMatrix();
 
   pushMatrix();
-  translate(-250,0,250);
+  translate(-450,0,50);
   g3d[2].draw();
   popMatrix();
 
   pushMatrix();
-  translate(250,0,-250);
+  translate(50,0,-450);
   g3d[3].draw();
   popMatrix();
   printFPS();
 }
 
-
+// The following is used to print fps rate on screen independent of the camera 
 void printFPS()
 {
   PMatrix3D currCameraMatrix = new PMatrix3D(g3.camera);
@@ -96,4 +96,6 @@ void printFPS()
   text("fps = "+(float)round(10000.0*frameCount/millis())/10.0, 70, 30);
   g3.camera = currCameraMatrix;
 }
+
+
 

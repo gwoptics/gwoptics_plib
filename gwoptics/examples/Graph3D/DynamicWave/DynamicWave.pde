@@ -1,30 +1,29 @@
 import org.gwoptics.graphics.*;
 import org.gwoptics.graphics.camera.*;
-import org.gwoptics.gaussbeams.*;
 import org.gwoptics.graphics.graph3D.*;
 import org.gwoptics.graphics.colourmap.presets.*;
-import processing.core.PApplet;
-import processing.core.PConstants;
 
 Camera3D cam;
 SurfaceGraph3D g3d;
 
 class standingWave implements IGraph3DCallback{
-	float t;
-	float k;
-	float w;
-	public float computePoint(float X, float Z) {
-		return (float) (Math.cos(w*t) * Math.sin(k*X) * Math.sin(k*Z));
-	}
+  float t;
+  float k;
+  float w;
+  public float computePoint(float X, float Z) {
+    return (float) (Math.cos(w*t) * Math.sin(k*X) * Math.sin(k*Z));
+  }
 }
 
 standingWave gcb = new standingWave();
 
 void setup() {
   size(800, 800, P3D); //Use P3D for now, openGl seems to have some issues
-  
+
   cam = new Camera3D(this);
-  
+  PVector cam_pos = new PVector(800f,800f,800f);
+  cam.setPosition(cam_pos);
+
   //constructor arguments are:
   //(PApplet parent, float xLength, float yLength, float zLength)
   g3d = new SurfaceGraph3D(this, 500, 500,100);		
@@ -33,13 +32,12 @@ void setup() {
   g3d.setZAxisMin(-1);
   g3d.setZAxisMax(1);		
   g3d.setYAxisMin(-2);		
-  g3d.setYAxisMax(2);		
-  gcb.k = 6; //wave number
+  g3d.setYAxisMax(2);	
+
+  gcb.k = 4; //wave number
   gcb.w = 10; //frequency
-  //There are several colourmap presets to try:
-  //HotColourmap
-  //WarmColourmap
-  //GrayScaleColourmap
+  //There are several colourmap presets to try such as: HotColourmap, WarmColourmap or
+  // GrayScaleColourmap
   g3d.addSurfaceTrace(gcb, 100, 100, new CoolColourmap(true));
 }
 
@@ -53,3 +51,5 @@ void draw() {
   g3d.draw();
   popMatrix();
 }
+
+

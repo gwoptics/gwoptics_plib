@@ -49,6 +49,7 @@ public class Axis2D extends Renderable implements PConstants  {
 	protected Alignment _axisTickLblAlign;
 	protected float _axisLblRotation;
 	protected float _axisLblOffset;
+	protected LabelPos _axisLblPos;
 	protected GWColour _axisColour;
 	protected GWColour _fontColour;
 	protected boolean _drawTicks;
@@ -107,6 +108,10 @@ public class Axis2D extends Renderable implements PConstants  {
 	public void setDrawAxisLabel(boolean value){_drawName = value;}
 	/** Sets the label of the axis */
 	public void setAxisLabel(String lbl) {_label = lbl;}
+    /** Sets the position of the axis label along the axis 
+     * @param lblpos position can be START, MIDDLE, END or OUTSIDE
+     */
+	public void setAxisLabelPos(LabelPos lblpos) {_axisLblPos=lblpos;}
 	/** Sets an offset that is to be applied to the axis label.
 	 * 	This offset is applied in the direction of the ticks away
 	 *  from the axis.*/
@@ -217,6 +222,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		_axisTickLblSize = 12;
 		_axisLblSize = 12;
 		_axisLblOffset = 4;
+		_axisLblPos = LabelPos.MIDDLE;
 		_axisLineWidth = 1;
 		_axisTickLineWidth = 1;		
 		_axisTickLblAlign = Alignment.CENTER;
@@ -426,8 +432,23 @@ public class Axis2D extends Renderable implements PConstants  {
 		_parent.textAlign(CENTER);
 		_parent.textFont(_font, _axisLblSize);
 		
+		PVector lblPos=new PVector(0,0,0);
 		// label position will be half way along the axis
-		PVector lblPos = PVector.div(length, 2);
+		switch (_axisLblPos){
+		case MIDDLE:
+			lblPos = PVector.div(length, 2);
+			break;
+		case START:
+			lblPos = new PVector(0,0,0);
+			break;
+		case END:
+			lblPos = length;
+			break;
+		case OUTSIDE:
+			lblPos = PVector.mult(length, 1.1f);
+			break;
+		}
+		
 		
 		// next need to offset in the label direction			
 		if(_offsetByLabelWidth)

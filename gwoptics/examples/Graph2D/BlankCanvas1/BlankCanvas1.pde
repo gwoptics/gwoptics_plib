@@ -24,7 +24,7 @@ class spiralTrace extends Blank2DTrace{
 	}
 }
 
-trace r;
+spiralTrace r;
 Graph2D g;
 
 void setup(){

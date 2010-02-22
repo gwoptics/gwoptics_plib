@@ -26,6 +26,7 @@ public class Logo extends Renderable {
 	private PImage _logo;
 	private PImage _logoMouseOver;
 	private boolean _isMouseOverLogo;
+	private PApplet _parent;
 	
 	public Logo(PApplet parent, float x, float y, boolean clickable) {
 		this(parent, x, y, clickable, LogoSize.Size35);
@@ -36,6 +37,7 @@ public class Logo extends Renderable {
 		position.x = x;
 		position.y = y;
 		_clickable = clickable;
+		_parent = parent;
 		
 		parent.registerMouseEvent(this);
 		//parent.registerDraw(this);
@@ -52,15 +54,20 @@ public class Logo extends Renderable {
 		}
 		
 		if(event.getID() == MouseEvent.MOUSE_CLICKED && _isMouseOverLogo && _clickable){
+			_parent.link("http://www.gwoptics.org","_self");
+			/*
 			try
 		    {
 		      AppletContext a = _parent.getAppletContext();
 		      URL url = new URL("http://www.gwoptics.org");
-		      a.showDocument(url,"_self");
+		      if ( a != null ) {
+		    	  a.showDocument(url,"_self");
+		      }
 		    }
-		    catch (MalformedURLException e){
+		    catch (Exception e){
 		      PApplet.print(e.getMessage());
 		    }
+		    */
 		}
 	}
 

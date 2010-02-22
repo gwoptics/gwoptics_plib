@@ -430,6 +430,7 @@ public class Axis3D extends Renderable implements PConstants {
 			}
 		}
 
+		_parent.popMatrix();
 		if (_drawName) {
 			// Add Label
 			_parent.textFont(_font, _axisLblSize);
@@ -453,7 +454,7 @@ public class Axis3D extends Renderable implements PConstants {
 			_parent.popMatrix();
 		}
 
-		_parent.popMatrix();
+		
 		_parent.popStyle();
 	}
 

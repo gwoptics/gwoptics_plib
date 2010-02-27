@@ -19,11 +19,10 @@
  *  Suite 330, Boston, MA 02111-1307 USA 
  */
 
-
 package org.gwoptics.GaussBeams;
 
-import org.gwoptics.MathUtils.Complex;
-import org.gwoptics.MathUtils.MathUtils;
+import org.gwoptics.mathutils.Complex;
+import org.gwoptics.mathutils.MathUtils;
 
 /**
  * Gaussmode is a class that provides the mathematical framework for Gaussian beams.

@@ -448,6 +448,7 @@ public class gwSlider extends GSlider implements IRenderable {
 		thumbTargetPos = _tickPositions[index];
 	}
 		
+	
 	/**
 	 * handles all the mouse events that may effect the slider. depending on mouse position and action
 	 * the focus is set to the slider and the relevant function and members set.

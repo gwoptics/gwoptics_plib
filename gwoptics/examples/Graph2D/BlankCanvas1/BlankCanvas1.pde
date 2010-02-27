@@ -1,3 +1,10 @@
+/**
+ * BlankCanvas1
+ * The Blank2DTrace onject can be used to draw more generally in
+ * a Graph2D envirmonment, i.e. not using functions. This example
+ * shows how to draw a parametric sprial.
+ */
+
 import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.traces.Blank2DTrace;
 

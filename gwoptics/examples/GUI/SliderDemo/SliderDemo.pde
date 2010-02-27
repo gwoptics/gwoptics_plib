@@ -1,24 +1,24 @@
-/* SliderDemo
-   Example file for the usage of the gwoptics library for
-   Processing.
-   
-   26.02.2010 Daniel Brown, Andreas Freise
-
-  Throughout example note the output in the PDE console;
-  you should see an integer and float output, retrieved by
-  getValue() (for integer) and getValuef (for float). 
-*/
+/** 
+ * SliderDemo
+ * Example file for the usage of the gwSlider objects.
+ * This needs the library gui4processing to be installed, 
+ * see http://www.lagers.org.uk/g4p/.
+ * 
+ * Throughout example note the output in the PDE console;
+ * you should see an integer and float output, retrieved by
+ * getValue() (for integer) and getValuef (for float). 
+ */
 
 import org.gwoptics.gui.slider.*;
 import guicomponents.GSlider;
 import org.gwoptics.ValueType;
 
-gwSlider sl,sl1,sl2,sl3,sl4, sl5;
+gwSlider sl,sl1,sl2,sl3,sl4,sl5;
 
 void setup() {
   size(350, 430);  
   
-  // simple default slider
+  // Simple default slider,
   // constructor is `Parent applet', the x, y position and length
   sl = new gwSlider(this,20,20,300);
   
@@ -86,3 +86,6 @@ void draw() {
 void handleSliderEvents(gwSlider slider) {
 	println("integer value:" + slider.getValue() + " float value:" + slider.getValuef());
 }
+
+// this is added only to suppress a warning from the G4P library
+void handleSliderEvents(GSlider slider) {}

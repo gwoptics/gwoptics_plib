@@ -1,3 +1,9 @@
+/**
+ * Basic
+ * This sketch demonstartes the basic use of the SurfaceGraph3D object.
+ * 
+ */
+
 import org.gwoptics.graphics.*;
 import org.gwoptics.graphics.camera.*;
 import org.gwoptics.graphics.graph3D.*;
@@ -16,14 +22,14 @@ class standingWave implements IGraph3DCallback{
 standingWave gcb = new standingWave();
 
 void setup() {
-  size(800, 800, P3D); //Use P3D for now, openGl seems to have some issues
+  size(800, 800, P3D); 
   frameRate(10);
   cam = new Camera3D(this);
   PVector cam_pos = new PVector(0f,540f,-10f);
   cam.setPosition(cam_pos);
 
-  // constructor arguments are:
-  // (PApplet parent, float xLength, float yLength, float zLength)
+  // Constructor arguments are:
+  // PApplet parent, float xLength, float yLength, float zLength
   // (z axis will be switched off if length is given as 0)
   g3d = new SurfaceGraph3D(this, 250, 250,0);		
   g3d.setXAxisMin(-2);		
@@ -35,13 +41,12 @@ void setup() {
   g3d.setXAxisLabelType(ValueType.DECIMAL);
   g3d.setYAxisLabelType(ValueType.DECIMAL);
   
-  //There are several colourmap presets to try such as: HotColourmap, WarmColourmap or
+  // There are several colourmap presets to try such as: HotColourmap, WarmColourmap or
   // GrayScaleColourmap
   g3d.addSurfaceTrace(gcb, 100, 100, new FlipColourmap(true));
 }
 
 void draw() {
-
   g3d.plotSurfaceTrace(0);
   background(204);
   pushMatrix();

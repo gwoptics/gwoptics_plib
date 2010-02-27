@@ -1,5 +1,6 @@
 /**
- *  this is sketch that uses the Graph2D object from the library.
+ *  Basic2
+ *  This is sketch that uses the Graph2D object from the library.
  *  It plots two functions, and shows how some more
  *  methods available to alter the graph
  **/
@@ -13,7 +14,7 @@ Graph2D g;
 
 /**
  *  Equations that are to be plot must be encapsulated into a 
- * class implementing the IGraph2DCallback interface.
+ *  class implementing the IGraph2DCallback interface.
  **/
 public class eq1 implements ILine2DEquation{
   public double computePoint(double x,int pos) {

@@ -1,3 +1,8 @@
+/**
+ * SquareMesh
+ * A very simple demostration of mesh on a square grid.
+ */
+
 import org.gwoptics.graphics.graph3D.SquareGridMesh;
 import org.gwoptics.graphics.camera.Camera3D;
 

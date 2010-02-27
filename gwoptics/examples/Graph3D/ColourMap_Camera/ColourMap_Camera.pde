@@ -1,4 +1,8 @@
-
+/**
+ * ColourMap_Camera
+ * This sketch demontrates how to use a simple camera object and Colourmap
+ * presets.
+ */
 import org.gwoptics.graphics.graph3D.*;
 import org.gwoptics.graphics.*;
 import org.gwoptics.graphics.colourmap.presets.*;

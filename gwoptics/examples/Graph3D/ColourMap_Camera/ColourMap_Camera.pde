@@ -23,7 +23,7 @@ IGraph3DCallback gcb = new IGraph3DCallback(){
 };
 
 void setup() {
-  size(800, 800, P3D); 
+  size(500, 500, P3D); 
 
   g3 = (PGraphics3D) g; 
 

@@ -21,38 +21,118 @@
 
 package org.gwoptics.gui.button;
 
-import guicomponents.GButton;
-//import guicomponents.*;
+import java.awt.Point;
+
+import guicomponents.*;
 
 import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.IRenderable;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 
 /**
- * Simple GButton extension to get around restrictive GCSchemes that set colours. The only way I could
- * find otherwise is rebuild the G4P library with custom scheme which is a pain.
+ * Simple GButton extension to allow you to alter the border colours without needing
+ * to create a GScheme.
+ * 
+ * Update to 1.3 G4P library. col variable is nolonger being used by GButton so had to
+ * update to using the localColor.
+ * 
+ * Also added functionality to use 3 different button images for normal, over and pressed
+ * statuses.
  * 
  * @author Daniel Brown 1/7/09
  * @since 0.3.7
- *
  */
 public class gwButton extends GButton implements IRenderable {
 
+	public enum gwButtonMode{
+		PLAIN_COLOURS,
+		IMAGES		
+	}
+	
+	private boolean _drawImages;
+	private PImage _imgOver,_imgNorm,_imgPress;
+	
 	public gwButton(PApplet theApplet, String text, int x, int y, int width,int height) {
 		super(theApplet, text, x, y, width, height);
+		_drawImages = false;
 	}
 	
 	public void setColours(GWColour normal, GWColour mouseOver, GWColour pressed){
-		this.col[0] = normal.toInt();
-		this.col[1] = mouseOver.toInt();
-		this.col[2] = pressed.toInt();
+		localColor.btnOff = normal.toInt();
+		localColor.btnOver = mouseOver.toInt();
+		localColor.btnDown = pressed.toInt();
+		localColor.btnDown = pressed.toInt();
 	}
 
+	public void setImages(PImage imgNormal, PImage imgOver, PImage imgPressed){
+		if(imgNormal == null) throw new RuntimeException("Normal button image cannot be null");
+		if(imgOver == null) throw new RuntimeException("Over button image cannot be null");
+		if(imgPressed == null) throw new RuntimeException("Pressed button image cannot be null");
+		
+		_imgNorm = imgNormal;
+		_imgOver = imgOver;
+		_imgPress = imgPressed;
+	}
+	
+	public void setButtonMode(gwButtonMode mode){_drawImages = (mode == gwButtonMode.IMAGES);}
+	
 	public void setParent(PApplet parent){
 		if(winApp != null)
 			throw new RuntimeException("Parent object has already been set.");
 		
 		winApp = parent;
+	}
+	
+	public void draw(){
+		if(!visible) return;
+		winApp.pushStyle();
+		//winApp.style(G4P.g4pStyle);
+		Point pos = new Point(0,0);
+		calcAbsPosition(pos);
+		
+		if(_drawImages){
+			switch(status){
+			case 0:
+				winApp.image(_imgNorm,pos.x,pos.y,width,height);
+				break;
+			case 1:
+				winApp.image(_imgOver,pos.x,pos.y,width,height);
+				break;
+			case 2:
+				winApp.image(_imgPress,pos.x,pos.y,width,height);
+				break;
+			}
+		}else{
+			switch(status){
+			case 0:
+				winApp.fill(localColor.btnOff);
+				break;
+			case 1:
+				winApp.fill(localColor.btnOver);
+				break;
+			case 2:
+				winApp.fill(localColor.btnDown);
+				break;
+			}
+
+			// Draw button rectangle
+			winApp.strokeWeight(1);
+			winApp.stroke(localColor.btnBorder);
+			winApp.rect(pos.x,pos.y,width,height);
+			
+			// Draw image
+			if(bimage[status] != null){
+				winApp.image(bimage[status], pos.x + imgAlignX, pos.y+(height-bimage[status].height)/2);
+			}
+		}	
+		
+		// Draw text
+		winApp.noStroke();
+		winApp.fill(localColor.btnFont);
+		winApp.textFont(localFont, localFont.size);
+		winApp.text(text, pos.x + alignX, pos.y + (height - localFont.size)/2 - PADV, width, height);
+		winApp.popStyle();
 	}
 }

@@ -234,7 +234,8 @@ public class RollingLine2DTrace extends Line2DTrace{
 		
 		if(startPos >= _eqDataX.length)
 			throw new RuntimeException("The RollingGraphTrace is moving too fast to" +
-					" process. Either reduce the tick increase rate or increase the" +
+					" process. Eit" +
+					" her reduce the tick increase rate or increase the" +
 					" range of the X-Axis on the graph.");
 		
 		int lastPosChange = startPos - _ax.valueToPosition(_eqDataX[startPos]);

@@ -130,8 +130,7 @@ public class Axis2D extends Renderable implements PConstants  {
 	/** Sets the label of the axis */
 	public void setAxisLabel(String lbl) {_label = lbl;}
     /** Sets the position of the axis label along the axis 
-     * @param lblpos position can be START, MIDDLE, END or OUTSIDE
-     */
+     * @param lblpos position can be START, MIDDLE, END or OUTSIDE*/
 	public void setAxisLabelPos(LabelPos lblpos) {_axisLblPos=lblpos;}
 	/** Sets an offset that is to be applied to the axis label.
 	 * 	This offset is applied in the direction of the ticks away

@@ -72,12 +72,12 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 			_backBuffer.beginDraw();
 			
 			Axis2D ax = _graphDrawable.getXAxis();
-			Axis2D ay = _graphDrawable.getYAxis();
+			Axis2D ay = _graphDrawable.getYAxis();		
 			
-			float xPos = PApplet.constrain(ax.valueToPosition(0), 0, ax.getLength());
-			float yPos = PApplet.constrain(ay.valueToPosition(0), 0, ay.getLength());
+			float xoff = ax.valueToPosition(0);
+			float yoff = _backBuffer.height - ay.valueToPosition(0);
 			
-			_backBuffer.translate(xPos, _backBuffer.height - yPos);
+			_backBuffer.translate(xoff, yoff);
 			
 			_backBuffer.pushMatrix();
 			
@@ -85,7 +85,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 			float yscale = (float)ay.getLength()/(ay.getMaxValue() - ay.getMinValue());
 			
 			_backBuffer.scale(xscale, -yscale);
-			_backBuffer.background(200);
+			_backBuffer.background(0,0,0,0);
 			
 			TraceDraw(_backBuffer);
 			
@@ -95,6 +95,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 			_traceImg = _backBuffer.get(0, 0, 
 										_backBuffer.width, 
 										_backBuffer.height);
+			_redraw = false;
 		}
 		
 		_parent.image(_traceImg,0,-_backBuffer.height);

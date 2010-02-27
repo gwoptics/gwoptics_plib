@@ -125,6 +125,11 @@ public final class SurfaceGraph3D extends Renderable {
 	private float _xLength;
 	private float _zLength;
 	private float _yLength;
+	
+	private boolean _drawXAxis;
+	private boolean _drawYAxis;
+	private boolean _drawZAxis;
+	
 	private int _autoRangeSurfaceIX;
 	private boolean _setAxisCrossAtZero;
 
@@ -215,17 +220,13 @@ public final class SurfaceGraph3D extends Renderable {
 		_ay.setMajorTicks(n);
 	}
 
-	public void setYAxisMinorTicks(int n) {
-		_ay.setMinorTicks(n);
-	}
-
-	public void setZAxisMajorTicks(int n) {
-		_az.setMajorTicks(n);
-	}
-
-	public void setZAxisMinorTicks(int n) {
-		_az.setMinorTicks(n);
-	}
+	public void setYAxisMinorTicks(int n) {_ay.setMinorTicks(n);}
+	public void setZAxisMajorTicks(int n) {	_az.setMajorTicks(n);}
+	public void setZAxisMinorTicks(int n) {_az.setMinorTicks(n);}
+	
+	public void setDrawXAxis(boolean val){_drawXAxis = val;}
+	public void setDrawYAxis(boolean val){_drawYAxis = val;}
+	public void setDrawZAxis(boolean val){_drawZAxis = val;}
 
 	public void setBillboarding(boolean value) {
 		_ax.setTickLabelBillboarding(value);
@@ -364,6 +365,8 @@ public final class SurfaceGraph3D extends Renderable {
 		_ax = new Axis3D(_parent);
 		_ay = new Axis3D(_parent);
 
+		_drawXAxis = _drawYAxis = _drawZAxis = true;
+		
 		if (xLength < 1) {
 			_xLength = 1;
 			_ax.setDraw(false);

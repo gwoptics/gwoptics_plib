@@ -1,5 +1,5 @@
 /**
- * BlankCanvas1
+ * Basic Sprial
  * The Blank2DTrace onject can be used to draw more generally in
  * a Graph2D envirmonment, i.e. not using functions. This example
  * shows how to draw a parametric sprial.
@@ -35,7 +35,7 @@ spiralTrace r;
 Graph2D g;
 
 void setup(){
-	size(600,600);
+	size(600,500);
 	
 	r  = new spiralTrace();
 	 
@@ -48,10 +48,10 @@ void setup(){
 	g.setYAxisTickSpacing(2f);
 	g.setXAxisTickSpacing(2f);
 
-	g.setYAxisMin(-5f);
-	g.setYAxisMax(5f);
-	g.setXAxisMin(-5f);
-	g.setXAxisMax(5f);
+	g.setYAxisMin(-10f);
+	g.setYAxisMax(-5f);
+	g.setXAxisMin(-10f);
+	g.setXAxisMax(10f);
 	
 	g.addTrace(r);
 }

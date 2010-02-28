@@ -22,7 +22,7 @@
 package org.gwoptics.GaussBeams;
 
 import org.gwoptics.mathutils.Complex;
-import org.gwoptics.mathutils.MathUtils;
+import org.gwoptics.mathutils.mathUtils;
 
 /**
  * Gaussmode is a class that provides the mathematical framework for Gaussian beams.
@@ -492,8 +492,8 @@ public class GaussMode {
 		w = w_size(q, _lambda, _nr);
 		Double a1 = 0.893243841738002308794364125788; // (2/pi)^1/4
 		factor = a1
-				/ Math.sqrt(Math.pow(2, n) * MathUtils.factorial(n) * w)
-				* MathUtils.hermite(n, Math.sqrt(2) * x
+				/ Math.sqrt(Math.pow(2, n) * mathUtils.factorial(n) * w)
+				* mathUtils.hermite(n, Math.sqrt(2) * x
 						/ w_size(q, _lambda, _nr));
 		factor *= Math.exp(-1.0 * x * x / (w * w));
 		return (factor);
@@ -543,9 +543,9 @@ public class GaussMode {
 		Double k = 2.0d * Math.PI / _lambda * _nr;
 
 		factor = a1
-				/ Math.sqrt(Math.pow(2, n) * MathUtils.factorial(n)
+				/ Math.sqrt(Math.pow(2, n) * mathUtils.factorial(n)
 						* w0_size(q, _lambda, _nr))
-				* MathUtils.hermite(n, Math.sqrt(2) * x
+				* mathUtils.hermite(n, Math.sqrt(2) * x
 						/ w_size(q, _lambda, _nr));
 
 		z1 = Complex.sqrt(Complex.divide(q0(q), q));
@@ -602,13 +602,13 @@ public class GaussMode {
 		Double q_abs = Complex.absSquared(q);
 		Double expFactor = -0.5 * k * r * r;
 
-		Double factor = Math.sqrt(2 * MathUtils.factorial(p)
-				/ (Math.PI * MathUtils.factorial(l_abs + p)))
+		Double factor = Math.sqrt(2 * mathUtils.factorial(p)
+				/ (Math.PI * mathUtils.factorial(l_abs + p)))
 				/ w;
 		Double Gouyphase = (2 * p + l_abs + 1) * psi;
 		Double AmpPattern = Math.exp(expFactor * q.imag() / q_abs)
 				* Math.pow(sr, l_abs)
-				* MathUtils.laguerre(p, l_abs, sr * sr);
+				* mathUtils.laguerre(p, l_abs, sr * sr);
 		Double Spiral = l * phi;
 		Double Sphere = expFactor * q.real() / q_abs;
 		return Complex.newAbsPhi(factor * AmpPattern, Gouyphase + Sphere + Spiral);
@@ -657,12 +657,12 @@ public class GaussMode {
 		Double sr = Math.sqrt(2) * r / w;
 		Double q_abs = Complex.absSquared(q);
 		Double expFactor = -0.5 * k * r * r;
-		Double factor = Math.sqrt(2 * MathUtils.factorial(p)
-				/ (Math.PI * MathUtils.factorial(l_abs + p)))
+		Double factor = Math.sqrt(2 * mathUtils.factorial(p)
+				/ (Math.PI * mathUtils.factorial(l_abs + p)))
 				/ w;		
 		Double AmpPattern = Math.exp(expFactor * q.imag() / q_abs)
 				* Math.pow(sr, l_abs)
-				* MathUtils.laguerre(p, l_abs, sr * sr);	
+				* mathUtils.laguerre(p, l_abs, sr * sr);	
 		return factor * AmpPattern;
 	}
 	
@@ -709,13 +709,13 @@ public class GaussMode {
 		Double q_abs = Complex.absSquared(q);
 		Double expFactor = -0.5 * k * r * r;
 
-		Double factor = Math.sqrt(2 * MathUtils.factorial(p)
-				/ (Math.PI * MathUtils.factorial(l_abs + p)))
+		Double factor = Math.sqrt(2 * mathUtils.factorial(p)
+				/ (Math.PI * mathUtils.factorial(l_abs + p)))
 				/ w;
 		Double Gouyphase = (2 * p + l_abs + 1) * psi;
 		Double AmpPattern = Math.exp(expFactor * q.imag() / q_abs)
 				* Math.pow(sr, l_abs)
-				* MathUtils.laguerre(p, l_abs, sr * sr);
+				* mathUtils.laguerre(p, l_abs, sr * sr);
 		Double Spiral = l * phi;
 		Double Sphere = expFactor * q.real() / q_abs;
 		return Complex.newAbsPhi(factor * AmpPattern * Math.cos(Spiral), Gouyphase + Sphere);
@@ -761,12 +761,12 @@ public class GaussMode {
 		Double sr = Math.sqrt(2) * r / w;
 		Double q_abs = Complex.absSquared(q);
 		Double expFactor = -0.5 * k * r * r;
-		Double factor = Math.sqrt(2 * MathUtils.factorial(p)
-				/ (Math.PI * MathUtils.factorial(l_abs + p)))
+		Double factor = Math.sqrt(2 * mathUtils.factorial(p)
+				/ (Math.PI * mathUtils.factorial(l_abs + p)))
 				/ w;		
 		Double AmpPattern = Math.exp(expFactor * q.imag() / q_abs)
 				* Math.pow(sr, l_abs)
-				* MathUtils.laguerre(p, l_abs, sr * sr);	
+				* mathUtils.laguerre(p, l_abs, sr * sr);	
 		Double Spiral = l * phi;
 		return factor * AmpPattern * Math.cos(Spiral);
 	}

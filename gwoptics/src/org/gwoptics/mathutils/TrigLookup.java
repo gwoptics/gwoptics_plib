@@ -19,7 +19,7 @@
  *  Suite 330, Boston, MA 02111-1307 USA 
  */
 
-package org.gwoptics.MathUtils;
+package org.gwoptics.mathutils;
 
 /**
  * This class provides access to a much faster version of the cos and sin functions.

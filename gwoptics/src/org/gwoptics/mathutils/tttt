@@ -19,7 +19,7 @@
  *  Suite 330, Boston, MA 02111-1307 USA 
  */
 
-package org.gwoptics.MathUtils;
+package org.gwoptics.mathutils;
 
 //Todo: create factorial LUT, test speed against logFactorial.
 
@@ -33,7 +33,7 @@ package org.gwoptics.MathUtils;
  * @author Andreas Freise 05/6/2009
  * @since 0.1.1
  */
-public final class MathUtils {
+public final class mathUtils {
 	
 	/**
 	 * This function computes the factorial of an long integer
@@ -277,7 +277,7 @@ public final class MathUtils {
 			if (k<=n && k>=0){
 				return Math.round(Math.exp(logFactorial(n) - logFactorial(k) - logFactorial(n - k)));
 			}else {
-				return Math.round(MathUtils.gamma(n+1) / (gamma(k+1) / gamma(n-k+1)));
+				return Math.round(mathUtils.gamma(n+1) / (gamma(k+1) / gamma(n-k+1)));
 			}	
 		}	
 	}
@@ -349,7 +349,7 @@ public final class MathUtils {
 		
 		for (int j = 0; j <= p; j++) {
 			// TODO replace factorial by round(exp(logFactorial()))??
-			L += MathUtils.binomial(l + p, p - j) / (double) MathUtils.factorial(j) * Math.pow(-x, j);
+			L += mathUtils.binomial(l + p, p - j) / (double) mathUtils.factorial(j) * Math.pow(-x, j);
 		}
 		
 		return L;

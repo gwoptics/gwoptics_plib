@@ -19,7 +19,7 @@
  *  Suite 330, Boston, MA 02111-1307 USA 
  */
 
-package org.gwoptics.GaussBeams;
+package org.gwoptics.gaussbeams;
 
 import org.gwoptics.mathutils.Complex;
 import org.gwoptics.mathutils.mathUtils;

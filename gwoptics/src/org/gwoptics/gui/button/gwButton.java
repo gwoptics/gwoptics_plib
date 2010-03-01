@@ -80,54 +80,54 @@ public class gwButton extends GButton implements IRenderable {
 		winApp = parent;
 	}
 	
-public void draw(){
-	if(!visible) return;
-	winApp.pushStyle();
-	//winApp.style(G4P.g4pStyle);
-Point pos = new Point(0,0);
-calcAbsPosition(pos);
-
-if(_drawImages){
-	switch(status){
-	case 0:
-		winApp.image(_imgNorm,pos.x,pos.y,width,height);
-		break;
-	case 1:
-		winApp.image(_imgOver,pos.x,pos.y,width,height);
-		break;
-	case 2:
-		winApp.image(_imgPress,pos.x,pos.y,width,height);
-		break;
+	public void draw(){
+		if(!visible) return;
+		winApp.pushStyle();
+		//winApp.style(G4P.g4pStyle);
+		Point pos = new Point(0,0);
+		calcAbsPosition(pos);
+		
+		if(_drawImages){
+			switch(status){
+				case 0:
+					winApp.image(_imgNorm,pos.x,pos.y,width,height);
+					break;
+				case 1:
+					winApp.image(_imgOver,pos.x,pos.y,width,height);
+					break;
+				case 2:
+					winApp.image(_imgPress,pos.x,pos.y,width,height);
+					break;
+				}
+			}else{
+				switch(status){
+				case 0:
+					winApp.fill(localColor.btnOff);
+					break;
+				case 1:
+					winApp.fill(localColor.btnOver);
+					break;
+				case 2:
+					winApp.fill(localColor.btnDown);
+					break;
+			}
+		
+			// Draw button rectangle
+			winApp.strokeWeight(1);
+			winApp.stroke(localColor.btnBorder);
+			winApp.rect(pos.x,pos.y,width,height);
+			
+			// Draw image
+			if(bimage[status] != null){
+				winApp.image(bimage[status], pos.x + imgAlignX, pos.y+(height-bimage[status].height)/2);
+			}
+		}	
+		
+		// Draw text
+		winApp.noStroke();
+		winApp.fill(localColor.btnFont);
+		winApp.textFont(localFont, localFont.size);
+		winApp.text(text, pos.x, pos.y + (height - localFont.size)/2 - PADV, width, height);
+		winApp.popStyle();
 	}
-}else{
-	switch(status){
-	case 0:
-		winApp.fill(localColor.btnOff);
-		break;
-	case 1:
-		winApp.fill(localColor.btnOver);
-		break;
-	case 2:
-		winApp.fill(localColor.btnDown);
-		break;
-	}
-
-	// Draw button rectangle
-winApp.strokeWeight(1);
-winApp.stroke(localColor.btnBorder);
-winApp.rect(pos.x,pos.y,width,height);
-
-// Draw image
-	if(bimage[status] != null){
-		winApp.image(bimage[status], pos.x + imgAlignX, pos.y+(height-bimage[status].height)/2);
-	}
-}	
-
-// Draw text
-	winApp.noStroke();
-	winApp.fill(localColor.btnFont);
-	winApp.textFont(localFont, localFont.size);
-	winApp.text(text, pos.x + alignX, pos.y + (height - localFont.size)/2 - PADV, width, height);
-	winApp.popStyle();
-}
 }

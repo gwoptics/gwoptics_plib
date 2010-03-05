@@ -10,6 +10,7 @@
  */
 
 import org.gwoptics.gui.slider.*;
+import guicomponents.G4P;
 import guicomponents.GSlider;
 import org.gwoptics.ValueType;
 
@@ -17,6 +18,9 @@ gwSlider sl,sl1,sl2,sl3,sl4,sl5;
 
 void setup() {
   size(350, 430);  
+  
+  // Disable G4P warning messages.
+  G4P.messagesEnabled(false);
   
   // Simple default slider,
   // constructor is `Parent applet', the x, y position and length
@@ -86,6 +90,3 @@ void draw() {
 void handleSliderEvents(gwSlider slider) {
 	println("integer value:" + slider.getValue() + " float value:" + slider.getValuef());
 }
-
-// this is added only to suppress a warning from the G4P library
-void handleSliderEvents(GSlider slider) {}

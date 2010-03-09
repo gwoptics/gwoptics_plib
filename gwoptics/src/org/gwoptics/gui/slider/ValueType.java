@@ -21,6 +21,12 @@
 
 package org.gwoptics.gui.slider;
 
+
+// **********************************************************************
+// This one is not used by any classes in the library the one used is
+// org.gwoptics.ValueType
+// **********************************************************************
+
 public enum ValueType {
 	INTEGER,
 	DECIMAL,

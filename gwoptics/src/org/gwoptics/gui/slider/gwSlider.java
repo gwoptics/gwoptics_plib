@@ -120,7 +120,7 @@ import processing.core.PImage;
  * @since 0.3.0
  *
  */
-public class gwSlider extends GSlider implements IRenderable {
+public class gwSlider extends GSlider { //implements IRenderable {
 
 	public String unit;
 	

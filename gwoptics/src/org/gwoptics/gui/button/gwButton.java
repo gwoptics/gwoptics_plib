@@ -44,7 +44,7 @@ import processing.core.PImage;
  * @author Daniel Brown 1/7/09
  * @since 0.3.7
  */
-public class gwButton extends GButton implements IRenderable {
+public class gwButton extends GButton { //implements IRenderable {
 	
 	private boolean _drawImages;
 	private PImage _imgOver,_imgNorm,_imgPress;

@@ -1,24 +1,3 @@
-/**
- *  Copyright notice
- *  
- *  This file is part of the Processing library `gwoptics' 
- *  http://www.gwoptics.org/processing/gwoptics_p5lib/
- *  
- *  Copyright (C) 2009 onwards Daniel Brown and Andreas Freise
- *  
- *  This library is free software; you can redistribute it and/or modify it under 
- *  the terms of the GNU Lesser General Public License version 2.1 as published 
- *  by the Free Software Foundation.
- *  
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public License along with 
- *  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, 
- *  Suite 330, Boston, MA 02111-1307 USA 
- */
-
 package org.gwoptics.graphics;
 
 import processing.core.PApplet;
@@ -31,7 +10,6 @@ import processing.core.PApplet;
  * 
  * @author Daniel Brown 12/6/09
  * @since 0.1.1
- *
  */
 public final class GWColour{
 	public float A;
@@ -39,6 +17,9 @@ public final class GWColour{
 	public float G;
 	public float B;
 	
+	/**
+	 * Default GWColour constructor assign a black colour with full opactiy 
+	 */
 	public GWColour(){
 		A = 1;
 		R = 0;
@@ -47,7 +28,17 @@ public final class GWColour{
 	}
 	
 	/**
-	 * Colour constructor allowing user defined RGB values. Values should be between 0.0f and 1.0f.
+	 * GWColour constructor accepting an integer representing the A, R, G and B components of a colour
+	 */
+	public GWColour(int colour){
+		B = (colour & 0xFF)/255f;
+		G = ((colour >> 8)& 0xFF)/255f;
+		R = ((colour >> 16)& 0xFF)/255f;
+		A = ((colour >> 24)& 0xFF)/255f;
+	}
+	
+	/**
+	 * GWColour constructor allowing user defined RGB values. Values should be between 0.0f and 1.0f.
 	 * 
 	 * @param Red Red value between 0.0f and 1.0f.
 	 * @param Green Green value between 0.0f and 1.0f.
@@ -60,6 +51,14 @@ public final class GWColour{
 		B = PApplet.constrain(Blue, 0f, 1f);
 	}
 	
+	/**
+	 * Colour constructor allowing user defined RGB values. Values should be between 0.0f and 1.0f.
+	 * 
+	 * @param Alpha Alpha value between 0.0f and 1.0f.
+	 * @param Red Red value between 0.0f and 1.0f.
+	 * @param Green Green value between 0.0f and 1.0f.
+	 * @param Blue Blue value between 0.0f and 1.0f.
+	 */
 	public GWColour(float Alpha, float Red, float Green, float Blue){
 		A = PApplet.constrain(Alpha, 0f, 1f);;
 		R = PApplet.constrain(Red, 0f, 1f);

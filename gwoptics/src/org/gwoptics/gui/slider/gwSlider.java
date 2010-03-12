@@ -145,6 +145,7 @@ public class gwSlider extends GSlider { //implements IRenderable {
 	protected float[] _tickValues;
 	protected GWColour _tickColour;	
 	protected GWColour _fontColour;	
+	protected int _currTickStuck; //Index of current index stuck to 
 	
 	protected float init;
 	protected float maxValue;
@@ -447,8 +448,8 @@ public class gwSlider extends GSlider { //implements IRenderable {
 		float dTick = sliderRange / _numTicks; //distance in terms of value
 		
 		int index = Math.round(PApplet.constrain(v, minValue, maxValue) / dTick);
-		index = PApplet.constrain(index, 0, _tickPositions.length-1);
-		thumbTargetPos = _tickPositions[index];
+		_currTickStuck = PApplet.constrain(index, 0, _tickPositions.length-1);
+		thumbTargetPos = _tickPositions[_currTickStuck];
 	}
 	
 	/**
@@ -465,8 +466,8 @@ public class gwSlider extends GSlider { //implements IRenderable {
 		float v = PApplet.map(pos, thumbMin, thumbMax, minValue, maxValue);
 		
 		int index = Math.round((v - minValue) / dTick);
-		index = PApplet.constrain(index, 0, _tickPositions.length-1);
-		thumbTargetPos = _tickPositions[index];
+		_currTickStuck = PApplet.constrain(index, 0, _tickPositions.length-1);
+		thumbTargetPos = _tickPositions[_currTickStuck];
 	}
 		
 	
@@ -540,9 +541,19 @@ public class gwSlider extends GSlider { //implements IRenderable {
 	public void keyEvent(KeyEvent e){
 		if(e.getID() == KeyEvent.KEY_PRESSED && this.hasFocus()){
 			if(e.getKeyCode()== 37){ //left arrow
-				thumbTargetPos = PApplet.constrain(thumbTargetPos - 1,thumbMin,thumbMax);
+				if(_stickToTicks){			
+					_currTickStuck = PApplet.constrain(_currTickStuck - 1, 0, _tickPositions.length-1);
+					thumbTargetPos = _tickPositions[_currTickStuck];
+				}else
+					thumbTargetPos = PApplet.constrain(thumbTargetPos - 1,thumbMin,thumbMax);
+				
 			}else if(e.getKeyCode()== 39){ //right arrow
-				thumbTargetPos = PApplet.constrain(thumbTargetPos + 1,thumbMin,thumbMax);
+				if(_stickToTicks){
+					_currTickStuck = PApplet.constrain(_currTickStuck + 1, 0, _tickPositions.length-1);
+					thumbTargetPos = _tickPositions[_currTickStuck];
+				}else
+					thumbTargetPos = PApplet.constrain(thumbTargetPos + 1,thumbMin,thumbMax);
+				
 			}
 		}
 	}

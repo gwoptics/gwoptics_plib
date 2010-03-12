@@ -1,24 +1,3 @@
-/**
- *  Copyright notice
- *  
- *  This file is part of the Processing library `gwoptics' 
- *  http://www.gwoptics.org/processing/gwoptics_p5lib/
- *  
- *  Copyright (C) 2009 onwards Daniel Brown and Andreas Freise
- *  
- *  This library is free software; you can redistribute it and/or modify it under 
- *  the terms of the GNU Lesser General Public License version 2.1 as published 
- *  by the Free Software Foundation.
- *  
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details.
- *  
- *  You should have received a copy of the GNU Lesser General Public License along with 
- *  this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, 
- *  Suite 330, Boston, MA 02111-1307 USA 
- */
-
 package org.gwoptics.graphics.graph2D.traces;
 
 import org.gwoptics.graphics.IRenderable;
@@ -42,12 +21,6 @@ import org.gwoptics.graphics.graph2D.effects.ITraceColourEffect;
  * use this effect object to determine the colour of the trace at given points.
  * </p>
  * 
- * <p>
- * Removed  setEquationCallback(ILine2DEquation equation) as a IGraph2DTrace is not necessarily a line
- * trace, could be area, pie, etc etc. Removed setTraceColour(int R, int G, int B), setTraceEffect(ITraceColourEffect effect) 
- * and RemoveEffect() as these are again not applicable to all types of trace
- * </p>
- * 
  * @author Daniel Brown 13/7/09
  * @since 0.4.0
  * @see ITraceColourEffect
@@ -59,29 +32,25 @@ public interface IGraph2DTrace extends IRenderable {
 	void setGraph(IGraph2D grp);
 	/** This is called everytime the equation callback object is changed. */
 	void generate();
-	
-	/* provides an object implementing the ILineEquation interface, this is stored
-	  and called to generate the trace points.	 
-	void setEquationCallback(ILine2DEquation equation);*/
-	
+	/** provides an object implementing the ILineEquation interface, this is stored
+	 * and called to generate the trace points.	 */
+	void setEquationCallback(ILine2DEquation equation);
 	/** alters the initial position of the trace on the graph */
 	void setPosition(int x, int y);
-	
-	/* If no effect is applied this is the solid colour of the trace.
-	void setTraceColour(int R, int G, int B);*/
-	/* Provides an object that implements the ITraceColourEffect interface. This object
+	/** If no effect is applied this is the solid colour of the trace.*/
+	void setTraceColour(int R, int G, int B);
+	/** Provides an object that implements the ITraceColourEffect interface. This object
 	 * returns a colour value for each point on the trace and allows for more interesting
-	 * effects to be applied 
-	void setTraceEffect(ITraceColourEffect effect);*/
-	/* Should remove any ITraceColourEffect's applied to the trace.
-	void removeEffect();*/
-	
+	 * effects to be applied */
+	void setTraceEffect(ITraceColourEffect effect);
+	/** Should remove any ITraceColourEffect's applied to the trace.*/
+	void removeEffect();
 	/**<p>
 	 * Before the trace is added to the graph control this method is called. It allows a
 	 * trace to check the settings of other traces that have previously been added for in
 	 * Compatibilities. Leave method empty in implementation if no checks are necessary.
 	 * </p>
-	 * <p>
+	 * <p>w
 	 * onAddTrace is called from with a synchronised lock so the traces object won't
 	 * be modified whilst reading it. Therefore it is not necessary to provide custom thread
 	 * locks.  

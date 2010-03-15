@@ -255,7 +255,10 @@ public class Axis2D extends Renderable implements PConstants  {
 		parent.registerPre(this);
 		
 		if(_font == null) {//Font is a static member so only load if noone has before
-			_font = parent.loadFont("Arial-BoldMT-12.vlw");
+			// adf 150310 changed to createFont because loadFont would not work with
+			// getFont().getSize() below
+			//_font = parent.loadFont("Arial-BoldMT-12.vlw");
+			_font = parent.createFont("Arial-BoldMT",12);
 		}
 	}	
 	
@@ -481,7 +484,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		//move into a local space about the label centre so we can easily rotate it
 		_parent.translate(lblPos.x, lblPos.y);						
 		_parent.rotate(_axisLblRotation);
-		_parent.text(String.valueOf(_label), 0, 0.25f * _font.size, 0);
+		_parent.text(String.valueOf(_label), 0, 0.25f * _font.getFont().getSize(), 0);
 		_parent.popMatrix();
 	}
 }

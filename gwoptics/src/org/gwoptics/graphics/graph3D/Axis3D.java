@@ -269,7 +269,10 @@ public class Axis3D extends Renderable implements PConstants {
 
 		if (_font == null) {// Font is a static member so only load if noone has
 							// before
-			_font = parent.loadFont("Verdana72.vlw");
+			// adf 150310 changed to createFont because loadFont would not work with
+			// getFont().getSize() below
+			_font = parent.createFont("Verdana",72);
+			//_font = parent.loadFont("Verdana72.vlw");
 			// _font = parent.loadFont("CourierNew36.vlw");
 		}
 	}
@@ -408,7 +411,7 @@ public class Axis3D extends Renderable implements PConstants {
 						_parent.rotateY(_axisTickLblRotation.y);
 					}
 
-					_parent.text(tickLbl, 0, (0.25f * _font.size), 0);
+					_parent.text(tickLbl, 0, (0.25f * _font.getFont().getSize()), 0);
 					_parent.popMatrix();
 				}
 
@@ -471,7 +474,7 @@ public class Axis3D extends Renderable implements PConstants {
 			_parent.rotateX(_axisLblRotation.x);
 			_parent.rotateY(_axisLblRotation.y);
 
-			_parent.text(String.valueOf(_label), 0, 0.25f * _font.size, 0);
+			_parent.text(String.valueOf(_label), 0, 0.25f * _font.getFont().getSize(), 0);
 			_parent.popMatrix();
 		}
 

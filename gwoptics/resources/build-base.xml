@@ -115,9 +115,7 @@
   	<mkdir dir="${dist}/examples" />
   	<mkdir dir="${dist}/reference" />
   	<mkdir dir="${dist}/src" />
-  	
-  	
-  	  	
+  	  	  	
   	<jar jarfile="${dist}/library/${jarFile}" basedir="${bin}">
 		<manifest>
 	      <attribute name="Implementation-Version" value="${versionNumber}"/> 
@@ -133,6 +131,8 @@
   	<copy todir="${dist}/src">
   		<fileset dir="src"/>
   	</copy> 
+
+  	
   	
 	<!-- create the java reference of the library -->
  	<mkdir dir="${reference}" />

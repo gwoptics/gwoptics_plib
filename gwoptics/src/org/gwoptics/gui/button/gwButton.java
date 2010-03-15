@@ -26,7 +26,7 @@ import java.awt.Point;
 import guicomponents.*;
 
 import org.gwoptics.graphics.GWColour;
-import org.gwoptics.graphics.IRenderable;
+//import org.gwoptics.graphics.IRenderable;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -126,8 +126,8 @@ public class gwButton extends GButton { //implements IRenderable {
 		// Draw text
 		winApp.noStroke();
 		winApp.fill(localColor.btnFont);
-		winApp.textFont(localFont, localFont.size);
-		winApp.text(text, pos.x, pos.y + (height - localFont.size)/2 - PADV, width, height);
+		winApp.textFont(localFont, localFont.getFont().getSize());
+		winApp.text(text, pos.x, pos.y + (height - localFont.getFont().getSize())/2 - PADV, width, height);
 		winApp.popStyle();
 	}
 }

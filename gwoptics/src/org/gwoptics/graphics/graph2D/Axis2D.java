@@ -259,8 +259,9 @@ public class Axis2D extends Renderable implements PConstants  {
 			// getFont().getSize() below
 			//_font = parent.loadFont("Arial-BoldMT-12.vlw");
 			_font = parent.createFont("Arial-BoldMT",12);
+			}
 		}
-	}	
+
 	
 	public void pre(){
 		if(_generateTicks){

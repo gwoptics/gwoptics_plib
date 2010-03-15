@@ -49,7 +49,7 @@ void setup(){
 	g.setXAxisTickSpacing(2f);
 
 	g.setYAxisMin(-10f);
-	g.setYAxisMax(-5f);
+	g.setYAxisMax(5f);
 	g.setXAxisMin(-10f);
 	g.setXAxisMax(10f);
 	

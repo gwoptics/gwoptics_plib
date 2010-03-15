@@ -55,17 +55,17 @@ public interface IGraph2DTrace extends IRenderable {
 	void generate();
 	/** provides an object implementing the ILineEquation interface, this is stored
 	 * and called to generate the trace points.	 */
-	void setEquationCallback(ILine2DEquation equation);
+	//void setEquationCallback(ILine2DEquation equation);
 	/** alters the initial position of the trace on the graph */
 	void setPosition(int x, int y);
 	/** If no effect is applied this is the solid colour of the trace.*/
-	void setTraceColour(int R, int G, int B);
+	//void setTraceColour(int R, int G, int B);
 	/** Provides an object that implements the ITraceColourEffect interface. This object
 	 * returns a colour value for each point on the trace and allows for more interesting
 	 * effects to be applied */
-	void setTraceEffect(ITraceColourEffect effect);
+	//void setTraceEffect(ITraceColourEffect effect);
 	/** Should remove any ITraceColourEffect's applied to the trace.*/
-	void removeEffect();
+	//void removeEffect();
 	/**<p>
 	 * Before the trace is added to the graph control this method is called. It allows a
 	 * trace to check the settings of other traces that have previously been added for in

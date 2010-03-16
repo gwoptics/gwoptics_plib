@@ -9,12 +9,13 @@
  * getValue() (for integer) and getValuef (for float). 
  */
 
-import org.gwoptics.gui.slider.*;
+//import org.gwoptics.gui.slider.*;
 import guicomponents.G4P;
+import guicomponents.GWSlider;
 import guicomponents.GSlider;
 import org.gwoptics.ValueType;
 
-gwSlider sl,sl1,sl2,sl3,sl4,sl5;
+GWSlider sl,sl1,sl2,sl3,sl4,sl5;
 
 void setup() {
   size(350, 430);  
@@ -24,11 +25,11 @@ void setup() {
   
   // Simple default slider,
   // constructor is `Parent applet', the x, y position and length
-  sl = new gwSlider(this,20,20,300);
+  sl = new GWSlider(this,20,20,300);
   
   // Slider with a custom skin, check the data folder to find the `blue18px'
   // folder which stores the used image files.
-  sl1 = new gwSlider(this,"blue18px",20,80,300);
+  sl1 = new GWSlider(this,"blue18px",20,80,300);
   // there are 3 types
   // ValueType.DECIMAL  eg 0.002
   // ValueType.EXPONENT eg 2E-3

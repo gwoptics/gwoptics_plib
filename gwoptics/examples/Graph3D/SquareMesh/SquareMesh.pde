@@ -13,7 +13,7 @@ void setup(){
   size(500,300,P3D);
   frameRate(30);
   cam = new Camera3D(this);
-  cam.setPosition(new PVector(1700,1200,0));
+  cam.setPosition(new PVector(3000,2500,1500));
   cam.setFarLimit(20000);
   sMesh = new SquareGridMesh(40,40,80,80,this);
 }

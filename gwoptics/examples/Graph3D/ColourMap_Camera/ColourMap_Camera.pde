@@ -24,6 +24,7 @@ IGraph3DCallback gcb = new IGraph3DCallback(){
 
 void setup() {
   size(500, 500, P3D); 
+  frameRate(15);
 
   g3 = (PGraphics3D) g; 
 

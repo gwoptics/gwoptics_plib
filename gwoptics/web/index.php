@@ -74,6 +74,11 @@ Description: A two-column, fixed-width and lightweight template ideal for 1024x7
 				of our research group, but we hope that it might be useful for many other people. Any comment,
 				feedback or suggestions are very welcome.
 				</p>
+			<p>
+				You can find examples of what we are doing with processing in our
+				<a href="http://www.gwoptics.org/processing/">list of processing sketches</a>.
+				</p>
+
 			</div>
 			
 			<!-- use the images/screenshots section. Activate the link to the misc section in the menu above. -->
@@ -103,7 +108,7 @@ Description: A two-column, fixed-width and lightweight template ideal for 1024x7
 				A copy of the documentation is included in the .zip as well.</p>		
 
 				<p><strong>Source</strong>
-				The source code of the library is included in the <a href="#download">download</a>.
+		The source code of the library is included in the .zip file.
 				<!-- The source code of ##yourLibrary## is available at <a href="##source:url##">##source:host##</a>, and its repository can be
 				browsed <a href="##source:repository##" target="_blank">here</a>.
 				-->
@@ -113,7 +118,8 @@ Description: A two-column, fixed-width and lightweight template ideal for 1024x7
 			
 			<div id="p5_examples" class="p5_clear">
 			<h2>Examples</h2>
-			<p>Find a list of examples in the current distribution of ##yourLibrary##, or have a look at them by following the links below.</p>
+			<p>Find a list of examples in the current distribution of ##yourLibrary##, or have a look at their
+      source code by following the links below.</p>
 			<ul>
 			##examples##
 			</ul>

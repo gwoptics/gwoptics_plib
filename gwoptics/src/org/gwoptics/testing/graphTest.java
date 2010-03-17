@@ -1,5 +1,8 @@
 package org.gwoptics.testing;
 
+/*
+
+
 <<<<<<< .mine
 =======
 import guicomponents.*;
@@ -113,3 +116,4 @@ public class graphTest extends PApplet{
 		println("integer value:" + slider.getValue() + " float value:" + slider.getValuef());
 	}
 }
+*/

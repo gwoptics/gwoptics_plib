@@ -56,7 +56,7 @@ public class SurfaceTrace3D extends Renderable {
 	private Axis3D _ax,_az,_ay; //pointers to axis that the surface is traced against
 	private float[] _highestValue =  new float[3];
 	private float[] _lowestValue = new float[3];
-	private boolean _autoRangeZaxis;
+	private boolean _autoRangeZaxis = false;
 	
 	//Setters - These setters seem fairly obvious from their names what they do...
 	public void setCallback(IGraph3DCallback cb){_callback = cb; _updateGrid = true;}	
@@ -176,7 +176,9 @@ public class SurfaceTrace3D extends Renderable {
 					//Check if we are autoranging the z axis, in this case
 					//we need to calc all values find the max and min then
 					//rescale the z-axis. once this is done then plot data
-					if(_autoRangeZaxis){
+					// Also need to confirm that the array has been created
+					// 17-3-2010 pkl
+					if(_autoRangeZaxis && _vals != null){
 						_vals[i][j] = val;
 					}else{
 						//clamp values to the max/min height of z axis
@@ -192,8 +194,9 @@ public class SurfaceTrace3D extends Renderable {
 					}				
 				}
 			}
-			
-			if(_autoRangeZaxis){
+			// Also need to confirm that the array has been created
+			// 17-3-2010 pkl
+			if(_autoRangeZaxis  && _vals != null){
 				//Calc all conversion variables
 				zMax = _highestValue[2];
 				zMin = _lowestValue[2];

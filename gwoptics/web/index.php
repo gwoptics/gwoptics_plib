@@ -105,7 +105,7 @@ Description: A two-column, fixed-width and lightweight template ideal for 1024x7
 			<div id="p5_resources">
 			<p><strong>Keywords</strong> ##keywords##</p>
 			<p><strong>Documentation</strong> Have a look at the online documentation <a href="reference/" target="_blank">here</a>.
-				A copy of the documentation is included in the .zip as well.</p>		
+				A copy of the documentation is included in the .zip file as well.</p>		
 
 				<p><strong>Source</strong>
 		The source code of the library is included in the .zip file.

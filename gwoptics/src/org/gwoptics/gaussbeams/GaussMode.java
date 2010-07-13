@@ -67,7 +67,7 @@ public class GaussMode {
 	 * @param nr local index of refraction (typically nr=1)
 	 */
 	public GaussMode(float lambda, Complex q, float nr) {
-		assert (_lambda > 0);
+		assert (lambda > 0);
 		assert (q.imag() > 0);
 		_lambda = lambda;
 		_qx = q;
@@ -85,7 +85,7 @@ public class GaussMode {
 	 * @param nr local index of refraction (typically nr=1)
 	 */
 	public GaussMode(float lambda, Complex qx, Complex qy, float nr) {
-		assert (_lambda > 0);
+		assert (lambda > 0);
 		assert (qx.imag() > 0);
 		assert (qy.imag() > 0);
 		_lambda = lambda;
@@ -104,7 +104,7 @@ public class GaussMode {
 	 * @param nr local index of refraction (typically n=1)
 	 */
 	public GaussMode(float lambda, float w0, float z, float nr) {
-		assert (_lambda > 0);
+		assert (lambda > 0);
 		assert (w0 > 0);
 		_lambda = lambda;
 		_nr = nr;
@@ -126,7 +126,7 @@ public class GaussMode {
 	 */
 	public GaussMode(float lambda, float w0x, float zx, float w0y, float zy,
 			float nr) {
-		assert (_lambda > 0);
+		assert (lambda > 0);
 		assert (w0x > 0);
 		assert (w0y > 0);
 		_lambda = lambda;

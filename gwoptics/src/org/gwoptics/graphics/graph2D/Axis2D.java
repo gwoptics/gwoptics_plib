@@ -86,6 +86,11 @@ public class Axis2D extends Renderable implements PConstants  {
 	protected boolean _generateTicks;
 	protected boolean _offsetByLabelWidth;
 	
+	//Log Stuff
+	protected boolean _isLogarithmic;
+	protected float   _logMax,_logMin;
+	
+	
 	protected final static int MIN_TICK_SPACING = 3;	
 	
 	/**
@@ -155,7 +160,10 @@ public class Axis2D extends Renderable implements PConstants  {
 	public void setLabelDirection(PVector vlbl) {vlbl.normalize();_labelDirection = vlbl;}
 	/** Sets the direction in which the axis is drawn */
 	public void setAxesDirection(PVector uv) {uv.normalize();_unitVec = uv;}
-	/** Sets the spacing between each tick in graph space */
+	/** Sets the spacing between each major tick in graph space. 
+	 *  When using a logarithmic axis the value you pass in here is taken to mean 10^(spacing).
+	 *  Hence setting a spacing of 1.0f means the ticks are separated by factors of 10, spacing 2.0f
+	 *  gives a spacing of factors of 100 etc.*/
 	public void setTickSpacing(float spacing){_majorTickSpacing = spacing;_generateTicks = true;}
 	/** Sets the number of minor ticks to show */
 	public void setMinorTicks(int t) {_minorTicks = t;_generateTicks = true;}
@@ -175,14 +183,28 @@ public class Axis2D extends Renderable implements PConstants  {
 	public void setMinorTickLength(int val) {_minorTickSize = val;}
 	/** Sets the maximum value to show on the axis */
 	public void setMaxValue(float val) {		
-		_maxShow = val;				
-		_posConv = (_length-1) / (_maxShow - _minShow);
+		_maxShow = val;
+		if(_isLogarithmic){
+			_logMax = (float) Math.log10(_maxShow);
+			_logMin = (float) Math.log10(_minShow);
+			_posConv = (_length-1) / (_logMax - _logMin);			
+		}else
+			_posConv = (_length-1) / (_maxShow - _minShow);
+		
 		_generateTicks = true;			
 	}
+	
 	/** Sets the minimum value to show on the axis */
 	public void setMinValue(float val) {
-		_minShow = val;				
-		_posConv = (_length-1) / (_maxShow - _minShow);
+		_minShow = val;
+		
+		if(_isLogarithmic){
+			_logMax = (float) Math.log10(_maxShow);
+			_logMin = (float) Math.log10(_minShow);
+			_posConv = (_length-1) / (_logMax - _logMin);			
+		}else
+			_posConv = (_length-1) / (_maxShow - _minShow);
+		
 		_generateTicks = true;
 	}	
 
@@ -212,6 +234,17 @@ public class Axis2D extends Renderable implements PConstants  {
 			return rtn;
 		}else
 			return null;
+	}
+	
+	/** If set to true the axis will become a logarithmic axis */
+	public void setLogarithmicAxis(boolean value){
+		_isLogarithmic = value;
+		
+		if(_maxShow == 0 || _minShow == 0)
+			throw new RuntimeException("Axis limits cannot be 0");
+		
+		setMaxValue(_maxShow);
+		setMinValue(_minShow);
 	}
 	
 	/** Axis2D constructor accepting the parent PApplet and the length of the axis in pixels */ 
@@ -248,6 +281,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		_axisTickLblAlign = Alignment.CENTER;
 		_axisTickLblOffset = 6;
 		_generateTicks = true;
+		_isLogarithmic = false;
 		
 		_posConv = _length / (_maxShow - _minShow);
 		_offsetByLabelWidth = false;
@@ -292,11 +326,27 @@ public class Axis2D extends Renderable implements PConstants  {
 	}
 	
 	/** For a given graph value it provides the position it is on the axis to the nearest pixel */
-	public int valueToPosition(float value){return Math.round((value - _minShow) * _posConv);}
-	public int valueToPosition(double value){return (int) Math.round((value - _minShow) * _posConv);}
+	public int valueToPosition(float value){
+		if(_isLogarithmic){			
+			return (int)Math.round((Math.log10(value)-_logMin)*_posConv);
+		}else
+			return Math.round((value - _minShow) * _posConv);
+	}
+	
+	public int valueToPosition(double value){
+		if(_isLogarithmic){			
+			return (int)Math.round((Math.log10(value)-_logMin)*_posConv);
+		}else
+			return (int)Math.round((value - _minShow) * _posConv);
+	}
 	
 	/** For a given number of pixels along the axis, the value it represents is returned*/
-	public float positionToValue(int pixel){return _minShow + ((float)(pixel)/(_posConv));}
+	public float positionToValue(int pixel){
+		if(_isLogarithmic){
+			return (float) Math.pow(10, _minShow + ((float)(pixel)/(_posConv)));
+		}else
+			return _minShow + ((float)(pixel)/(_posConv));	
+	}
 	
 	/** Internal method too draw the main axis line */
 	protected void _drawAxisLine(){
@@ -318,36 +368,70 @@ public class Axis2D extends Renderable implements PConstants  {
 		_majorTickPositions = new ArrayList<Integer>();
 		_minorTickPositions = new ArrayList<Integer>();
 		
-		float spcDivMn = _minShow/_majorTickSpacing;
+		float spcDivMn;
 		  
-		float firstTickOffset = (float) (Math.ceil(spcDivMn) * _majorTickSpacing - _minShow);
-		float currTickValue = _minShow + firstTickOffset;
-		float minorTickSpc = _majorTickSpacing / (_minorTicks + 1); //graph space	
-		float currMinorTickValue = currTickValue;
+		float firstTickOffset;
+		float currTickValue;
+		float minorTickSpc;	
+		float currMinorTickValue;
+		float max;
 		
+		if(_isLogarithmic){
+			spcDivMn = (float) (Math.log10(_minShow)/_majorTickSpacing);
+			
+			firstTickOffset = (float) (Math.ceil(spcDivMn) * _majorTickSpacing - Math.log10(_minShow));
+			currTickValue = (float) (Math.log10(_minShow) + firstTickOffset);
+			minorTickSpc = _majorTickSpacing / (_minorTicks + 1); //log graph space	
+			currMinorTickValue = currTickValue;			
+			max = (float) Math.log10(_maxShow);
+		}else{
+			spcDivMn = _minShow/_majorTickSpacing;
+			firstTickOffset = (float) (Math.ceil(spcDivMn) * _majorTickSpacing - _minShow);
+			currTickValue = _minShow + firstTickOffset;
+			minorTickSpc = _majorTickSpacing / (_minorTicks + 1); //graph space	
+			currMinorTickValue = currTickValue;
+			max = _maxShow;
+		}
+			
 		//This loop may seem out of place. Because the main draw loop draws minor
 		//ticks after the major ticks, no minor ticks are drawn before the first
 		//major tick. There is probably more elegant ways of doing this, like
 		//looping for every minor tick possible then determining if the current
 		//tick is a major or minor. this works though...		
+		
 		//offset initial minor tick
 		currMinorTickValue -= minorTickSpc;
 		
+		//calculate minor ticks that might be above the min value on the axis but
+		//before the next major tick
 		while(currMinorTickValue >= _minShow){
-			//same as with major ticks, get start and end points			
-			_minorTickPositions.add(valueToPosition(currMinorTickValue));						
+			//same as with major ticks, get start and end points	
+			if(_isLogarithmic)
+				_minorTickPositions.add(valueToPosition(Math.pow(10,currMinorTickValue)));
+			else
+				_minorTickPositions.add(valueToPosition(currMinorTickValue));
+			
 			currMinorTickValue -= minorTickSpc;
 		}
 		
-		while(currTickValue <= _maxShow){			
-			_majorTickPositions.add(valueToPosition(currTickValue));
-			_majorTickLabels.add(currTickValue);
+		while(currTickValue <= max){
+			if(_isLogarithmic){
+				_majorTickPositions.add(valueToPosition(Math.pow(10,currTickValue)));
+				_majorTickLabels.add((float) Math.pow(10,currTickValue));
+			}else{
+				_majorTickPositions.add(valueToPosition(currTickValue));
+				_majorTickLabels.add(currTickValue);
+			}
 			
 			currMinorTickValue = currTickValue + minorTickSpc; //graph space
 			
-			while(currMinorTickValue <= _maxShow && currMinorTickValue < currTickValue + _majorTickSpacing){
+			while(currMinorTickValue <= max && currMinorTickValue < currTickValue + _majorTickSpacing){
 				//same as with major ticks, get start and end points
-				_minorTickPositions.add(valueToPosition(currMinorTickValue));				
+				if(_isLogarithmic)
+					_minorTickPositions.add(valueToPosition(Math.pow(10,currMinorTickValue)));
+				else
+					_minorTickPositions.add(valueToPosition(currMinorTickValue));
+				
 				currMinorTickValue += minorTickSpc;
 			}			
 			

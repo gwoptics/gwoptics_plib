@@ -1,119 +1,107 @@
 package org.gwoptics.testing;
-
 /*
+ScatterPlot
 
+Example showing how to use blank2DCanvas to quickly create a simple scatter plot.
+*/
+import java.util.ArrayList;
 
-<<<<<<< .mine
-=======
-import guicomponents.*;
-import org.gwoptics.gui.button.*;
-
->>>>>>> .r65
-<<<<<<< .mine
+import org.gwoptics.ValueType;
 import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.backgrounds.GridBackground;
+import org.gwoptics.graphics.graph2D.traces.Blank2DTrace;
 import org.gwoptics.graphics.graph2D.traces.ILine2DEquation;
 import org.gwoptics.graphics.graph2D.traces.Line2DTrace;
-import org.gwoptics.gui.slider.gwSlider;
 
-=======
->>>>>>> .r65
 import processing.core.PApplet;
-<<<<<<< .mine
-import org.gwoptics.gui.slider.*;
-import guicomponents.GSlider;
-import org.gwoptics.ValueType;
-=======
-import processing.core.PImage;
->>>>>>> .r65
+import processing.core.PGraphics;
 
-@SuppressWarnings("serial")
+
 public class graphTest extends PApplet{
-<<<<<<< .mine
-
-	gwSlider sl,sl1,sl2,sl3,sl4;
-=======
->>>>>>> .r65
+	class Point2D{
+	  public float X,Y;
+	  public Point2D(float x, float y){X=x;Y=y;}
+	}
 	
-<<<<<<< .mine
-=======
-	gwButton btn;
+	public class eq implements ILine2DEquation{
+	  public double computePoint(double x,int pos) {
+	    return Math.pow(10,x);
+	  }		
+	}
 
->>>>>>> .r65
-	public void setup(){
-<<<<<<< .mine
-		size(400, 300); //Use P3D for now, openGl seems to have some issues
-		  
-		  //Throughout example note the output in the PDE console
-		  //you should see an integer and float output, retrieved by
-		  //getValue() (for integer) and getValuef (for float). The reason
-		  //behind this is to do with inheriting from the g4p library 
-		  //certain functions which can't be overriden.
-		  
-		  //simple default slider
-		  //constructor is Parent applet, x, y, length
-		  sl = new gwSlider(this,20,20,300);
-		  
-		  
-		  sl2 = new gwSlider(this,20,140,300);
-		  sl2.setValueType(ValueType.DECIMAL);
-		  sl2.setLimits(0.5f, 0f, 1.0f);
-		  sl2.setTickCount(3); 
-		  sl2.setRenderMaxMinLabel(false); //hides labels
-		  sl2.setRenderValueLabel(false);	//hides value label
-		  sl2.setStickToTicks(true);//false by default this sticks
-		  							//the handle to ticks so no inbetween
-		  							//values are possible
-		  
-		  //Last example shows small float numbers used and settings
-		  //the accuracy of the display labels
-		  sl3 = new gwSlider(this,20,190,300);
-		  sl3.setValueType(ValueType.EXPONENT);
-		  sl3.setLimits((int)2E-10, 0, (int)3E-10);
-		  sl3.setTickCount(10); 
-		  sl3.setPrecision(1);
-		  
-		  //Can also add custom labels to ticks
-		  //Note: setTickCount() is overriden by
-		  //the length of the input array, and 
-		  //vice versa
-		  String[] l = new String[4];
-		  l[0] = "A";
-		  l[1] = "B";
-		  l[2] = "C";
-		  l[3] = "D";
-		  sl4 = new gwSlider(this,20,240,300);
-		  sl4.setTickLabels(l);
-		  sl4.setStickToTicks(true);
-		  sl4.setValue(56);//notice that we are setting a value that isnt exactly a tick
-		  				   //when stick to tick is true, setValue will stick to nearest tick
-		  				   //value
+	public class ArrayTrace extends Blank2DTrace{
+	  private ArrayList<Point2D> _data;
+	  private float pSize = 0.08f;
+	  
+	  public ArrayTrace(){
+	    _data = new ArrayList<Point2D>();
+	  }
+	  
+	  public void addPoint(float x, float y){_data.add(new Point2D(x,y));}
+	
+	  public void TraceDraw(PGraphics canvas) {
+	    if(_data != null){            
+	      for (int i = 0;i < _data.size()-1; i++) {
+	        
+	        Point2D p1,p2;
+	        p1 = (Point2D)_data.get(i);
+	        p2 = (Point2D)_data.get(i+1);
+	        
+	        canvas.pushStyle();
+		    canvas.stroke(255,0,0);
+		    canvas.line(p1.X,p1.Y,p2.X,p2.Y);      
+		    canvas.popStyle();
+	      }
+	    }
+	  }
+	}
+	
+	ArrayTrace sTrace;
+	Line2DTrace lTrace;
+	Graph2D g;
 		
-=======
-		  size(300,300);
-		    
-		  btn = new gwButton(this,"test",10,10,200,200);
-		  
-		  PImage imgNorm = loadImage("norm.png");
-		  PImage imgOver = loadImage("over.png");
-		  PImage imgPressed = loadImage("pressed.png");
-		  
-		  btn.setUseImages(true);
-		  btn.setImages(imgNorm,imgOver,imgPressed);
->>>>>>> .r65
+	public void setup(){
+	  size(900,600);
+	  
+	  sTrace  = new ArrayTrace();
+	  lTrace = new Line2DTrace(new eq());
+	  
+	  g = new Graph2D(this, 700,500, true);
+	  g.setAxisColour(220, 220, 220);
+	  g.setFontColour(255, 255, 255);
+	  		
+	  g.position.y = 50;
+	  g.position.x = 100;
+	  		
+	  g.setYAxisTickSpacing(1f);
+	  g.setXAxisTickSpacing(1f);
+	  
+	  g.setXAxisMinorTicks(1);
+	  g.setYAxisMinorTicks(1);
+	  
+	  g.setYAxisMin(1f);
+	  g.setYAxisMax(100000f);
+	  
+	  g.getYAxis().setLogarithmicAxis(true);
+	  
+	  g.getYAxis().setTickLabelType(ValueType.EXPONENT);
+	  g.getYAxis().setMinorTicks(4);
+	  g.setXAxisMin(0f);
+	  g.setXAxisMax(5f);
+	  g.setXAxisLabelAccuracy(0);
+	  
+	  lTrace.setTraceColour(255, 0, 0);
+	  
+	  GridBackground gb = new GridBackground(new GWColour(100,100,100), new GWColour(15));
+	  g.setBackground(gb);
+	  g.addTrace(lTrace);	
+	  
+	  frameRate(10);
 	}
-	
-<<<<<<< .mine
+		
 	public void draw(){
-		  background(200);
-	}
-=======
-	public void draw(){}
->>>>>>> .r65
-	
-	void handleSliderEvents(gwSlider slider) {
-		println("integer value:" + slider.getValue() + " float value:" + slider.getValuef());
+	  background(0);
+	  g.draw();
 	}
 }
-*/

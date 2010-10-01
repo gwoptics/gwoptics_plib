@@ -24,31 +24,47 @@ package org.gwoptics.graphics.graph2D.backgrounds;
 import org.gwoptics.graphics.GWColour;
 
 public class GridBackground extends SolidColourBackground {
-	protected GWColour _gridColour;
+	protected GWColour _gridXColour,_gridYColour;
+	protected boolean _showX=true, _showY=true;
 	
 	/** Sets the colour of the major grid lines **/
-	public void setGridColour(int R, int G, int B){_gridColour = new GWColour(R, G, B);}
+	public void setGridColour(int R, int G, int B){_gridYColour = new GWColour(R, G, B);_gridXColour = new GWColour(R, G, B);}
+	
+	/** Set colour of grid lines independently *x sets X-axis line and *y set Y-axis line colours. **/
+	public void setGridColour(int Rx, int Gx, int Bx,int Ry, int Gy, int By){
+		_gridYColour = new GWColour(Ry, Gy, By);_gridXColour = new GWColour(Rx, Gx, Bx);}
+	
 	/** Removes major grid lines **/
-	public void setNoGrid(){_gridColour = null;}
+	public void setNoGrid(){_gridXColour = null;_gridYColour = null;}
 	
 	public GridBackground(GWColour gridColour, GWColour background){
 		super(background);
-		_gridColour = gridColour;
+		_gridXColour = gridColour;
+		_gridYColour = gridColour;
+	}
+	
+	public GridBackground(GWColour gridColour, GWColour background,boolean ShowXAxisLines,boolean ShowYAxisLines){
+		super(background);
+		_showX = ShowXAxisLines;
+		_showY = ShowYAxisLines;
+		_gridXColour = gridColour;
+		_gridYColour = gridColour;
 	}
 	
 	public void draw() {
 		super.draw();
 		
-		if(_parent != null && _gridColour != null){	
-			_parent.stroke(_gridColour.toInt());
+		if(_parent != null && _gridYColour != null && _gridXColour != null){	
+			_parent.stroke(_gridXColour.toInt());
 			
-			if(_ax.getMajorTickPositions() != null){
+			if(_ax.getMajorTickPositions() != null && _showX){
 				for (Integer i : _ax.getMajorTickPositions()) {
 					_parent.line(i, 0, i, -_ay.getLength());
 				}
 			}
 			
-			if(_ay.getMajorTickPositions() != null){
+			_parent.stroke(_gridYColour.toInt());
+			if(_ay.getMajorTickPositions() != null && _showY){
 				for (Integer i : _ay.getMajorTickPositions()) {
 					_parent.line(0, -i, _ax.getLength(), -i);
 				}

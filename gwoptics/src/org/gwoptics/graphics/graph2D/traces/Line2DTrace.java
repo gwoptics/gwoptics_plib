@@ -241,21 +241,20 @@ public class Line2DTrace implements IGraph2DTrace{
 			throw new RuntimeException("One of the axis objects are null, set them using setAxes().");
 			
 		if(_cb != null){
-			float dRes = (_ax.getMaxValue() - _ax.getMinValue()) / (_ax.getLength() - 1);
 			double highestValue = 0;
 			double lowestValue = 0;
 			
 			for (int i = 0; i < _eqDataY.length; i++) {
-				double val = _cb.computePoint(_ax.getMinValue() + i * dRes,i);
-
+				double xval = _ax.positionToValue(i);
+				double val = _cb.computePoint(xval,i);
+				
 				_eqDataY[i] = val;
 				
 				if(_yAutoRange){
 					if(val > highestValue)
 						highestValue = val;
 					else if(val < lowestValue)
-						val = lowestValue;
-					
+						val = lowestValue;					
 				}else
 					_pointData[i] = _ay.valueToPosition((float) val); 
 			}
@@ -290,6 +289,8 @@ public class Line2DTrace implements IGraph2DTrace{
 			float prevY = 0;
 			int startPos = 0;
 			
+			//find a starting point as the previous point is drawn first
+			//then the current point, and a line between them
 			for(int j=0;j < _pointData.length; j++){
 				if(!Float.isNaN(_pointData[j])){
 					prevX = j;
@@ -307,27 +308,28 @@ public class Line2DTrace implements IGraph2DTrace{
 					ypos = _pointData[i];
 					
 					if(!(Float.isNaN(ypos) || Float.isNaN(prevY))){						
-	
-						if(ypos < 0)
-							ypos = 0;
-						else if(ypos > _ay.getLength())
-							ypos = _ay.getLength();
+						boolean outofbounds = false;
 						
-						if(prevY < 0)
-							prevY = 0;
-						else if(prevY > _ay.getLength())
-							prevY = _ay.getLength();
+						if(ypos < 0 || ypos > _ay.getLength())
+							outofbounds=true;
 						
-						if(_effect != null){
-							cTrace = _effect.getPixelColour(i-1, (int) ypos,
-																_ax.getMinValue() + i * dRes,
-																(float)_eqDataY[i-1]);
-							_parent.stroke(cTrace.R * 255,
-										   cTrace.G * 255,
-										   cTrace.B * 255,
-										   cTrace.A * 255);
-						}else
-							_parent.stroke(_traceColour.R * 255,_traceColour.G * 255,_traceColour.B * 255,_traceColour.A * 255);
+						if(prevY < 0 || prevY > _ay.getLength())
+							outofbounds=true;
+						
+						if(!outofbounds){
+							if(_effect != null){
+								cTrace = _effect.getPixelColour(i-1, (int) ypos,
+																	_ax.getMinValue() + i * dRes,
+																	(float)_eqDataY[i-1]);
+								_parent.stroke(cTrace.R * 255,
+											   cTrace.G * 255,
+											   cTrace.B * 255,
+											   cTrace.A * 255);
+							}else
+								_parent.stroke(_traceColour.R * 255,_traceColour.G * 255,_traceColour.B * 255,_traceColour.A * 255);
+						}else{
+							_parent.stroke(0,0);
+						}
 						
 						_parent.line(prevX, -prevY, i, -ypos);
 	

@@ -26,10 +26,22 @@ public class graphTest extends PApplet{
 	
 	public class eq implements ILine2DEquation{
 	  public double computePoint(double x,int pos) {
-	    return Math.pow(10,x);
+	    return x*x*x;
 	  }		
 	}
+	
+	public class eq2 implements ILine2DEquation{
+		  public double computePoint(double x,int pos) {
+		    return x*x;
+		  }		
+		}
 
+	public class eq3 implements ILine2DEquation{
+		  public double computePoint(double x,int pos) {
+		    return x;
+		  }		
+		}
+	
 	public class ArrayTrace extends Blank2DTrace{
 	  private ArrayList<Point2D> _data;
 	  private float pSize = 0.08f;
@@ -62,9 +74,8 @@ public class graphTest extends PApplet{
 	Graph2D g;
 		
 	public void setup(){
-	  size(900,600);
+	  size(900,600,P2D);
 	  
-	  sTrace  = new ArrayTrace();
 	  lTrace = new Line2DTrace(new eq());
 	  
 	  g = new Graph2D(this, 700,500, true);
@@ -80,22 +91,39 @@ public class graphTest extends PApplet{
 	  g.setXAxisMinorTicks(1);
 	  g.setYAxisMinorTicks(1);
 	  
+	  g.getYAxis().setTickLabelType(ValueType.EXPONENT);
+	  g.getYAxis().setMinorTicks(4);
+
 	  g.setYAxisMin(1f);
 	  g.setYAxisMax(100000f);
 	  
-	  g.getYAxis().setLogarithmicAxis(true);
+	  g.setXAxisMin(1f);
+	  g.setXAxisMax(40f);
 	  
-	  g.getYAxis().setTickLabelType(ValueType.EXPONENT);
-	  g.getYAxis().setMinorTicks(4);
-	  g.setXAxisMin(0f);
-	  g.setXAxisMax(5f);
+	  g.getYAxis().setLogarithmicAxis(true);
+	  g.getXAxis().setLogarithmicAxis(true);
+	  
 	  g.setXAxisLabelAccuracy(0);
 	  
 	  lTrace.setTraceColour(255, 0, 0);
+	  lTrace.setLineWidth(2);
 	  
 	  GridBackground gb = new GridBackground(new GWColour(100,100,100), new GWColour(15));
+	  
 	  g.setBackground(gb);
-	  g.addTrace(lTrace);	
+	  
+	  Line2DTrace l,k;
+	  l = new Line2DTrace(new eq2());
+	  l.setLineWidth(2);
+	  k = new Line2DTrace(new eq3());
+	  k.setLineWidth(2);
+	  
+	  l.setTraceColour(0, 255, 0);
+	  k.setTraceColour(0, 0, 255);
+
+	  g.addTrace(lTrace);
+	  g.addTrace(l);
+	  g.addTrace(k);
 	  
 	  frameRate(10);
 	}

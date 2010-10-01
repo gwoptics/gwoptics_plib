@@ -343,7 +343,7 @@ public class Axis2D extends Renderable implements PConstants  {
 	/** For a given number of pixels along the axis, the value it represents is returned*/
 	public float positionToValue(int pixel){
 		if(_isLogarithmic){
-			return (float) Math.pow(10, _minShow + ((float)(pixel)/(_posConv)));
+			return (float) Math.pow(10, _logMin + ((float)(pixel)/(_posConv)));
 		}else
 			return _minShow + ((float)(pixel)/(_posConv));	
 	}

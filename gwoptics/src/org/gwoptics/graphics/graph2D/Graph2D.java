@@ -117,7 +117,7 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 		_back.setParent(_parent);
 		_back.setAxes(_ax, _ay);
 		_back.setDimensions(_ax.getLength(), _ay.getLength());
-		}
+	}
 	
 	/**
 	 * Graph constructor that requires you to define the dimensions of the graph, whether
@@ -241,13 +241,20 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
 			_parent.noFill();
 			_parent.rect(0, 0, _xLength, -_yLength);
 		}
-
+		
 		//put a lock on the traces object so other threads
 		//cannot change values while we are drawing
 		synchronized (_traces) {
+			//need this to separate lines and background when drawing in 3D
+			//if(!(_parent.g instanceof PGraphics2D || _parent.g instanceof PGraphicsJava2D))
+			//	_parent.translate(0, 0,1f);
+			
 			for (IGraph2DTrace t : _traces) {t.draw();}
 		}
 
+		//if(!(_parent.g instanceof PGraphics2D || _parent.g instanceof PGraphicsJava2D))
+		//	_parent.translate(0, 0,1f);
+		
 		_ax.draw();
 		_ay.draw();
 		

@@ -36,6 +36,11 @@ public class GridBackground extends SolidColourBackground {
 	
 	/** Removes major grid lines **/
 	public void setNoGrid(){_gridXColour = null;_gridYColour = null;}
+
+	/** Sets which lines to to show **/
+	public void setGridLines(boolean ShowXAxisLines,boolean ShowYAxisLines){
+		_showX = ShowXAxisLines;
+		_showY = ShowYAxisLines;}
 	
 	public GridBackground(GWColour gridColour, GWColour background){
 		super(background);

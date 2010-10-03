@@ -64,6 +64,7 @@ public class Axis2D extends Renderable implements PConstants  {
 	protected int _majorTickSize;
 	protected int _minorTickSize;
 	protected int _axisTickLblSize;
+	protected int _axisTickLblLogOffset;
 	protected int _axisTickLblOffset;
 	protected int _axisLblSize;
 	protected float _axisTickLblRotation;
@@ -81,7 +82,7 @@ public class Axis2D extends Renderable implements PConstants  {
 	private float _posConv;	/** Value is the number of pixels a value of 1 unit represents, eg 50 means 1unit is 50pixels along the axis */
 	protected float _longestLabel = 0;
 	protected ArrayList<Integer> _majorTickPositions;
-	protected ArrayList<Float> _majorTickLabels;
+	protected ArrayList<Double> _majorTickLabels;
 	protected ArrayList<Integer> _minorTickPositions;
 	protected boolean _generateTicks;
 	protected boolean _offsetByLabelWidth;
@@ -364,29 +365,29 @@ public class Axis2D extends Renderable implements PConstants  {
 	}
 	
 	protected void _generateTicks(){
-		_majorTickLabels = new ArrayList<Float>();
+		_majorTickLabels = new ArrayList<Double>();
 		_majorTickPositions = new ArrayList<Integer>();
 		_minorTickPositions = new ArrayList<Integer>();
 		
-		float spcDivMn;
+		double spcDivMn;
 		  
-		float firstTickOffset;
-		float currTickValue;
-		float minorTickSpc;	
-		float currMinorTickValue;
-		float max;
+		double firstTickOffset;
+		double currTickValue;
+		double minorTickSpc;	
+		double currMinorTickValue;
+		double max;
 		
 		if(_isLogarithmic){
-			spcDivMn = (float) (Math.log10(_minShow)/_majorTickSpacing);
+			spcDivMn = Math.log10(_minShow)/_majorTickSpacing;
 			
-			firstTickOffset = (float) (Math.ceil(spcDivMn) * _majorTickSpacing - Math.log10(_minShow));
-			currTickValue = (float) (Math.log10(_minShow) + firstTickOffset);
+			firstTickOffset = (Math.ceil(spcDivMn) * _majorTickSpacing - Math.log10(_minShow));
+			currTickValue = (Math.log10(_minShow) + firstTickOffset);
 			minorTickSpc = _majorTickSpacing / (_minorTicks + 1); //log graph space	
 			currMinorTickValue = currTickValue;			
-			max = (float) Math.log10(_maxShow);
+			max = Math.log10(_maxShow);
 		}else{
 			spcDivMn = _minShow/_majorTickSpacing;
-			firstTickOffset = (float) (Math.ceil(spcDivMn) * _majorTickSpacing - _minShow);
+			firstTickOffset = (Math.ceil(spcDivMn) * _majorTickSpacing - _minShow);
 			currTickValue = _minShow + firstTickOffset;
 			minorTickSpc = _majorTickSpacing / (_minorTicks + 1); //graph space	
 			currMinorTickValue = currTickValue;
@@ -417,7 +418,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		while(currTickValue <= max){
 			if(_isLogarithmic){
 				_majorTickPositions.add(valueToPosition(Math.pow(10,currTickValue)));
-				_majorTickLabels.add((float) Math.pow(10,currTickValue));
+				_majorTickLabels.add(Math.pow(10,currTickValue));
 			}else{
 				_majorTickPositions.add(valueToPosition(currTickValue));
 				_majorTickLabels.add(currTickValue);
@@ -439,7 +440,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		}
 		
 	}
- 
+	
 	/** Internal method to draw tick marks and labels */
 	protected void _drawTicksAndLabels(){
 		PVector tickLblPos = new PVector(0, 0);
@@ -464,7 +465,7 @@ public class Axis2D extends Renderable implements PConstants  {
 		
 		for (int i = 0; i < _majorTickPositions.size(); i++) {
 			int pos = _majorTickPositions.get(i);
-			float val = _majorTickLabels.get(i);
+			double val = _majorTickLabels.get(i);
 			
 			// position of tick along the axis
 			tickPos = PVector.mult(_unitVec, pos);
@@ -472,14 +473,27 @@ public class Axis2D extends Renderable implements PConstants  {
 			tickEnd = PVector.add(tickPos, PVector.mult(_labelDirection,-_majorTickSize));
 			
 			//next draw the tick label
-			if(_drawTickLabels){			
+			if(_drawTickLabels){	
+				Integer exp = (int)Math.log10(val);
+				
 				// Make tick label
 				switch (_tickLblType) {
 					case DECIMAL:			
-						tickLbl = String.format(" %." + _accuracy + "f",(float)(val));		
+						tickLbl = String.format(" %." + _accuracy + "f",val);		
 						break;
-					case EXPONENT:	
-						tickLbl = String.format(" %." + _accuracy + "E",(float)(val));				
+						
+					case EXPONENT:						
+						if(_isLogarithmic){
+							double tmp = val / Math.pow(10,exp);
+							
+							if(tmp == 1.0d){
+								tickLbl = "10";
+							}else{
+								tickLbl = String.format(" %." + _accuracy + "f", tmp) + "x10";
+							}
+						}else
+							tickLbl = String.format(" %." + _accuracy + "E",val);
+						
 						break;
 					case INTEGER:	
 						tickLbl = String.format(" %d", Math.round(val));				
@@ -489,11 +503,19 @@ public class Axis2D extends Renderable implements PConstants  {
 				//to define where the major tick label is, we take the current tick position
 				//and move in the label direction depending on width of the text and the major
 				//tick size
-				tickLblPos = PVector.add(tickPos, PVector.mult(_labelDirection, _axisTickLblOffset + Math.abs(_majorTickSize)));				
+				if(_isLogarithmic && _axisTickLblAlign.getValue() != CENTER)
+					tickLblPos = PVector.add(tickPos, PVector.mult(_labelDirection, _axisTickLblOffset + Math.abs(_majorTickSize) + _parent.textWidth(exp.toString())));
+				else
+					tickLblPos = PVector.add(tickPos, PVector.mult(_labelDirection, _axisTickLblOffset + Math.abs(_majorTickSize)));				
 				
 				// determine if this is the longest label for main axis label
 				// placement later
-				float lblSize = _parent.textWidth(tickLbl);
+				float lblSize=0f;
+				
+				if(_isLogarithmic)
+					lblSize = _parent.textWidth(tickLbl)+ _parent.textWidth(exp.toString());
+				else
+					lblSize = _parent.textWidth(tickLbl);
 				
 				if (lblSize > _longestLabel) {
 					_longestLabel = lblSize + 5;
@@ -504,7 +526,33 @@ public class Axis2D extends Renderable implements PConstants  {
 								
 				_parent.rotate(_axisTickLblRotation);
 				_parent.fill(_fontColour.toInt());
-				_parent.text(tickLbl, 0, 0.4f * _axisTickLblSize, 0);
+				
+				if(_isLogarithmic && _tickLblType == ValueType.EXPONENT){		
+					float xpos = 0;
+					
+					_parent.textAlign(_axisTickLblAlign.getValue());
+					_parent.text(tickLbl, 0, 0.4f * _axisTickLblSize, 0);
+					
+					switch (_axisTickLblAlign) {
+					case CENTER:
+						_parent.textAlign(PConstants.LEFT);
+						xpos = _parent.textWidth(tickLbl)/2f;
+						break;
+					case LEFT:
+						_parent.textAlign(PConstants.LEFT);
+						xpos = _parent.textWidth(tickLbl);
+						break;
+					case RIGHT:
+						_parent.textAlign(PConstants.LEFT);
+						xpos = 0;// _parent.textWidth(tickLbl);
+						break;
+					}
+					
+					_parent.text(exp.toString(), xpos, -0.2f * _axisTickLblSize, 0);
+				}else{
+					_parent.text(tickLbl, 0, 0.4f * _axisTickLblSize, 0);
+				}
+					
 				_parent.popMatrix();
 			}
 			

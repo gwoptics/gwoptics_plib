@@ -26,19 +26,19 @@ public class graphTest extends PApplet{
 	
 	public class eq implements ILine2DEquation{
 	  public double computePoint(double x,int pos) {
-	    return x*x*x;
+	    return x*x*x/(250f*250f*250f);
 	  }		
 	}
 	
 	public class eq2 implements ILine2DEquation{
 		  public double computePoint(double x,int pos) {
-		    return x*x;
+		    return x*x/(250f*250f);
 		  }		
 		}
 
 	public class eq3 implements ILine2DEquation{
 		  public double computePoint(double x,int pos) {
-		    return x;
+		    return x/250f;
 		  }		
 		}
 	
@@ -74,7 +74,7 @@ public class graphTest extends PApplet{
 	Graph2D g;
 		
 	public void setup(){
-	  size(900,600,P2D);
+	  size(900,600);
 	  
 	  lTrace = new Line2DTrace(new eq());
 	  
@@ -90,15 +90,17 @@ public class graphTest extends PApplet{
 	  
 	  g.setXAxisMinorTicks(1);
 	  g.setYAxisMinorTicks(1);
+
+	  g.getXAxis().setTickLabelType(ValueType.EXPONENT);
 	  
 	  g.getYAxis().setTickLabelType(ValueType.EXPONENT);
 	  g.getYAxis().setMinorTicks(4);
 
-	  g.setYAxisMin(1f);
-	  g.setYAxisMax(100000f);
+	  g.setYAxisMin(5f);
+	  g.setYAxisMax(3450000000000f);
 	  
 	  g.setXAxisMin(1f);
-	  g.setXAxisMax(40f);
+	  g.setXAxisMax(1000000000000000f);
 	  
 	  g.getYAxis().setLogarithmicAxis(true);
 	  g.getXAxis().setLogarithmicAxis(true);

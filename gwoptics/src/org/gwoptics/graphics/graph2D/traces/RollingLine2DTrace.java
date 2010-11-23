@@ -31,6 +31,16 @@ import org.gwoptics.graphics.graph2D.IGraph2D;
 import processing.core.PApplet;
 
 /**
+ * <p>
+ * The rolling 2D trace object was created to act in a similar way to a Seismometer works, where the previous
+ * values on the graph move to the left and new values are added to the right.
+ * </p> 
+ * <p>
+ * In similar fashion to other {@link Line2DTrace} objects a callback function needs to be specified, {@link ILine2DEquation}, 
+ * that returns the value of a function or the value of some monitored variable.
+ * </p> 
+ * <p>Only Rolling2DTrace's can be added to a graph control, you cannot mix this with other {@link Line2DTrace} objects 
+ * due to the way this object updates the x-axis of the graph control it is added to.</p>
  * 
  * @author Daniel Brown 13/7/09
  * @since 0.4.0 
@@ -41,10 +51,26 @@ public class RollingLine2DTrace extends Line2DTrace{
 	protected boolean _doDraw;
 	protected Timer _timer;
 	protected long _refreshRate;
-	protected float _xTickIncr;
+	protected float _xIncr;
 	protected boolean _isMaster;
 	protected RollingLine2DTrace[] _slaveTraces;
 	protected double[] _eqDataX;
+	
+	/**
+	 * This exception is thrown when the graph is trying to update too fast. You must pick values for
+	 * msRefreshRate and xIncr in the {@link RollingLine2DTrace} constructor so that the graph can 
+	 * update and render correctly. Using large x-axis increments per update and short refresh times will
+	 * cause the issue. Experimenting with different values will be required.
+	 * 
+	 * @author Daniel Brown 23/11/10
+	 */
+	public class RollingTraceTooFastException extends RuntimeException{
+		public RollingTraceTooFastException(){
+			super("The RollingGraphTrace is moving too fast to" +
+				  " process and render correctly. You need to reduce the x-axis increment" +
+				  " per update or use a larger refresh rate in the RollingLine2DTrace constructor");
+		}
+	}
 	
 	protected class RollingTick extends TimerTask{
 		@Override
@@ -56,8 +82,8 @@ public class RollingLine2DTrace extends Line2DTrace{
 					
 					//increment the x-axis bounds if we are the master trace.
 					if(isMaster()){
-						_ax.setMaxValue(_ax.getMaxValue() + _xTickIncr);
-						_ax.setMinValue(_ax.getMinValue() + _xTickIncr);
+						_ax.setMaxValue(_ax.getMaxValue() + _xIncr);
+						_ax.setMinValue(_ax.getMinValue() + _xIncr);
 					}
 					
 					_timer.schedule(new RollingTick(), _refreshRate);
@@ -72,18 +98,23 @@ public class RollingLine2DTrace extends Line2DTrace{
 	protected boolean isMaster(){return _isMaster;}
 
 	/**
-	 * Creates a new {@link RollingLine2DTrace} to be added to a {@link Graph2D} instance. A rolling graph is able
+	 * <p>Creates a new {@link RollingLine2DTrace} to be added to a {@link Graph2D} instance. A rolling graph is able
 	 * to update itself automatically after a user defined period in milliseconds indefinitely. All {@link RollingLine2DTrace}
-	 * traces that are added to a {@link Graph2D} instance should have the same update rate or an exception will be thrown.
+	 * traces that are added to a {@link Graph2D} instance should have the same update rate or an exception will be thrown.</p>
+	 * 
+	 * <p>
+	 * Care needs to be taken when choosing values for the refresh and x axis increment. Choosing very quick refresh rates using large
+	 * x-axis increments will cause the {@link RollingTraceTooFastException} to be thrown.
+	 * </p>
 	 * 
 	 * @param eq Equation that is to be used to generate the trace.
 	 * @param msRefreshRate Rate at which trace is updated in milliseconds
-	 * @param xTickIncr The amount the X-Axis value should increase every update
+	 * @param xIncr The amount the X-Axis value should increase every update
 	 */
-	public RollingLine2DTrace(ILine2DEquation eq, long msRefreshRate, float xTickIncr) {
+	public RollingLine2DTrace(ILine2DEquation eq, long msRefreshRate, float xIncr) {
 		super(eq);
 		_refreshRate = msRefreshRate;
-		_xTickIncr = xTickIncr;
+		_xIncr = xIncr;
 		_timer = new Timer();
 		_isMaster = true; //true unless otherwise found it isnt in preCheck
 		_lock = new ReentrantLock();
@@ -233,10 +264,7 @@ public class RollingLine2DTrace extends Line2DTrace{
 		int startPos = endPX-endNewPos;
 		
 		if(startPos >= _eqDataX.length)
-			throw new RuntimeException("The RollingGraphTrace is moving too fast to" +
-					" process. Eit" +
-					" her reduce the tick increase rate or increase the" +
-					" range of the X-Axis on the graph.");
+			throw new RollingTraceTooFastException();
 		
 		int lastPosChange = startPos - _ax.valueToPosition(_eqDataX[startPos]);
 		

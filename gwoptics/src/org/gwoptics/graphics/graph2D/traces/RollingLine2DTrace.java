@@ -29,6 +29,7 @@ import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
 
 import processing.core.PApplet;
+import sun.java2d.pipe.LoopPipe;
 
 /**
  * <p>
@@ -55,6 +56,7 @@ public class RollingLine2DTrace extends Line2DTrace{
 	protected boolean _isMaster;
 	protected RollingLine2DTrace[] _slaveTraces;
 	protected double[] _eqDataX;
+	protected boolean paused = false;
 	
 	/**
 	 * This exception is thrown when the graph is trying to update too fast. You must pick values for
@@ -77,7 +79,8 @@ public class RollingLine2DTrace extends Line2DTrace{
 		public void run() {
 			if(_isMaster){
 				try {
-					_lock.lock();					
+					_lock.lock();
+					
 					_doDraw = true;
 					
 					//increment the x-axis bounds if we are the master trace.
@@ -85,13 +88,30 @@ public class RollingLine2DTrace extends Line2DTrace{
 						_ax.setMaxValue(_ax.getMaxValue() + _xIncr);
 						_ax.setMinValue(_ax.getMinValue() + _xIncr);
 					}
-					
-					_timer.schedule(new RollingTick(), _refreshRate);
+				
+
+					if(!paused)
+						_timer.schedule(new RollingTick(), _refreshRate);
 				} finally {
 					_lock.unlock();
 				}				
 			}
 		}		
+	}
+	
+	/** Calling this stops the internal updating thread running. */
+	public void pause(){
+		paused = true;
+		_timer.cancel();
+	}
+	
+	/** Calling this resumes the internal updating thread. */
+	public void unpause(){
+		if(paused){
+			paused = false;
+			_timer = new Timer();
+			_timer.schedule(new RollingTick(), _refreshRate);
+		}
 	}
 	
 	public long getRefreshRate(){return _refreshRate;}

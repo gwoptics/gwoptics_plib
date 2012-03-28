@@ -1,5 +1,33 @@
 
 TODO items:
 
+For Processing 2.0
+
+- everything will be OpenGL which requires some changes
+  SquareMesh example shows that lines work differently
+  now. Is not looking good now, but don't know what's
+  the problem.
+
+- PGraphics2D and 3D have disappeared
+  the latter is PGraphicsOpenGL
+  the former maybe PGraphics???
+
+- all the Blank2DCanvas things seem to fail
+  because they cannot see/find PGraphics2D,
+  might be a Processing bug in 2.05a
+
+For Android
+
+- probably need to change the hardcoded font to
+  something smarter, at least add a setFont method
+
+- Timer class seems not to work well with Anroid,
+  see e.g. http://developer.android.com/resources/articles/timed-ui-updates.html
+  more on stack overflow
+  I guess this is why RollingGraph fails on Android now
+
+
+Other stuff
+
 - mathutils.mathUtils.java should be renamed mathutils.MathUtils
   currently only used in the GWBinary sketch

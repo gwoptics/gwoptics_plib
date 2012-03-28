@@ -410,10 +410,10 @@ public class Axis2D extends Renderable implements PConstants {
 
 		if (_font == null) {// Font is a static member so only load if noone has
 							// before
-			// adf 150310 changed to createFont because loadFont would not work
-			// with
-			// getFont().getSize() below
 			// _font = parent.loadFont("Arial-BoldMT-12.vlw");
+			// TODO check this for use with Android, probably need a setFont method too
+			//String[] fontList = PFont.list();
+			//_font = parent.createFont(fontList[0], 12, true);
 			_font = parent.createFont("Arial-BoldMT", 12);
 		}
 	}

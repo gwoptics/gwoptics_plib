@@ -782,8 +782,8 @@ public class Axis2D extends Renderable implements PConstants {
 		// rotate it
 		_parent.translate(lblPos.x, lblPos.y);
 		_parent.rotate(_axisLblRotation);
-		_parent.text(String.valueOf(_label), 0, 0.25f * _font.getFont()
-				.getSize(), 0);
+		// removed getFont adf 29.03.2012
+		_parent.text(String.valueOf(_label), 0, 0.25f * _font.getFont().getSize(), 0);
 		_parent.popMatrix();
 	}
 }

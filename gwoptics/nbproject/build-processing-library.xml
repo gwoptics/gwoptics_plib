@@ -1,199 +1,200 @@
+
 <project name="gwoptics Ant Build" default="build" basedir="../">
     
-	<description>
-		This file is a base copy of the build file, it contains all the necessary Ant tags
-		to build the gwoptics library. To use, first make a local copy of this file that is
-		not added to the svn, next you must alter the processing property to specify
-		the output location.
+  <description>
+    This file is a base copy of the build file, it contains all the necessary Ant tags
+    to build the gwoptics library. To use, first make a local copy of this file that is
+    not added to the svn, next you must alter the processing property to specify
+    the output location.
 		
-		Note depending on changes made to library update the version number.
+    Note depending on changes made to library update the version number.
 		
-        Builds the gwoptics library Jar along with examples and reference website
+    Builds the gwoptics library Jar along with examples and reference website
 		
-		Created by Daniel Brown
+    Created by Daniel Brown
 		
-		Template used from processing library template
-		http://code.google.com/p/processing-library-template/
-    </description>
+    Template used from processing library template
+    http://code.google.com/p/processing-library-template/
+  </description>
 	
 	<!-- Alter this property with the location of the output directory required -->
-	<property name="outputDir" location="out"/>	
+  <property name="outputDir" location="out"/>	
 	
 	<!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
-	<tstamp>
-		<format property="versionNumber" pattern="0.4.2 (yyyy.MM.dd)" offset="0" unit="day"/>
-	</tstamp>
+  <tstamp>
+    <format property="versionNumber" pattern="0.4.2 (yyyy.MM.dd)" offset="0" unit="day"/>
+  </tstamp>
 	
 	<!-- _________________________________________________________________________________
 		|                                                                                 |
 		|                   *  No changes required beyond this point  *                   |
 		|_________________________________________________________________________________|-->
 	
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-		<classpath>
-			<pathelement location="resources/code/ant-contrib-1.0b3.jar"/>
-		</classpath>
-	</taskdef>	
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="resources/code/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>	
 
-	<property name="libraryClasspath"  location="libs"/>	
+  <property name="libraryClasspath"  location="libs"/>	
 	
-	<if>
-		<equals arg1="${outputDir}" arg2="${basedir}" />
-		<then>
-			<fail message="You have not specified a location to compile the library too"/>
-		</then>
-	</if>	
+  <if>
+    <equals arg1="${outputDir}" arg2="${basedir}" />
+    <then>
+      <fail message="You have not specified a location to compile the library too"/>
+    </then>
+  </if>	
         
-        <mkdir dir="${outputDir}" />
+  <mkdir dir="${outputDir}" />
 	
-	<path id="library-classpath">
-		<fileset dir="${libraryClasspath}" >		
-			<include name="core.jar"/>	
-			<include name="guicomponents.jar"/>
-		</fileset>
-	</path>		
+  <path id="library-classpath">
+    <fileset dir="${libraryClasspath}" >		
+      <include name="core.jar"/>	
+      <include name="guicomponents.jar"/>
+    </fileset>
+  </path>		
 	
-	<property name="javaVersion" value="1.5"/>		
-	<property name="author" value="Daniel Brown and Andreas Freise"/>	
-	<property name="copyright" value="(c) 2009 onwards"/>
-	<property name="libraryName"  value="gwoptics"/>	
-	<property name="yourLink"  value="http://www.gwoptics.org/" />	
-	<property name="keywords"  value="graph, plotting, simulation, optics" />	
-	<property name="tested:platform"  value="OS X 10.5, Windows 7" />	
-	<property name="tested:processingVersion"  value="1.0.8" />	
-	<property name="tested:dependencies"  value="gui4processing" />	
-	<property name="source:host"  value="gwoptics.org" />
-	<property name="source:url"  value="http://www.gwoptics.org/processing/gwoptics_p5lib" />
-	<property name="source:repository"  value="" />
+  <property name="javaVersion" value="1.5"/>		
+  <property name="author" value="Daniel Brown and Andreas Freise"/>	
+  <property name="copyright" value="(c) 2009 onwards"/>
+  <property name="libraryName"  value="gwoptics"/>	
+  <property name="yourLink"  value="http://www.gwoptics.org/" />	
+  <property name="keywords"  value="graph, plotting, simulation, optics" />	
+  <property name="tested:platform"  value="OS X 10.5, Windows 7" />	
+  <property name="tested:processingVersion"  value="1.0.8" />	
+  <property name="tested:dependencies"  value="gui4processing" />	
+  <property name="source:host"  value="gwoptics.org" />
+  <property name="source:url"  value="http://www.gwoptics.org/processing/gwoptics_p5lib" />
+  <property name="source:repository"  value="" />
 	
-	<property name="jarFile" value="${libraryName}.jar"/>
-	<property name="src" location="src"/>
-	<property name="bin" location="bin"/>
-	<property name="reference" location="reference"/>
-	<property name="distbase" location="distribution"/>	
-	<property name="distweb" location="distribution/publish"/>	
-	<property name="dist" location="distribution/${libraryName}"/>	
+  <property name="jarFile" value="${libraryName}.jar"/>
+  <property name="src" location="src"/>
+  <property name="bin" location="bin"/>
+  <property name="reference" location="reference"/>
+  <property name="distbase" location="distribution"/>	
+  <property name="distweb" location="distribution/publish"/>	
+  <property name="dist" location="distribution/${libraryName}"/>	
 	
-	<target name="init">
-	<echo>Properties initialized.
-	src path			${src}
-	bin path 			${bin}
-	libraryClasspath		${libraryClasspath}
-	processing Libraries	${outputDir}
-	java version		${javaVersion}
-	</echo>			
+  <target name="init">
+    <echo>Properties initialized.
+      src path			${src}
+      bin path 			${bin}
+      libraryClasspath		${libraryClasspath}
+      processing Libraries	${outputDir}
+      java version		${javaVersion}
+    </echo>			
 		
-	<echo>building library ...</echo>
+    <echo>building library ...</echo>
 	<!-- Create the time stamp -->
-	<tstamp> 
-		<format property="date" pattern="dd.MM.yyyy" offset="0" unit="hour"/>
-	</tstamp>
-		<mkdir dir="${distbase}"/>
-		<mkdir dir="${dist}"/>
-		<mkdir dir="${distweb}"/>	
+    <tstamp> 
+      <format property="date" pattern="dd.MM.yyyy" offset="0" unit="hour"/>
+    </tstamp>
+    <mkdir dir="${distbase}"/>
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${distweb}"/>	
   </target>
   
 	<!-- compile the library -->
   <target name="compile" depends="init" description="compile the source" >  	
-		<javac srcdir="${src}" destdir="${bin}" source="${javaVersion}">
-                  <exclude name="**/testing/**"/>
-                  <classpath>
-                          <path refid="library-classpath"/>
-                  </classpath>
-                </javac>
+    <javac srcdir="${src}" destdir="${bin}" source="${javaVersion}">
+      <exclude name="**/testing/**"/>
+      <classpath>
+        <path refid="library-classpath"/>
+      </classpath>
+    </javac>
   </target>
 
 	<!-- build the distribution of the library -->
   <target name="build" depends="compile" description="generate the distribution" >
   	<!-- delete the previous content of the ${distweb} folder -->
  	
- 	<delete dir="${dist}" />
-  	<delete dir="${distweb}" />
-  	<delete dir="${distbase}" />
+    <delete dir="${dist}" />
+    <delete dir="${distweb}" />
+    <delete dir="${distbase}" />
   	
   	
   	<!-- build the structure for ${dist} -->
-  	<mkdir dir="${dist}" /> 
-  	<mkdir dir="${dist}/library" />
-  	<mkdir dir="${dist}/examples" />
-  	<mkdir dir="${dist}/reference" />
-  	<mkdir dir="${dist}/src" />
+    <mkdir dir="${dist}" /> 
+    <mkdir dir="${dist}/library" />
+    <mkdir dir="${dist}/examples" />
+    <mkdir dir="${dist}/reference" />
+    <mkdir dir="${dist}/src" />
   	  	  	
-  	<jar jarfile="${dist}/library/${jarFile}" basedir="${bin}">
-		<manifest>
-	      <attribute name="Implementation-Version" value="${versionNumber}"/> 
-	  	</manifest>
-	</jar>
+    <jar jarfile="${dist}/library/${jarFile}" basedir="${bin}">
+      <manifest>
+        <attribute name="Implementation-Version" value="${versionNumber}"/> 
+      </manifest>
+    </jar>
   	
-  	<copy todir="${dist}/src/">
-  		<file file="license.txt"/>
+    <copy todir="${dist}/src/">
+      <file file="license.txt"/>
     </copy>	
-  	<copy todir="${dist}/examples">
-  		<fileset dir="examples"/>
-  	</copy>
-  	<copy todir="${dist}/src">
-  		<fileset dir="src"/>
-  	</copy> 
+    <copy todir="${dist}/examples">
+      <fileset dir="examples"/>
+    </copy>
+    <copy todir="${dist}/src">
+      <fileset dir="src"/>
+    </copy> 
 
   	
   	
 	<!-- create the java reference of the library -->
- 	<mkdir dir="${reference}" />
- 	<javadoc bottom="processing library ${libraryName} by ${author}. ${copyright}" 
- 			 classpath="${libraryClasspath}/core.jar" 
- 			 destdir="${reference}" 
- 			 verbose="true" 
- 			 stylesheetfile="resources/stylesheet.css" 
- 			 doctitle="Javadocs: ${libraryName}" 
- 			 public="true" version="false" 
- 			 windowtitle="Javadocs: ${libraryName}">
- 		<taglet name="ExampleTaglet" path="resources/code" />
- 		<fileset dir="${src}" defaultexcludes="yes">
+    <mkdir dir="${reference}" />
+    <javadoc bottom="processing library ${libraryName} by ${author}. ${copyright}" 
+                 classpath="${libraryClasspath}/core.jar" 
+                 destdir="${reference}" 
+                 verbose="true" 
+                 stylesheetfile="resources/stylesheet.css" 
+                 doctitle="Javadocs: ${libraryName}" 
+                 public="true" version="false" 
+                 windowtitle="Javadocs: ${libraryName}">
+      <taglet name="ExampleTaglet" path="resources/code" />
+      <fileset dir="${src}" defaultexcludes="yes">
  			<!-- #### (9) add packages to be added to reference. #### -->
-			<include name="../libs/guicomponents.jar"/>
-			<include name="**/*"/>
- 			<exclude name="**/*.png"/>
- 			<exclude name="**/*.vlw"/>
-			<exclude name="**/*.jpg"/>
-		</fileset>
- 	</javadoc>
+        <include name="../libs/guicomponents.jar"/>
+        <include name="**/*"/>
+        <exclude name="**/*.png"/>
+        <exclude name="**/*.vlw"/>
+        <exclude name="**/*.jpg"/>
+      </fileset>
+    </javadoc>
  	
-	<copy todir="${dist}/reference">
-		<fileset dir="${reference}" />
-	</copy>
+    <copy todir="${dist}/reference">
+      <fileset dir="${reference}" />
+    </copy>
   	
   	<!-- copy the jar file to processing's libraries -->
-  	<delete dir="${outputDir}/${libraryName}" />
+    <delete dir="${outputDir}/${libraryName}" />
   	
-  	<mkdir dir="${outputDir}/${libraryName}" />
-	<copy todir="${outputDir}/${libraryName}">
-		<fileset dir="${dist}"/>
-	</copy> 
+    <mkdir dir="${outputDir}/${libraryName}" />
+    <copy todir="${outputDir}/${libraryName}">
+      <fileset dir="${dist}"/>
+    </copy> 
 
   	<!-- zip the distribution of the library -->
-  	<zip destfile="${distbase}/${libraryName}.zip"
-  	       basedir="${distbase}"
-  	       excludes="**/_DS.Store"
+    <zip destfile="${distbase}/${libraryName}.zip"
+             basedir="${distbase}"
+             excludes="**/_DS.Store"
 	/>
   	
   	<!-- <rename src="${dist}/${libraryName}.zip" dest="${dist}/${libraryName}_${versionNumber}.zip" /> -->
  	
   	<!-- organize the ${dist} folder -->
-  	<mkdir dir="${distweb}/web" />
+    <mkdir dir="${distweb}/web" />
   	  	
-  	<move todir="${distweb}/web/reference">
-  		<fileset dir="${dist}/reference" />
-  	</move>
+    <move todir="${distweb}/web/reference">
+      <fileset dir="${dist}/reference" />
+    </move>
   	
-  	<move todir="${distweb}/web/examples">
-  		<fileset dir="${dist}/examples" />
-  	</move>
+    <move todir="${distweb}/web/examples">
+      <fileset dir="${dist}/examples" />
+    </move>
   	
-  	<delete dir="${dist}/library" />
+    <delete dir="${dist}/library" />
   	
-   	<copy todir="${distweb}/web">
-  		<fileset dir="web" />
-  	</copy>
+    <copy todir="${distweb}/web">
+      <fileset dir="web" />
+    </copy>
   	
   	<!--
   	format the index.html file. 
@@ -205,186 +206,186 @@
   	somewhat to the gwoptics.org page.
   	-->
   	
-  	<replaceregexp file="${distweb}/web/index.html"
-   	                         match="##yourLibrary##"
-  	                         replace="${libraryName}"
-  	                         flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                       match="##yourLibrary##"
+                       replace="${libraryName}"
+                       flags="g" />
  
-   	<replaceregexp file="${distweb}/web/index.html"
-							match="##author##"
-							replace="${author}"
-							flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                       match="##author##"
+                       replace="${author}"
+                       flags="g" />
   	
-  	<replaceregexp file="${distweb}/web/index.html"
-							match="##versionNumber##"
-							replace="${versionNumber}"
-							flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                       match="##versionNumber##"
+                       replace="${versionNumber}"
+                       flags="g" />
   	
-	<replaceregexp file="${distweb}/web/index.html"
-							match="##yourLink##"
-  							replace="${yourLink}"
-							flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                       match="##yourLink##"
+                       replace="${yourLink}"
+                       flags="g" />
   	
-  	<replaceregexp file="${distweb}/web/index.html"
-  							match="##date##"
-  	  						replace="${date}"
-  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                       match="##date##"
+                       replace="${date}"
+                       flags="g" />
   	  						
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##keywords##"
-  	  						replace="${keywords}"
-  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##keywords##"
+                        replace="${keywords}"
+                        flags="g" />
   	  						
   	  						
   	  						
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##tested:platform##"
-  	  						replace="${tested:platform}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##tested:processingVersion##"
-  	  						replace="${tested:processingVersion}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##tested:dependencies##"
-  	  						replace="${tested:dependencies}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##source:host##"
-  	  						replace="${source:host}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##source:url##"
-  	  						replace="${source:url}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.html"
-  							match="##source:repository##"
-  	  						replace="${source:repository}"
-  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##tested:platform##"
+                        replace="${tested:platform}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##tested:processingVersion##"
+                        replace="${tested:processingVersion}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##tested:dependencies##"
+                        replace="${tested:dependencies}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##source:host##"
+                        replace="${source:host}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##source:url##"
+                        replace="${source:url}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                        match="##source:repository##"
+                        replace="${source:repository}"
+                        flags="g" />
 
   	<!-- 
   	Now processing the php file 
   	-->
   	
-	<replaceregexp file="${distweb}/web/index.php"
-   	                         match="##yourLibrary##"
-  	                         replace="${libraryName}"
-  	                         flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                       match="##yourLibrary##"
+                       replace="${libraryName}"
+                       flags="g" />
  
-   	<replaceregexp file="${distweb}/web/index.php"
-							match="##author##"
-							replace="${author}"
-							flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                       match="##author##"
+                       replace="${author}"
+                       flags="g" />
   	
-  	<replaceregexp file="${distweb}/web/index.php"
-							match="##versionNumber##"
-							replace="${versionNumber}"
-							flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                       match="##versionNumber##"
+                       replace="${versionNumber}"
+                       flags="g" />
   	
-	<replaceregexp file="${distweb}/web/index.php"
-							match="##yourLink##"
-  							replace="${yourLink}"
-							flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                       match="##yourLink##"
+                       replace="${yourLink}"
+                       flags="g" />
   	
-  	<replaceregexp file="${distweb}/web/index.php"
-  							match="##date##"
-  	  						replace="${date}"
-  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                       match="##date##"
+                       replace="${date}"
+                       flags="g" />
   	  						
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##keywords##"
-  	  						replace="${keywords}"
-  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##keywords##"
+                        replace="${keywords}"
+                        flags="g" />
   	  						
   	  					  	  						
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##tested:platform##"
-  	  						replace="${tested:platform}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##tested:processingVersion##"
-  	  						replace="${tested:processingVersion}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##tested:dependencies##"
-  	  						replace="${tested:dependencies}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##source:host##"
-  	  						replace="${source:host}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##source:url##"
-  	  						replace="${source:url}"
-  	  						flags="g" />
-  	 <replaceregexp file="${distweb}/web/index.php"
-  							match="##source:repository##"
-  	  						replace="${source:repository}"
-  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##tested:platform##"
+                        replace="${tested:platform}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##tested:processingVersion##"
+                        replace="${tested:processingVersion}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##tested:dependencies##"
+                        replace="${tested:dependencies}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##source:host##"
+                        replace="${source:host}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##source:url##"
+                        replace="${source:url}"
+                        flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                        match="##source:repository##"
+                        replace="${source:repository}"
+                        flags="g" />
 
 
   	
-  	<echo>---------------------</echo>
-  	<antcall target="processExamples" />
-  	<echo>---------------------</echo>
+    <echo>---------------------</echo>
+    <antcall target="processExamples" />
+    <echo>---------------------</echo>
   	
-  	<replaceregexp file="${distweb}/web/index.html"
-  	  							match="##examples##"
-  	  	  						replace=""
-  	  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.html"
+                       match="##examples##"
+                       replace=""
+                       flags="g" />
 
-  	<replaceregexp file="${distweb}/web/index.php"
-  	  							match="##examples##"
-  	  	  						replace=""
-  	  	  						flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                       match="##examples##"
+                       replace=""
+                       flags="g" />
   	  	  						
   	  	  						
   	<!-- finish organizating library's distribution -->
-  	<mkdir dir="${distweb}/web/download" />
-  	<copy file="${distbase}/${libraryName}.zip" todir="${distweb}/web/download" />
+    <mkdir dir="${distweb}/web/download" />
+    <copy file="${distbase}/${libraryName}.zip" todir="${distweb}/web/download" />
   	
-  	<copy todir="${outputDir}/${libraryName}/reference">
-		<fileset dir="${reference}" />
-	</copy>
+    <copy todir="${outputDir}/${libraryName}/reference">
+      <fileset dir="${reference}" />
+    </copy>
   	
   	<!-- done, finished. -->
-  	<echo>done, finished.</echo>
- </target>
+    <echo>done, finished.</echo>
+  </target>
  
  
  	
 	<!-- parsing the examples folder -->
 
 
-	<target name="processExamples">
-		<dirset id="folder.contents" dir="examples" excludes="*/*"/>
-		<property name="folder.list" refid="folder.contents"/>
-		<foreach list="${folder.list}" target="processFolder" param="exampleFolder" delimiter=";">
-		</foreach>
-	</target>
+  <target name="processExamples">
+    <dirset id="folder.contents" dir="examples" excludes="*/*"/>
+    <property name="folder.list" refid="folder.contents"/>
+    <foreach list="${folder.list}" target="processFolder" param="exampleFolder" delimiter=";">
+    </foreach>
+  </target>
 	
-	<target name="processFolder">
-			<dirset id="examples.contents" dir="examples/${exampleFolder}" excludes="*/*"/>
-			<property name="examples.list" refid="examples.contents"/>
-		<foreach list="${examples.list}" target="addExamples" param="exampleDir" delimiter=";">
-			</foreach>
-	</target>
+  <target name="processFolder">
+    <dirset id="examples.contents" dir="examples/${exampleFolder}" excludes="*/*"/>
+    <property name="examples.list" refid="examples.contents"/>
+    <foreach list="${examples.list}" target="addExamples" param="exampleDir" delimiter=";">
+    </foreach>
+  </target>
 	
-	<target name="checkFile">
-	    <available file="examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde" property="examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde.present"/>
-	</target>
+  <target name="checkFile">
+    <available file="examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde" property="examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde.present"/>
+  </target>
 
 	
-	<target name="addExamples" depends="checkFile" if="examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde.present">
-		<replaceregexp file="${distweb}/web/index.html"
-	  					match="(##examples##)"
-	  	  				replace="&lt;li&gt;&lt;a href=&quot;examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde&quot;&gt;${exampleFolder}/${exampleDir}&lt;/a&gt;&lt;/li&gt; \1"
-	  	  				flags="g" />
-			<replaceregexp file="${distweb}/web/index.php"
-		  					match="(##examples##)"
-		  	  				replace="&lt;li&gt;&lt;a href=&quot;examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde&quot;&gt;${exampleFolder}/${exampleDir}&lt;/a&gt;&lt;/li&gt; \1"
-		  	  				flags="g" />
-	</target>
+  <target name="addExamples" depends="checkFile" if="examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde.present">
+    <replaceregexp file="${distweb}/web/index.html"
+                               match="(##examples##)"
+                               replace="&lt;li&gt;&lt;a href=&quot;examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde&quot;&gt;${exampleFolder}/${exampleDir}&lt;/a&gt;&lt;/li&gt; \1"
+                               flags="g" />
+    <replaceregexp file="${distweb}/web/index.php"
+                                       match="(##examples##)"
+                                       replace="&lt;li&gt;&lt;a href=&quot;examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde&quot;&gt;${exampleFolder}/${exampleDir}&lt;/a&gt;&lt;/li&gt; \1"
+                                       flags="g" />
+  </target>
 	
 </project>
 

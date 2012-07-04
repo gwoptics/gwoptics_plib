@@ -21,6 +21,11 @@ import processing.core.PGraphics;
 
 public class graphTest extends PApplet{
 
+        public static void main(String args[])
+        {
+          
+        }
+        
 	class eq implements ILine2DEquation{
 		public double computePoint(double x,int pos) {
 			return mouseX;

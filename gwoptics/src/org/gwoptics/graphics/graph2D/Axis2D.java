@@ -51,9 +51,10 @@ public class Axis2D extends Renderable implements PConstants {
   private int _length;
   private float _minShow;
   private float _maxShow;
-  protected int _axisLineWidth;
-  protected int _axisTickLineWidth;
-  protected static PFont _font;
+  protected float _axisLineWidth;
+  protected float _axisTickLineWidth;
+  protected String _tickFontName, _labelFontName;
+  protected PFont _fontTick, _fontLabel;
   protected String _label;
   protected PVector _labelDirection;
   protected float _majorTickSpacing;
@@ -134,6 +135,32 @@ public class Axis2D extends Renderable implements PConstants {
     _axisColour = c;
   }
 
+  /**
+   * Sets the font of the axis label
+   * 
+   * @param font
+   * @param size
+   * @param smooth 
+   */
+  public void setLabelFont(String font, int size, boolean smooth){
+    _axisLblSize = size;
+    _labelFontName = font;
+    _fontLabel = _parent.createFont(_labelFontName, _axisLblSize, smooth);
+  }
+  
+  /**
+   * Sets the font of the axis ticks
+   * 
+   * @param font
+   * @param size
+   * @param smooth 
+   */
+  public void setTickFont(String font, int size, boolean smooth){
+    _axisTickLblSize = size;
+    _tickFontName = font;
+    _fontTick = _parent.createFont(_tickFontName, _axisTickLblSize, smooth);
+  }
+  
   /**
    * Sets the labels font colour from RGB values
    */
@@ -437,26 +464,23 @@ public class Axis2D extends Renderable implements PConstants {
     _axisLblSize = 12;
     _axisLblOffset = 4;
     _axisLblPos = LabelPos.MIDDLE;
-    _axisLineWidth = 1;
-    _axisTickLineWidth = 1;
+    _axisLineWidth = 2f;
+    _axisTickLineWidth = 2f;
     _axisTickLblAlign = Alignment.CENTER;
     _axisTickLblOffset = 6;
     _generateTicks = true;
     _isLogarithmic = false;
-
+    _labelFontName = "Arial";
+    _tickFontName = "Arial";
+    
     _posConv = _length / (_maxShow - _minShow);
     _offsetByLabelWidth = false;
 
     parent.registerPre(this);
 
-    if (_font == null) {// Font is a static member so only load if noone has
-      // before
-      // _font = parent.loadFont("Arial-BoldMT-12.vlw");
-      // TODO check this for use with Android, probably need a setFont method too
-      //String[] fontList = PFont.list();
-      //_font = parent.createFont(fontList[0], 12, true);
-      _font = parent.createFont("Arial-BoldMT", 12, true);
-    }
+    setLabelFont(_labelFontName, _axisLblSize, true);
+    setTickFont(_tickFontName, _axisTickLblSize, true);
+    
   }
 
   public void pre() {
@@ -528,7 +552,7 @@ public class Axis2D extends Renderable implements PConstants {
   protected void _drawAxisLine() {
     _parent.pushStyle();
 
-    _parent.strokeWeight(1f);
+    _parent.strokeCap(PApplet.PROJECT);
     _parent.stroke(_axisColour.toInt());
     _parent.strokeWeight(_axisLineWidth);
 
@@ -638,10 +662,12 @@ public class Axis2D extends Renderable implements PConstants {
 
     // setup tick properties
     _parent.pushStyle();
+    _parent.strokeCap(PApplet.PROJECT);
     _parent.strokeWeight(_axisTickLineWidth);
-    _parent.textFont(_font, _axisTickLblSize);
+    _parent.textFont(_fontTick);
+    _parent.textAlign(_axisTickLblAlign.getValue());
     _parent.stroke(_axisColour.toInt());
-    _parent.strokeWeight(_axisLineWidth);
+    
 
     if (_axisTickLblAlign == null) {
       _parent.textAlign(CENTER);
@@ -649,6 +675,7 @@ public class Axis2D extends Renderable implements PConstants {
       _parent.textAlign(_axisTickLblAlign.getValue());
     }
 
+          
     for (int i = 0; i < _majorTickPositions.size(); i++) {
       int pos = _majorTickPositions.get(i);
       double val = _majorTickLabels.get(i);
@@ -740,8 +767,7 @@ public class Axis2D extends Renderable implements PConstants {
 
         if (_isLogarithmic && _tickLblType == ValueType.EXPONENT) {
           float xpos = 0;
-
-          _parent.textAlign(_axisTickLblAlign.getValue());
+          
           _parent.text(tickLbl, 0, 0.4f * _axisTickLblSize, 0);
 
           switch (_axisTickLblAlign) {
@@ -795,7 +821,7 @@ public class Axis2D extends Renderable implements PConstants {
     // Add Label
     _parent.fill(_fontColour.toInt());
     _parent.textAlign(CENTER);
-    _parent.textFont(_font, _axisLblSize);
+    _parent.textFont(_fontLabel);
 
     PVector lblPos = new PVector(0, 0, 0);
     // label position will be half way along the axis
@@ -832,7 +858,7 @@ public class Axis2D extends Renderable implements PConstants {
     _parent.translate(lblPos.x, lblPos.y);
     _parent.rotate(_axisLblRotation);
     // removed getFont adf 29.03.2012
-    _parent.text(String.valueOf(_label), 0, 0.25f * _font.getFont().getSize(), 0);
+    _parent.text(String.valueOf(_label), 0, 0.25f * _fontLabel.getFont().getSize(), 0);
     _parent.popMatrix();
   }
 }

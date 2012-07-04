@@ -28,6 +28,7 @@ import org.gwoptics.graphics.graph2D.IGraph2D;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.opengl.PGraphicsOpenGL;
 
 public abstract class Blank2DTrace implements IGraph2DTrace {
 
@@ -36,7 +37,20 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
   protected PGraphics _backBuffer;
   protected PImage _traceImg;
   private boolean _redraw;
+  private String _renderer = PApplet.JAVA2D;
 
+  /**
+   * Sets the renderer for the PGraphics object that is used for drawing to.
+   * 
+   * @param renderer P2D or JAVA2D
+   */
+  public final void setRenderer(String renderer){
+    if(renderer != PApplet.JAVA2D || renderer != PApplet.P2D)
+      throw new RuntimeException("Renderer must be JAVA2D or P2D");
+    
+    _renderer = renderer;
+  }
+  
   public void generate() {
     _redraw = true;
   }
@@ -71,7 +85,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
     }
 
     _graphDrawable = grp;
-    _backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength());
+    _backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength(), _renderer);    
   }
 
   public void draw() {
@@ -93,7 +107,11 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 
       _backBuffer.scale(xscale, -yscale);
       _backBuffer.background(0, 0, 0, 0);
-
+      
+      // for some reason the stroke width is going weird, needs to be set small
+      // otherwise it looks like a massive blob
+      //_backBuffer.strokeWeight(0.1f);
+      
       TraceDraw(_backBuffer);
 
       _backBuffer.popMatrix();
@@ -104,8 +122,6 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
     }
 
     _parent.image(_traceImg, 0, -_backBuffer.height);
-    _parent.textFont(this._parent.createFont("Arial", 15));
-    _parent.text("(10, 123)", 100, 100);
   }
 
   public abstract void TraceDraw(PGraphics backBuffer);

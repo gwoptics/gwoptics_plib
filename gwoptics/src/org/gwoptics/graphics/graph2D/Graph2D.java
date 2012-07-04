@@ -135,7 +135,27 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
   public void setXAxisMinorTicks(int n) {
     _ax.setMinorTicks(n);
   }
+  
+  /** Sets the font of the X axis label */
+  public void setXAxisLabelFont(String font, int size, boolean smooth){
+    _ax.setLabelFont(font, size, smooth);
+  }
+  
+  /** Sets the font of the X axis ticks */
+  public void setXAxisTickFont(String font, int size, boolean smooth){
+    _ax.setTickFont(font, size, smooth);
+  }
 
+  /** Sets the font of the Y axis label */
+  public void setYAxisLabelFont(String font, int size, boolean smooth){
+    _ay.setLabelFont(font, size, smooth);
+  }
+  
+  /** Sets the font of the Y axis ticks */
+  public void setYAxisTickFont(String font, int size, boolean smooth){
+    _ay.setTickFont(font, size, smooth);
+  }
+  
   /**
    * Sets number of minor ticks to show on the Y-Axis*
    */

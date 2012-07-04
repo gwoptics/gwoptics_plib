@@ -18,11 +18,11 @@
   </description>
 	
 	<!-- Alter this property with the location of the output directory required -->
-  <property name="outputDir" location="out"/>	
+  <property name="outputDir" location="C:\Users\Daniel\Documents\Processing\libraries"/>	
 	
 	<!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
   <tstamp>
-    <format property="versionNumber" pattern="0.4.2 (yyyy.MM.dd)" offset="0" unit="day"/>
+    <format property="versionNumber" pattern="0.5.0 (yyyy.MM.dd)" offset="0" unit="day"/>
   </tstamp>
 	
 	<!-- _________________________________________________________________________________

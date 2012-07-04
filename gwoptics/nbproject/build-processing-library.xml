@@ -96,10 +96,11 @@
 	<!-- compile the library -->
   <target name="compile" depends="init" description="compile the source" >  	
 		<javac srcdir="${src}" destdir="${bin}" source="${javaVersion}">
-			<classpath>
-				<path refid="library-classpath"/>
-			</classpath>
-		</javac>
+                  <exclude name="**/testing/**"/>
+                  <classpath>
+                          <path refid="library-classpath"/>
+                  </classpath>
+                </javac>
   </target>
 
 	<!-- build the distribution of the library -->

@@ -294,11 +294,8 @@ public class Axis3D extends Renderable implements PConstants {
 			_parent.stroke(_axisColour.toInt());
 			_parent.fill(_fontColour.toInt());
 			_parent.strokeWeight(_axisLineWidth);
-			_parent.beginShape(PConstants.LINE);
-			_parent.vertex(0, 0, 0);
-			_parent.vertex(length.x, length.y, length.z);
-			_parent.endShape();
-		}
+			_parent.line(0, 0, 0, length.x, length.y, length.z);
+                }
 		float longestLabel = 0; // difference in value for tick positions
 		PVector pos = null;
 		PVector eye = null;
@@ -417,11 +414,8 @@ public class Axis3D extends Renderable implements PConstants {
 
 				if (_drawTicks) {
 					// draw the tick line
-					_parent.beginShape(PConstants.LINE);
-					_parent.vertex(tickPos.x, tickPos.y, tickPos.z);
-					_parent.vertex(tickEnd.x, tickEnd.y, tickEnd.z);
-					_parent.endShape();
-
+					_parent.line(tickPos.x, tickPos.y, tickPos.z,tickEnd.x, tickEnd.y, tickEnd.z);
+					
 					// Draw minor ticks
 					if (i != 0) {// dont draw minor tick if first iteration as
 									// the minor ticks get drawn in the -ive
@@ -439,12 +433,9 @@ public class Axis3D extends Renderable implements PConstants {
 							tickEndMinor = PVector.add(tickPosMinor, PVector
 									.mult(_labelDirection, _minorTickSize));
 
-							_parent.beginShape(PConstants.LINE);
-							_parent.vertex(tickPosMinor.x, tickPosMinor.y,
-									tickPosMinor.z);
-							_parent.vertex(tickEndMinor.x, tickEndMinor.y,
+							_parent.line(tickPosMinor.x, tickPosMinor.y,
+									tickPosMinor.z, tickEndMinor.x, tickEndMinor.y,
 									tickEndMinor.z);
-							_parent.endShape();
 						}
 					}
 				}

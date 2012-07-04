@@ -29,7 +29,6 @@ import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
 
 import processing.core.PApplet;
-import sun.java2d.pipe.LoopPipe;
 
 /**
  * <p>

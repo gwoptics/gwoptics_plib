@@ -414,7 +414,7 @@ public class Axis2D extends Renderable implements PConstants {
 			// TODO check this for use with Android, probably need a setFont method too
 			//String[] fontList = PFont.list();
 			//_font = parent.createFont(fontList[0], 12, true);
-			_font = parent.createFont("Arial-BoldMT", 12);
+			_font = parent.createFont("Arial-BoldMT", 12,true);
 		}
 	}
 
@@ -480,14 +480,12 @@ public class Axis2D extends Renderable implements PConstants {
 	protected void _drawAxisLine() {
 		_parent.pushStyle();
 
+                _parent.strokeWeight(1f);
 		_parent.stroke(_axisColour.toInt());
 		_parent.strokeWeight(_axisLineWidth);
 
-		_parent.beginShape(PConstants.LINE);
-		_parent.vertex(0, 0);
-		_parent.vertex(length.x, length.y);
-		_parent.endShape();
-
+                _parent.line(0, 0, length.x, length.y);
+		
 		_parent.popStyle();
 	}
 
@@ -717,25 +715,19 @@ public class Axis2D extends Renderable implements PConstants {
 			}
 
 			if (_drawTicks) {
-				// draw the tick line
-				_parent.beginShape(PConstants.LINE);
-				_parent.vertex(tickPos.x, tickPos.y);
-				_parent.vertex(tickEnd.x, tickEnd.y);
-				_parent.endShape();
+                          // draw the tick line
+                          _parent.line(tickPos.x, tickPos.y, tickEnd.x, tickEnd.y);
 			}
 		}
 
 		if (_drawTicks) {
 			for (Integer i : _minorTickPositions) {
-				// same as with major ticks, get start and end points
-				tickPosMinor = PVector.mult(_unitVec, i);
-				tickEndMinor = PVector.add(tickPosMinor, PVector.mult(
-						_labelDirection, -_minorTickSize));
+                          // same as with major ticks, get start and end points
+                          tickPosMinor = PVector.mult(_unitVec, i);
+                          tickEndMinor = PVector.add(tickPosMinor, PVector.mult(
+                                          _labelDirection, -_minorTickSize));
 
-				_parent.beginShape(PConstants.LINE);
-				_parent.vertex(tickPosMinor.x, tickPosMinor.y);
-				_parent.vertex(tickEndMinor.x, tickEndMinor.y);
-				_parent.endShape();
+                          _parent.line(tickPosMinor.x, tickPosMinor.y, tickEndMinor.x, tickEndMinor.y);				
 			}
 		}
 

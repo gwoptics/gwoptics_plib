@@ -21,6 +21,7 @@
 
 package org.gwoptics.graphics.graph2D.traces;
 
+import com.sun.corba.se.spi.oa.OADefault;
 import org.gwoptics.graphics.graph2D.Axis2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
 
@@ -30,10 +31,10 @@ import processing.core.PImage;
 
 public abstract class Blank2DTrace implements IGraph2DTrace {
 
-	private IGraph2D _graphDrawable;
-	private PApplet _parent;
-	private PGraphics _backBuffer;
-	private PImage _traceImg;
+	protected IGraph2D _graphDrawable;
+	protected PApplet _parent;
+	protected PGraphics _backBuffer;
+	protected PImage _traceImg;
 	private boolean _redraw;
 	
 	public void generate(){
@@ -62,9 +63,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 			throw new NullPointerException("Parent PApplet object is null.");
 		
 		_graphDrawable = grp;
-		_backBuffer = _parent.createGraphics(grp.getXAxis().getLength(),
-											 grp.getYAxis().getLength(),
-											 PApplet.P2D);
+		_backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength());
 	}
 	
 	public void draw(){
@@ -92,13 +91,13 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 			_backBuffer.popMatrix();
 			_backBuffer.endDraw();
 			
-			_traceImg = _backBuffer.get(0, 0, 
-										_backBuffer.width, 
-										_backBuffer.height);
+			_traceImg = _backBuffer.get(0, 0, _backBuffer.width, _backBuffer.height);
 			_redraw = false;
 		}
 		
 		_parent.image(_traceImg,0,-_backBuffer.height);
+                _parent.textFont(this._parent.createFont("Arial", 15));
+                _parent.text("(10, 123)", 100, 100);
 	}
 	
 	public abstract void TraceDraw(PGraphics backBuffer);

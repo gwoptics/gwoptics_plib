@@ -17,7 +17,7 @@
     </description>
 	
 	<!-- Alter this property with the location of the output directory required -->
-	<property name="outputDir" location=""/>	
+	<property name="outputDir" location="out"/>	
 	
 	<!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
 	<tstamp>
@@ -43,6 +43,8 @@
 			<fail message="You have not specified a location to compile the library too"/>
 		</then>
 	</if>	
+        
+        <mkdir dir="${outputDir}" />
 	
 	<path id="library-classpath">
 		<fileset dir="${libraryClasspath}" >		

@@ -1,6 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright notice
+ *
+ * This file is part of the Processing library `gwoptics'
+ * http://www.gwoptics.org/processing/gwoptics_p5lib/
+ *
+ * Copyright (C) 2009 onwards Daniel Brown and Andreas Freise
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License version 2.1 as published
+ * by the Free Software Foundation.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package org.gwoptics.graphics.graph2D.traces;
 
@@ -224,9 +241,13 @@ public class ScatterTrace extends Blank2DTrace {
 
     float sx = ax.getLength() / (ax.getMaxValue() - ax.getMinValue());
     float sy = ay.getLength() / (ay.getMaxValue() - ay.getMinValue());
-
+    
+    canvas.pushMatrix();
+    canvas.pushStyle();
     _pt.drawPoint(p.x, p.y, canvas, _info.get(ix));
-
+    canvas.popMatrix();
+    canvas.popStyle();
+    
     if (!_labels.isEmpty()) {
       // The BlankCanvas trace works by creating a scaled canvas on which
       // we draw, if we try and draw text to it though this will also be

@@ -23,7 +23,6 @@ package org.gwoptics.graphics.graph2D.traces;
 
 import org.gwoptics.graphics.graph2D.Axis2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -45,25 +44,30 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
    * @param renderer P2D or JAVA2D
    */
   public final void setRenderer(String renderer){
-    if(renderer != PApplet.JAVA2D & renderer != PApplet.P2D)
+    if(!renderer.equals(PApplet.JAVA2D) & !renderer.equals(PApplet.P2D))
       throw new RuntimeException("Renderer must be JAVA2D or P2D");
     
     _renderer = renderer;
   }
   
+  @Override
   public void generate() {
     _redraw = true;
   }
 
+  @Override
   public void onAddTrace(Object[] traces) {
   }
 
+  @Override
   public void onRemoveTrace() {
   }
 
+  @Override
   public void setPosition(int x, int y) {
   }
 
+  @Override
   public void setParent(PApplet parent) {
     if (parent == null) {
       throw new NullPointerException("Cannot assign a null PApplet object as a parent.");
@@ -72,6 +76,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
     }
   }
 
+  @Override
   public void setGraph(IGraph2D grp) {
     if (grp == null) {
       throw new NullPointerException("Cannot assign a null graph2D object to draw on.");
@@ -88,6 +93,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
     _backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength(), _renderer);    
   }
 
+  @Override
   public void draw() {
     if (_redraw) {
       _backBuffer.beginDraw();
@@ -120,8 +126,9 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
       _traceImg = _backBuffer.get(0, 0, _backBuffer.width, _backBuffer.height);
       _redraw = false;
     }
-
-    _parent.image(_traceImg, 0, -_backBuffer.height);
+    
+    if(_traceImg!=null)
+      _parent.image(_traceImg, 0, -_backBuffer.height);
   }
 
   public abstract void TraceDraw(PGraphics backBuffer);

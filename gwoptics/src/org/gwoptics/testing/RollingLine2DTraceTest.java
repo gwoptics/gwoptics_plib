@@ -4,19 +4,10 @@ ScatterPlot
 
 Example showing how to use blank2DCanvas to quickly create a simple scatter plot.
 */
-import java.util.ArrayList;
-
-import org.gwoptics.ValueType;
-import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.graph2D.Graph2D;
-import org.gwoptics.graphics.graph2D.backgrounds.GridBackground;
-import org.gwoptics.graphics.graph2D.traces.Blank2DTrace;
 import org.gwoptics.graphics.graph2D.traces.ILine2DEquation;
-import org.gwoptics.graphics.graph2D.traces.Line2DTrace;
 import org.gwoptics.graphics.graph2D.traces.RollingLine2DTrace;
-
 import processing.core.PApplet;
-import processing.core.PGraphics;
 
 
 public class RollingLine2DTraceTest extends PApplet{

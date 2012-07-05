@@ -48,7 +48,7 @@ public class ScatterTraceTest extends PApplet {
 
     // Here we create a new trace and set a colour for
     // it, along with passing the equation object to it.
-    ScatterTrace t = new ScatterTrace(ScatterTrace.Circle);
+    t = new ScatterTrace(ScatterTrace.Circle);
         
     t.setDefaultSize(7.5f);
     t.setLablePosition(ScatterTrace.LABELPOSITION.CENTER);
@@ -61,10 +61,16 @@ public class ScatterTraceTest extends PApplet {
     }
     // Adding the trace to the graph
     grph.addTrace(t);
+    
+    frameRate(900);
   }
+  
+  ScatterTrace t;
 
   @Override public void draw(){
     background(255);
     grph.draw();
+    t.generate();
+    println(frameRate);
   }
 }

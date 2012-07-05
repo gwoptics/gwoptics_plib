@@ -48,7 +48,7 @@ void setup(){
       canvas.stroke(c.toInt());
       canvas.strokeCap(PApplet.ROUND);
       canvas.strokeWeight(0.05f);
-      canvas.rect(x - psize/2, y-psize/2, psize, psize);
+      canvas.rect(x - psize, y-psize, 2*psize, 2*psize);
     }
   };
 

@@ -51,8 +51,9 @@ public class ScatterTrace extends Blank2DTrace {
 
   private class LabelData {
 
-    public String value;
+    public String value="";
     public GWColour c = defaultLabelColour;
+    public float offscale=1f;
   }
 
   private class Point2D {
@@ -87,11 +88,9 @@ public class ScatterTrace extends Blank2DTrace {
       float psize = 0.5f * ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
 
-      canvas.pushStyle();
       canvas.fill(c.toInt());
       canvas.noStroke();
       canvas.ellipse(x, y, psize, psize);
-      canvas.popStyle();
     }
   };
   
@@ -135,7 +134,7 @@ public class ScatterTrace extends Blank2DTrace {
       _labelfont = _parent.createFont("Arial", 12, true);
     }
   }
-
+  
   public void setLablePosition(LABELPOSITION p) {
     _lblPos = p;
   }
@@ -171,8 +170,13 @@ public class ScatterTrace extends Blank2DTrace {
   private void _addPoint(float x, float y, float size, GWColour c) {
     _data.add(new Point2D(x, y));
     HashMap<String, Object> hm = new HashMap<String, Object>(2);
-    hm.put("colour", c);
-    hm.put("size", (Float) size);
+    
+    if(!hm.containsKey("color"))
+      hm.put("colour", c);
+    
+    if(!hm.containsKey("size"))
+      hm.put("size", (Float) size);
+    
     _info.add(hm);
   }
 
@@ -226,7 +230,15 @@ public class ScatterTrace extends Blank2DTrace {
         }
 
         _labels.get(_info.size() - 1).c = (GWColour) args[i + 1];
+      } else if (key.compareToIgnoreCase("labeloffsetscale") == 0) {
+        
+        if (_labels.size() < _info.size()) {
+          _labels.add(new LabelData());
+        }
+
+        _labels.get(_info.size() - 1).offscale = ((Number)args[i + 1]).floatValue();
       }
+      
 
       hm.put((String) args[i], args[i + 1]);
     }
@@ -266,7 +278,8 @@ public class ScatterTrace extends Blank2DTrace {
 
       String lbl = _labels.get(ix).value;
       GWColour c = _labels.get(ix).c;
-
+      float offsc = _labels.get(ix).offscale;
+      
       switch (_lblPos) {
         case CENTER:
           px = -canvas.textWidth(lbl) / 2;
@@ -274,19 +287,19 @@ public class ScatterTrace extends Blank2DTrace {
           break;
         case BELOW:
           px = -canvas.textWidth(lbl) / 2;
-          py = -defaultSize * sy / 2 - _labelfont.getSize() * (_labelfont.ascent());
+          py = -defaultSize * sy * offsc / 2 - _labelfont.getSize() * (_labelfont.ascent());
           break;
         case ABOVE:
           px = -canvas.textWidth(lbl) / 2;
-          py = defaultSize * sy / 2 + _labelfont.getSize() * (_labelfont.descent());
+          py = defaultSize * sy * offsc / 2 + _labelfont.getSize() * (_labelfont.descent());
           break;
         case LEFT:
           py = -_labelfont.getSize() * (_labelfont.ascent()) / 2;
-          px = -(canvas.textWidth(lbl) + defaultSize * sx / 2);
+          px = -(canvas.textWidth(lbl) + defaultSize * sx * offsc / 2);
           break;
         case RIGHT:
           py = -_labelfont.getSize() * (_labelfont.ascent()) / 2;
-          px = defaultSize * sx / 2;
+          px = defaultSize * sx * offsc / 2;
           break;
       }
 

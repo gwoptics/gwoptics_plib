@@ -18,7 +18,7 @@
   </description>
 	
 	<!-- Alter this property with the location of the output directory required -->
-  <property name="outputDir" location="C:\Users\Daniel\Documents\Processing\libraries"/>	
+  <property name="outputDir" location="out"/>	
 	
 	<!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
   <tstamp>

@@ -21,12 +21,31 @@
   <property file="nbproject/private/configs/${config}.properties"/>
   <property file="nbproject/private/private.properties"/>
   <property file="${user.properties.file}"/>
-  <!-- Alter this property with the location of the output directory required -->
   
-  <property name="outputDir" location="${var.GWOPTICS_OUT}"/>	
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <pathelement location="resources/code/ant-contrib-1.0b3.jar"/>
+    </classpath>
+  </taskdef>	
+
+  <if>
+    <isset property="GWOPTICS_OUT"/>
+    <then>
+      <property name="outputDir" value="${GWOPTICS_OUT}"/>
+    </then>
+  </if>
   
-  <echo>${var.GWOPTICS_OUT}</echo>
-	<!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
+  <if>
+    <isset property="var.GWOPTICS_OUT"/>
+    <then>
+      <property name="outputDir" value="${var.GWOPTICS_OUT}"/>
+    </then>
+  </if>
+
+  <echo>Output directory is: ${outputDir}</echo>
+  <fail unless="outputDir" message="Both var.GWOPTICS_OUT or GWOPTICS_OUT were not set. See http://kvasir.sr.bham.ac.uk/redmine/projects/gwoptics/wiki/Wiki"/>
+  
+  <!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
   <tstamp>
     <format property="versionNumber" pattern="0.5.0 (yyyy.MM.dd)" offset="0" unit="day"/>
   </tstamp>
@@ -36,12 +55,7 @@
 		|                   *  No changes required beyond this point  *                   |
 		|_________________________________________________________________________________|-->
 	
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-    <classpath>
-      <pathelement location="resources/code/ant-contrib-1.0b3.jar"/>
-    </classpath>
-  </taskdef>	
-
+        
   <property name="libraryClasspath"  location="libs"/>	
 	
   <if>
@@ -356,6 +370,7 @@
   	
   	<!-- done, finished. -->
     <echo>done, finished.</echo>
+    <echo>Library has been output to ${outputDir}</echo>
   </target>
  
  
@@ -392,6 +407,7 @@
                                        replace="&lt;li&gt;&lt;a href=&quot;examples/${exampleFolder}/${exampleDir}/${exampleDir}.pde&quot;&gt;${exampleFolder}/${exampleDir}&lt;/a&gt;&lt;/li&gt; \1"
                                        flags="g" />
   </target>
-	
+  
+  
 </project>
 

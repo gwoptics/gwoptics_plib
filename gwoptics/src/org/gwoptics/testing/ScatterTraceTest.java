@@ -4,6 +4,7 @@
  */
 package org.gwoptics.testing;
 
+import org.gwoptics.graphics.GWColour;
 import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.traces.ILine2DEquation;
 import org.gwoptics.graphics.graph2D.traces.Line2DTrace;
@@ -47,14 +48,17 @@ public class ScatterTraceTest extends PApplet {
 
     // Here we create a new trace and set a colour for
     // it, along with passing the equation object to it.
-    ScatterTrace t = new ScatterTrace(ScatterTrace.Cross);
+    ScatterTrace t = new ScatterTrace(ScatterTrace.Circle);
         
-    t.setDefaultSize(1f);
-    t.setLablePosition(ScatterTrace.LABELPOSITION.ABOVE);
+    t.setDefaultSize(7.5f);
+    t.setLablePosition(ScatterTrace.LABELPOSITION.CENTER);
+    t.setLabelFont(createFont("Arial", 18, true));
     
-    for(int i=0;i<10;i++)
-      t.addPoint(-9f + (float)Math.random()*18f,-9f + (float)Math.random()*18f);
-    
+    for(int i=0;i<5;i++){      
+      float x =-9f + (float)Math.random()*18f;
+      float y = -9f + (float)Math.random()*18f;
+      t.addPoint(x,y,"label",String.format("[%.1f, %.1f]", x,y),"labelcolour", new GWColour(255,255,255));
+    }
     // Adding the trace to the graph
     grph.addTrace(t);
   }

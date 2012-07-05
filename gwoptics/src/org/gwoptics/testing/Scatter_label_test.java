@@ -10,7 +10,6 @@ import org.gwoptics.graphics.graph2D.traces.Blank2DTrace;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
-import processing.opengl.PGraphics3D;
 
 /**
  *

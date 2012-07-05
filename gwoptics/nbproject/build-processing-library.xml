@@ -16,10 +16,16 @@
     Template used from processing library template
     http://code.google.com/p/processing-library-template/
   </description>
-	
-	<!-- Alter this property with the location of the output directory required -->
-  <property name="outputDir" location="out"/>	
-	
+
+  <property file="nbproject/private/config.properties"/>
+  <property file="nbproject/private/configs/${config}.properties"/>
+  <property file="nbproject/private/private.properties"/>
+  <property file="${user.properties.file}"/>
+  <!-- Alter this property with the location of the output directory required -->
+  
+  <property name="outputDir" location="${var.GWOPTICS_OUT}"/>	
+  
+  <echo>${var.GWOPTICS_OUT}</echo>
 	<!-- Version number has the date appended to it to distinguish different builds ot the same version  -->
   <tstamp>
     <format property="versionNumber" pattern="0.5.0 (yyyy.MM.dd)" offset="0" unit="day"/>

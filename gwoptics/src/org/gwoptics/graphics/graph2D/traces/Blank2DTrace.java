@@ -21,31 +21,31 @@
  */
 package org.gwoptics.graphics.graph2D.traces;
 
-import com.sun.corba.se.spi.oa.OADefault;
 import org.gwoptics.graphics.graph2D.Axis2D;
 import org.gwoptics.graphics.graph2D.IGraph2D;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.opengl.PGraphicsOpenGL;
 
 public abstract class Blank2DTrace implements IGraph2DTrace {
 
-  protected IGraph2D _graphDrawable;
+  private IGraph2D _graphDrawable;
   protected PApplet _parent;
   protected PGraphics _backBuffer;
   protected PImage _traceImg;
   private boolean _redraw;
   private String _renderer = PApplet.JAVA2D;
 
+  protected IGraph2D getGraph(){ return _graphDrawable; }
+  
   /**
    * Sets the renderer for the PGraphics object that is used for drawing to.
    * 
    * @param renderer P2D or JAVA2D
    */
   public final void setRenderer(String renderer){
-    if(renderer != PApplet.JAVA2D || renderer != PApplet.P2D)
+    if(renderer != PApplet.JAVA2D & renderer != PApplet.P2D)
       throw new RuntimeException("Renderer must be JAVA2D or P2D");
     
     _renderer = renderer;

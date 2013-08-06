@@ -1,0 +1,7 @@
+
+Version 0.4.4 (???)
+
+o fixed bugs:
+  - assertion error on using GaussMode 
+
+Version 0.4.3 (2010.03.17)

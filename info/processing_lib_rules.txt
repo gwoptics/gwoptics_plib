@@ -1,0 +1,90 @@
+
+The following is an excerpt from: http://code.google.com/p/processing/wiki/LibraryBasics#Describing_Your_Library_--_library.properties
+10.11.11
+
+
+Describing Your Library -- library.properties
+
+Processing 2.0 will support installing libraries from within the PDE. To make the installation of your library as easy as possible, you should add file named library.properties to the base directory of your library. For example, if we were to extract sonia.zip, we should see the following file structure:
+
+sonia/library.properties
+sonia/library/sonia.jar
+...
+
+In library.properties, you should include the following attributes:
+
+# UTF-8 supported.
+
+# The name of your library as you want it formatted
+name = Most Pixels Ever
+
+# List of authors. Links can be provided using the syntax [author name](url)
+authorList = [Daniel Shiffman](http://www.shiffman.net/) and Chris Kairalla
+
+# A web page for your library, NOT a direct link to where to download it
+url = http://www.mostpixelsever.com/
+
+# The category of your library, must be one of the following:
+#   "3D"            "Animation"         "Compilations"
+#   "Data"          "Geometry"          "GUI"
+#   "Hardware"      "I/O"               "Math" 
+#   "Simulation"    "Sound"             "Utilities"   
+#   "Typography"    "Video & Vision"
+# 
+# If a value other than those listed is used, your library will listed as "Other."
+category = Hardware
+
+# A short sentence (or fragment) to summarize the library's function. This will be
+# shown from inside the PDE when the library is being installed. Avoid repeating
+# the name of your library here. Also, avoid saying anything redundant like
+# mentioning that its a library. This should start with a capitalized letter, and
+# end with a period.
+sentence = Framework for spanning Processing sketches across multiple screens.
+
+# Additional information suitable for the Processing website. The value of
+# 'sentence' always will be prepended, so you should start by writing the
+# second sentence here. If your library only works on certain operating systems,
+# mention it here.
+paragraph =  
+
+# Links in the 'sentence' and 'paragraph' attributes can be inserted using the
+# same syntax as for authors. That is, [here is a link to Processing](http://processing.org/)
+
+
+# A version number that increments once with each release. This
+# is used to compare different versions of the same library, and
+# check if an update is available. You should think of it as a
+# counter, counting the total number of releases you've had.
+version = 22  # This must be parsable as an int
+
+# The version as the user will see it. If blank, the version attribute will be used here
+prettyVersion = 0.98a  # This is treated as a String
+
+Advertising Your Library
+
+Starting with Processing 2.0, libraries that are advertised on Processing's website also have the option of being advertised through the PDE. To support this, you'll need to include a library.properties file with your library and make a few changes to how it's hosted on your server.
+
+First, you must include the following attributes in library.properties: name, authorList, url, category, sentence, version. You'll also need to provide a static link to the latest version of your library, and host a copy of your library.properties alongside it. The result on your server should look something like this:
+
+http://www.example.com/awesomelib.zip/ (The latest version of awesomelib)
+http://www.example.com/awesomelib.txt/ (A copy of the library.properties file contained in awesomelib.zip)
+
+On our end, we'll only record the location of awesomelib.zip, and we'll assume that a copy of the .properties file is hosted at an address by the same name, except ending in txt. Each day, a script on processing.org will scrape the information from all the .txt files and aggregate it into a single file, which is then used by each user to browse what's available and check for updates. Even if your library is being advertised, you should still include the library.properties file inside your zip.
+Releasing an update
+
+When you want to release a new version of your library, here's what you'll need to do:
+
+    * Option 1: Manual Update
+         1. Update your library.properties file inside your .zip
+                o Increment the value of "version". This is an integer that we'll use to check for updates. You can think of it as a counter, counting the total number of releases you've had.
+                o Write whatever you want for the new value of "prettyVersion". 
+         2. Copy your latest release to the static address you gave us earlier (e.g. http://www.example.com/awesomelib.zip)
+         3. Copy the library.properties file from your latest release to a .txt file hosted at an address by the same name as your .zip, except instead ending in .txt (e.g. http://www.example.com/awesomelib.txt) 
+    * Option 2: Update using the LibraryTemplate
+         1. Update your build.properties file from the "resources" folder.
+                o Increment the value of "library.version". This is an integer that we'll use to check for updates. You can think of it as a counter, counting the total number of releases you've had.
+                o Write whatever you want for the new value of "library.prettyVersion". 
+         2. Recompile the project using the Ant script. This will generate the appropriate files in the "distribution/name-version/download" folder.
+         3. Copy your latest release and properties files to the static address you gave us earlier (e.g. http://www.example.com/awesomelib-latest.zip and http://www.example.com/awesomelib-latest.txt) 
+
+That's it. The next time the aggregator script runs and your users start the PDE, they'll be notified that updates are available.

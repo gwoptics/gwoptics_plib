@@ -1,0 +1,27 @@
+
+A new library `gwoptics' for plotting in 2D or 3D is available here:
+
+http://www.gwoptics.org/processing/gwoptics_p5lib/
+
+With this library it should be easy to create simple line 
+graphs of static or dynamic data in 2D. You can also plot 
+functions or data in 3D, for example, using some nice 
+colourmaps.
+
+We started to use Processing last year in our research 
+group for doing simple simulations related to optics. So far
+this has been a very successful and fun exercise. The most 
+common need was for a library that simplifies the plotting
+of functions or data. Therefore one of my students, 
+Daniel Brown, has developed this library. You can see it in
+action here:
+
+http://www.gwoptics.org/processing/gbviewer/
+
+Comments and feedback are very welcome!
+
+Andreas
+
+
+
+

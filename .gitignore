@@ -1,0 +1,8 @@
+# gitignore file
+/gwoptics/nbproject/private/
+/gwoptics/build/
+/gwoptics/bin/
+/gwoptics/out/
+/gwoptics/distribution/
+/gwoptics/reference/
+/gwoptics/dist/

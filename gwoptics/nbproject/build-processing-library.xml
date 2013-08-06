@@ -1,4 +1,4 @@
-
+    
 <project name="gwoptics Ant Build" default="build" basedir="../">
     
   <description>
@@ -56,8 +56,9 @@
 		|_________________________________________________________________________________|-->
 	
         
-  <property name="libraryClasspath"  location="libs"/>	
-	
+  <property name="libraryClasspath"  location="libs"/>
+  
+  
   <if>
     <equals arg1="${outputDir}" arg2="${basedir}" />
     <then>
@@ -73,8 +74,10 @@
       <include name="guicomponents.jar"/>
     </fileset>
   </path>		
-	
-  <property name="javaVersion" value="1.5"/>		
+
+  
+  <property name="javaVersion" value="1.6"/>		
+  <property name="build.compiler" value="javac${javaVersion}"/>
   <property name="author" value="Daniel Brown and Andreas Freise"/>	
   <property name="copyright" value="(c) 2009 onwards"/>
   <property name="libraryName"  value="gwoptics"/>	
@@ -97,6 +100,7 @@
 	
   <target name="init">
     <echo>Properties initialized.
+      base path                 ${basedir}
       src path			${src}
       bin path 			${bin}
       libraryClasspath		${libraryClasspath}
@@ -115,8 +119,9 @@
   </target>
   
 	<!-- compile the library -->
-  <target name="compile" depends="init" description="compile the source" >  	
-    <javac srcdir="${src}" destdir="${bin}" source="${javaVersion}">
+  <target name="compile" depends="init" description="compile the source" >  
+    <mkdir dir="${bin}"/>	
+    <javac srcdir="${src}" destdir="${bin}" source="${javaVersion}" verbose="yes">
       <exclude name="**/testing/**"/>
       <classpath>
         <path refid="library-classpath"/>
@@ -139,26 +144,22 @@
     <mkdir dir="${dist}/examples" />
     <mkdir dir="${dist}/reference" />
     <mkdir dir="${dist}/src" />
-  	  	  	
+    <echo>!! Building Jar</echo>	
     <jar jarfile="${dist}/library/${jarFile}" basedir="${bin}">
       <manifest>
         <attribute name="Implementation-Version" value="${versionNumber}"/> 
       </manifest>
     </jar>
-  	
-    <copy todir="${dist}/src/">
-      <file file="license.txt"/>
-    </copy>	
+    <copy file="${basedir}/library.properties" todir="${dist}/"></copy>		
+    <copy file="${basedir}/license.txt" todir="${dist}/src/"></copy>	
     <copy todir="${dist}/examples">
       <fileset dir="examples"/>
     </copy>
     <copy todir="${dist}/src">
       <fileset dir="src"/>
     </copy> 
-
-  	
-  	
-	<!-- create the java reference of the library -->
+    
+    <!-- create the java reference of the library -->
     <mkdir dir="${reference}" />
     <javadoc bottom="processing library ${libraryName} by ${author}. ${copyright}" 
                  classpath="${libraryClasspath}/core.jar" 

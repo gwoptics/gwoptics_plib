@@ -39,7 +39,7 @@ public class RollingLine2DTraceTest extends PApplet{
 	Graph2D g;
 		
 	public void setup(){
-          size(600,300);
+          size(600,300, P2D);
 
           r  = new RollingLine2DTrace(new eq() ,100,1.0f);
           r.setTraceColour(0, 255, 0);

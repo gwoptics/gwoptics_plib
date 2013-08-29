@@ -115,8 +115,13 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
       _backBuffer.background(0, 0, 0, 0);
       
       // for some reason the stroke width is going weird, needs to be set small
-      // otherwise it looks like a massive blob
-      //_backBuffer.strokeWeight(0.1f);
+      // otherwise it looks like a massive blob...
+      // So this happens because the strokeWeight is in terms of pixels, which
+      // when scaled each pixel obviously looks bigger. Obviously we can't
+      // have a different scale per axis so currently just takes the one that
+      // gives us the smaller stroke
+      _backBuffer.strokeWeight(1.0f/Math.min(xscale,yscale));
+      _backBuffer.strokeCap(PApplet.SQUARE);
       
       TraceDraw(_backBuffer);
 

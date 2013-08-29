@@ -1,5 +1,5 @@
     
-<project name="gwoptics Ant Build" default="build" basedir="../">
+<project name="gwoptics_plib library" default="build" basedir=".">
     
   <description>
     This file is a base copy of the build file, it contains all the necessary Ant tags
@@ -16,11 +16,8 @@
     Template used from processing library template
     http://code.google.com/p/processing-library-template/
   </description>
-
-  <property file="nbproject/private/config.properties"/>
-  <property file="nbproject/private/configs/${config}.properties"/>
-  <property file="nbproject/private/private.properties"/>
-  <property file="${user.properties.file}"/>
+  
+  <property environment="env"/>
   
   <taskdef resource="net/sf/antcontrib/antcontrib.properties">
     <classpath>
@@ -28,20 +25,8 @@
     </classpath>
   </taskdef>	
 
-  <if>
-    <isset property="GWOPTICS_OUT"/>
-    <then>
-      <property name="outputDir" value="${GWOPTICS_OUT}"/>
-    </then>
-  </if>
+<property name="outputDir" value="${GWOPTICS_OUT}"/>
   
-  <if>
-    <isset property="var.GWOPTICS_OUT"/>
-    <then>
-      <property name="outputDir" value="${var.GWOPTICS_OUT}"/>
-    </then>
-  </if>
-
   <echo>Output directory is: ${outputDir}</echo>
   <fail unless="outputDir" message="Both var.GWOPTICS_OUT or GWOPTICS_OUT were not set. See http://kvasir.sr.bham.ac.uk/redmine/projects/gwoptics/wiki/Wiki"/>
   
@@ -57,14 +42,6 @@
 	
         
   <property name="libraryClasspath"  location="libs"/>
-  
-  
-  <if>
-    <equals arg1="${outputDir}" arg2="${basedir}" />
-    <then>
-      <fail message="You have not specified a location to compile the library too"/>
-    </then>
-  </if>	
         
   <mkdir dir="${outputDir}" />
 	
@@ -84,7 +61,7 @@
   <property name="yourLink"  value="http://www.gwoptics.org/" />	
   <property name="keywords"  value="graph, plotting, simulation, optics" />	
   <property name="tested:platform"  value="OS X 10.5, Windows 7" />	
-  <property name="tested:processingVersion"  value="1.0.8" />	
+  <property name="tested:processingVersion"  value="2.0.8" />	
   <property name="tested:dependencies"  value="gui4processing" />	
   <property name="source:host"  value="gwoptics.org" />
   <property name="source:url"  value="http://www.gwoptics.org/processing/gwoptics_p5lib" />
@@ -119,9 +96,10 @@
   </target>
   
 	<!-- compile the library -->
-  <target name="compile" depends="init" description="compile the source" >  
+  <target name="compile" depends="init" description="compile the source" >
+  	<delete dir="${bin}" />
     <mkdir dir="${bin}"/>	
-    <javac srcdir="${src}" destdir="${bin}" source="${javaVersion}" verbose="yes">
+    <javac executable="${env:JAVA_HOME}/bin/javac" srcdir="${src}" destdir="${bin}" source="${javaVersion}" target="${javaVersion}" verbose="yes">
       <exclude name="**/testing/**"/>
       <classpath>
         <path refid="library-classpath"/>
@@ -151,7 +129,7 @@
       </manifest>
     </jar>
     <copy file="${basedir}/library.properties" todir="${dist}/"></copy>		
-    <copy file="${basedir}/license.txt" todir="${dist}/src/"></copy>	
+    <copy file="${basedir}/LICENSE" todir="${dist}/src/"></copy>	
     <copy todir="${dist}/examples">
       <fileset dir="examples"/>
     </copy>

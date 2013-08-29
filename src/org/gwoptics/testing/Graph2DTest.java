@@ -17,7 +17,7 @@ public class Graph2DTest extends PApplet{
   }
 
   @Override public void setup(){
-    size(500,270);
+    size(500,270, P2D);
 
     // Creating the Graph2D object:
     // arguments are the parent object, xsize, ysize, cross axes at zero point

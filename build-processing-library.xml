@@ -61,7 +61,7 @@
   <property name="yourLink"  value="http://www.gwoptics.org/" />	
   <property name="keywords"  value="graph, plotting, simulation, optics" />	
   <property name="tested:platform"  value="OS X 10.5, Windows 7" />	
-  <property name="tested:processingVersion"  value="2.0.8" />	
+  <property name="tested:processingVersion"  value="2.0.1" />	
   <property name="tested:dependencies"  value="gui4processing" />	
   <property name="source:host"  value="gwoptics.org" />
   <property name="source:url"  value="http://www.gwoptics.org/processing/gwoptics_p5lib" />

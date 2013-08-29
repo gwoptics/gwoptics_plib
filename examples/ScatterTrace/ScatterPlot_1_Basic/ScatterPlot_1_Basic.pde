@@ -10,8 +10,7 @@ import org.gwoptics.graphics.graph2D.traces.ScatterTrace;
 Graph2D grph;
 
 void setup(){
-  // Need to specify P2D when using Scatter Trace!
-  size(600,600,P2D);
+  size(600,600);
 
   // Creating the Graph2D object:
   // arguments are the parent object, xsize, ysize, cross axes at zero point

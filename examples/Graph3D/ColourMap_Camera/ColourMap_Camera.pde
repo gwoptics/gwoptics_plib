@@ -23,7 +23,7 @@ IGraph3DCallback gcb = new IGraph3DCallback(){
 };
 
 void setup() {
-  size(500, 500, P3D); 
+  size(500, 500, OPENGL); 
   frameRate(15);
 
   g3 = (PGraphicsOpenGL) g; 

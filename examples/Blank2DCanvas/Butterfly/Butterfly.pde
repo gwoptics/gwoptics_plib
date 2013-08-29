@@ -37,7 +37,7 @@ Graph2D g;
 
 void setup(){
 	size(600,500);
-        frameRate(20);
+    frameRate(20);
         
 	bTrace  = new ButterflyTrace();
 	 

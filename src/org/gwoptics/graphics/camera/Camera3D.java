@@ -21,8 +21,6 @@
  */
 package org.gwoptics.graphics.camera;
 
-import java.awt.event.MouseEvent;
-
 //import org.eclipse.tptp.trace.arm.internal.model.ArmWrapper;
 //import org.gwoptics.mathutils.TrigLookup;
 import org.gwoptics.mathutils.VectorUtils;
@@ -30,6 +28,7 @@ import org.gwoptics.mathutils.VectorUtils;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
+import processing.event.MouseEvent;
 
 /**
  * <p> Camera3D is a camera class designed to be integrated into a processing
@@ -200,9 +199,9 @@ public final class Camera3D implements PConstants {
     _parent.camera(_position.x, _position.y, _position.z, _lookat.x,
             _lookat.y, _lookat.z, _up.x, _up.y, _up.z);
 
-    parent.registerDraw(this);
-    parent.registerDispose(this);
-    parent.registerMouseEvent(this);
+    parent.registerMethod("draw",this);
+    parent.registerMethod("dispose",this);
+    parent.registerMethod("mouseEvent",this);
   }
 
   /**
@@ -216,7 +215,7 @@ public final class Camera3D implements PConstants {
     this(parent);
 
     if (!registerMouseEvents) {
-      parent.unregisterMouseEvent(this);
+      parent.unregisterMethod("mouseEvent",this);
     }
   }
 
@@ -226,10 +225,11 @@ public final class Camera3D implements PConstants {
     _cam = null;
   }
 
-  public void mouseEvent(MouseEvent event) {
-    switch (event.getID()) {
+  public void mouseEvent(processing.event.MouseEvent event) {
+	  
+    switch (event.getAction()) {
 
-      case MouseEvent.MOUSE_DRAGGED:
+      case MouseEvent.DRAG:
         //Calc distance dragged 
         float dx = prevX - event.getX();
         float dy = prevY - event.getY();
@@ -285,7 +285,7 @@ public final class Camera3D implements PConstants {
         prevX = event.getX();
         prevY = event.getY();
         break;
-      case MouseEvent.MOUSE_MOVED:
+      case MouseEvent.MOVE:
         //Keep track of previous mouse pos
         //so a distance dragged can be calculated
         prevX = event.getX();

@@ -104,7 +104,7 @@ public class UpdatingLine2DTrace extends Line2DTrace {
   @Override
   public void setParent(PApplet parent) {
     super.setParent(parent);
-    parent.registerPre(this);
+    parent.registerMethod("pre",this);
   }
 
   /**

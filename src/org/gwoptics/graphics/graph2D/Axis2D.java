@@ -476,7 +476,7 @@ public class Axis2D extends Renderable implements PConstants {
     _posConv = _length / (_maxShow - _minShow);
     _offsetByLabelWidth = false;
 
-    parent.registerPre(this);
+    parent.registerMethod("pre",this);
 
     setLabelFont(_labelFontName, _axisLblSize, true);
     setTickFont(_tickFontName, _axisTickLblSize, true);

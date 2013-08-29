@@ -60,7 +60,7 @@ public class Logo extends Renderable {
     _clickable = clickable;
     _parent = parent;
 
-    parent.registerMouseEvent(this);
+    parent.registerMethod("mouseEvent",this);
     //parent.registerDraw(this);
 
     _logo = parent.loadImage("gwoptics_org_logo_" + size.getSize() + "px.png");

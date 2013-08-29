@@ -13,7 +13,7 @@
 
   class ScatterTrace extends Blank2DTrace{
     private ArrayList _data;
-    private float pSize = 0.0000008f;
+    private float pSize = 0.1f;
     
     public ScatterTrace(){
       _data = new ArrayList();

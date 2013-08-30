@@ -411,7 +411,7 @@ public class Axis3D extends Renderable implements PConstants {
             _parent.rotateY(_axisTickLblRotation.y);
           }
 
-          _parent.text(tickLbl, 0, (0.25f * _font.getFont().getSize()), 0);
+          _parent.text(tickLbl, 0, (0.25f * _font.getSize()), 0);
           _parent.popMatrix();
         }
 
@@ -467,7 +467,7 @@ public class Axis3D extends Renderable implements PConstants {
       _parent.rotateX(_axisLblRotation.x);
       _parent.rotateY(_axisLblRotation.y);
 
-      _parent.text(String.valueOf(_label), 0, 0.25f * _font.getFont().getSize(), 0);
+      _parent.text(String.valueOf(_label), 0, 0.25f * _font.getSize(), 0);
       _parent.popMatrix();
     }
 

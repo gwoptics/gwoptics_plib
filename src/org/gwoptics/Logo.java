@@ -75,7 +75,7 @@ public class Logo extends Renderable {
     }
 
     if (event.getID() == MouseEvent.MOUSE_CLICKED && _isMouseOverLogo && _clickable) {
-      _parent.link("http://www.gwoptics.org", "_self");
+      _parent.link("http://www.gwoptics.org");
       /*
        * try { AppletContext a = _parent.getAppletContext(); URL url = new
        * URL("http://www.gwoptics.org"); if ( a != null ) {

@@ -68,35 +68,35 @@ public class ScatterTrace extends Blank2DTrace {
   public final static IScatterPoint Cross = new IScatterPoint() {
 
     @Override
-    public void drawPoint(float x, float y, PGraphics canvas, HashMap<String, Object> info) {
+    public void drawPoint(float x, float y, PlotRenderer pr, HashMap<String, Object> info) {
       float psize = 0.5f * ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
 
-      canvas.pushStyle();
-      canvas.stroke(c.toInt());
-      canvas.strokeCap(PApplet.SQUARE);
-      canvas.strokeWeight(0.05f);
-      canvas.line(x - psize, y, x + psize, y);
-      canvas.line(x, y - psize, x, y + psize);
-      canvas.popStyle();
+      pr.canvas.pushStyle();
+      pr.canvas.stroke(c.toInt());
+      pr.canvas.strokeCap(PApplet.SQUARE);
+      
+      pr.canvas.line(pr.valToX(x - psize), pr.valToY(y), pr.valToX(x + psize), pr.valToY(y));
+      pr.canvas.line(pr.valToX(x), pr.valToY(y - psize), pr.valToX(x), pr.valToY(y + psize));
+      pr.canvas.popStyle();
     }
   };
+  
   public final static IScatterPoint Circle = new IScatterPoint() {
-
     @Override
-    public void drawPoint(float x, float y, PGraphics canvas, HashMap<String, Object> info) {
+    public void drawPoint(float x, float y, PlotRenderer pr, HashMap<String, Object> info) {
       float psize = 0.5f * ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
 
-      canvas.fill(c.toInt());
-      canvas.noStroke();
-      canvas.ellipse(x, y, psize, psize);
+      pr.canvas.fill(c.toInt());
+      pr.canvas.noStroke();
+      pr.canvas.ellipse(pr.valToX(x), pr.valToY(y), pr.valToX(psize), pr.valToX(psize));
     }
   };
   
   public final static IScatterPoint Ring = new IScatterPoint() {
     @Override
-    public void drawPoint(float x, float y, PGraphics canvas, HashMap<String, Object> info) {
+    public void drawPoint(float x, float y, PlotRenderer pr, HashMap<String, Object> info) {
       float psize = 0.5f * ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
       float stroke = 0.05f;
@@ -105,18 +105,17 @@ public class ScatterTrace extends Blank2DTrace {
         stroke = (Float) info.get("stroke");
       }
 
-      canvas.pushStyle();
-      canvas.stroke(c.toInt());
-      canvas.strokeWeight(stroke);
-      canvas.noFill();
-      canvas.ellipse(x, y, psize, psize);
-      canvas.popStyle();
+      pr.canvas.pushStyle();
+      pr.canvas.stroke(c.toInt());
+      pr.canvas.strokeWeight(stroke);
+      pr.canvas.noFill();
+      pr.canvas.ellipse(pr.valToX(x), pr.valToY(y), pr.valToX(psize), pr.valToY(psize));
+      pr.canvas.popStyle();
     }
   };
 
   public interface IScatterPoint {
-
-    public void drawPoint(float x, float y, PGraphics canvas, HashMap<String, Object> info);
+    public void drawPoint(float x, float y, PlotRenderer pr, HashMap<String, Object> info);
   }
 
   public ScatterTrace(IScatterPoint pt) {
@@ -244,35 +243,30 @@ public class ScatterTrace extends Blank2DTrace {
     }
   }
 
-  private void drawPoint(int ix, PGraphics canvas) {
+  private void drawPoint(int ix, PlotRenderer pr) {
     Point2D p = _data.get(ix);
 
     // the scale factor is [length of axis]/([axis max] - [axis min])
-    Axis2D ax = getGraph().getXAxis();
-    Axis2D ay = getGraph().getYAxis();
-
-    float sx = ax.getLength() / (ax.getMaxValue() - ax.getMinValue());
-    float sy = ay.getLength() / (ay.getMaxValue() - ay.getMinValue());
     
-    canvas.pushMatrix();
-    canvas.pushStyle();
-    _pt.drawPoint(p.x, p.y, canvas, _info.get(ix));
-    canvas.popMatrix();
-    canvas.popStyle();
+    pr.canvas.pushMatrix();
+    pr.canvas.pushStyle();
+    _pt.drawPoint(p.x, p.y, pr, _info.get(ix));
+    pr.canvas.popMatrix();
+    pr.canvas.popStyle();
     
     if (!_labels.isEmpty()) {
       // The BlankCanvas trace works by creating a scaled canvas on which
       // we draw, if we try and draw text to it though this will also be
       // scaled and looks ugly. For a hack we can undo this scaling then
       // draw the text, easy...
-      canvas.pushMatrix();
-      canvas.pushStyle();
+      pr.canvas.pushMatrix();
+      pr.canvas.pushStyle();
 
       // -1 for the y is needed here as the coordinate system in Blank canvas is
       // flipped to be like a normal graph, rather than screen coordinates
-      canvas.scale(1 / sx, -1 / sy);
-      canvas.textFont(_labelfont);
-      canvas.fill(0);
+      //pr.canvas.scale(1 / sx, -1 / sy);
+      pr.canvas.textFont(_labelfont);
+      pr.canvas.fill(0);
 
       float px = 0, py = 0;
 
@@ -282,47 +276,47 @@ public class ScatterTrace extends Blank2DTrace {
       
       switch (_lblPos) {
         case CENTER:
-          px = -canvas.textWidth(lbl) / 2;
+          px = -pr.canvas.textWidth(lbl) / 2;
           py = -_labelfont.getSize() * (_labelfont.ascent()) / 2;
           break;
         case BELOW:
-          px = -canvas.textWidth(lbl) / 2;
-          py = -defaultSize * sy * offsc / 2 - _labelfont.getSize() * (_labelfont.ascent());
+          px = -pr.canvas.textWidth(lbl) / 2;
+          py = -defaultSize * offsc / 2 - _labelfont.getSize() * (_labelfont.ascent());
           break;
         case ABOVE:
-          px = -canvas.textWidth(lbl) / 2;
-          py = defaultSize * sy * offsc / 2 + _labelfont.getSize() * (_labelfont.descent());
+          px = -pr.canvas.textWidth(lbl) / 2;
+          py = defaultSize  * offsc / 2 + _labelfont.getSize() * (_labelfont.descent());
           break;
         case LEFT:
           py = -_labelfont.getSize() * (_labelfont.ascent()) / 2;
-          px = -(canvas.textWidth(lbl) + defaultSize * sx * offsc / 2);
+          px = -(pr.canvas.textWidth(lbl) + defaultSize  * offsc / 2);
           break;
         case RIGHT:
           py = -_labelfont.getSize() * (_labelfont.ascent()) / 2;
-          px = defaultSize * sx * offsc / 2;
+          px = defaultSize * offsc / 2;
           break;
       }
 
-      canvas.fill(c.toInt());
-      canvas.text(lbl, (p.x * sx) + px, -(p.y * sy + py));
+      pr.canvas.fill(c.toInt());
+      pr.canvas.text(lbl, p.x + px, -(p.y + py));
 
-      canvas.popMatrix();
-      canvas.popStyle();
+      pr.canvas.popMatrix();
+      pr.canvas.popStyle();
     }
   }
 
   @Override
-  public void TraceDraw(PGraphics canvas) {
-    canvas.pushStyle();
-    canvas.pushMatrix();
+  public void TraceDraw(PlotRenderer p) {
+    p.canvas.pushStyle();
+    p.canvas.pushMatrix();
 
     if (_data != null) {
       for (int i = 0; i < _data.size(); i++) {
-        drawPoint(i, canvas);
+        drawPoint(i, p);
       }
     }
 
-    canvas.popMatrix();
-    canvas.popStyle();
+    p.canvas.popMatrix();
+    p.canvas.popStyle();
   }
 }

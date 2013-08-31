@@ -35,8 +35,27 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
   protected PImage _traceImg;
   private boolean _redraw;
   private String _renderer = PApplet.JAVA2D;
-
+  protected PlotRenderer _prenderer;
   protected IGraph2D getGraph(){ return _graphDrawable; }
+  
+  public class PlotRenderer {
+	public PGraphics canvas;
+	private Axis2D _x, _y;
+	
+	public PlotRenderer(IGraph2D grph, PGraphics canvas){
+		this.canvas = canvas;
+		this._x = grph.getXAxis();
+		this._y = grph.getYAxis();
+	}
+	
+	public int valToX(double value){
+		return _x.valueToPosition(value);
+	}
+	
+	public int valToY(double value){
+		return _y.valueToPosition(value);
+	}
+  }
   
   /**
    * Sets the renderer for the PGraphics object that is used for drawing to.
@@ -90,7 +109,9 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
     }
 
     _graphDrawable = grp;
-    _backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength(), _renderer);    
+    _backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength(), _renderer);
+    
+    _prenderer = new PlotRenderer(grp, _backBuffer);
   }
 
   @Override
@@ -108,22 +129,12 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 
       _backBuffer.pushMatrix();
 
-      float xscale = (float) ax.getLength() / (ax.getMaxValue() - ax.getMinValue());
-      float yscale = (float) ay.getLength() / (ay.getMaxValue() - ay.getMinValue());
-
-      _backBuffer.scale(xscale, -yscale);
+      _backBuffer.scale(1f,-1f);
       _backBuffer.background(0, 0, 0, 0);
       
-      // for some reason the stroke width is going weird, needs to be set small
-      // otherwise it looks like a massive blob...
-      // So this happens because the strokeWeight is in terms of pixels, which
-      // when scaled each pixel obviously looks bigger. Obviously we can't
-      // have a different scale per axis so currently just takes the one that
-      // gives us the smaller stroke
-      _backBuffer.strokeWeight(1.0f/Math.min(xscale,yscale));
       _backBuffer.strokeCap(PApplet.SQUARE);
       
-      TraceDraw(_backBuffer);
+      TraceDraw(_prenderer);
 
       _backBuffer.popMatrix();
       _backBuffer.endDraw();
@@ -136,5 +147,5 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
       _parent.image(_traceImg, 0, -_backBuffer.height);
   }
 
-  public abstract void TraceDraw(PGraphics backBuffer);
+  public abstract void TraceDraw(PlotRenderer p);
 }

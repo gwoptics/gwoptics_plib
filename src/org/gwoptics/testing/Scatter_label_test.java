@@ -7,6 +7,8 @@ package org.gwoptics.testing;
 import java.util.ArrayList;
 import org.gwoptics.graphics.graph2D.*;
 import org.gwoptics.graphics.graph2D.traces.Blank2DTrace;
+import org.gwoptics.testing.Scatter_label_test.Point2D;
+
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
@@ -35,51 +37,46 @@ public class Scatter_label_test extends processing.core.PApplet {
 
   class ScatterTrace extends Blank2DTrace {
 
-    private ArrayList _data;
-    private float pSize = 0.1f;
+    private ArrayList<Point2D> _data;
+    private float pSize = 5f;
 
     public ScatterTrace() {
-      _data = new ArrayList();
+      _data = new ArrayList<Point2D>();
     }
 
     public void addPoint(float x, float y) {
       _data.add(new Point2D(x, y));
     }
 
-    private void drawPoint(Point2D p, PGraphics canvas) {
-      // the scale factor is [length of axis]/([axis max] - [axis min])
-      Axis2D ax = grph.getXAxis();
-      Axis2D ay = grph.getYAxis();
+    private void drawPoint(Point2D p, PlotRenderer pr) {
+      p.X = pr.valToX(p.X);
+      p.Y = pr.valToX(p.Y);
       
-      float sx = ax.getLength() / (ax.getMaxValue() - ax.getMinValue());
-      float sy = ay.getLength() / (ay.getMaxValue() - ay.getMinValue());
-      
-      canvas.pushStyle();
-      canvas.stroke(255, 0, 0);
-      canvas.strokeCap(PApplet.SQUARE);
-      canvas.strokeWeight(0.05f);
-      canvas.line(p.X - pSize, p.Y, p.X + pSize, p.Y);
-      canvas.line(p.X, p.Y - pSize, p.X, p.Y + pSize);
-      canvas.popStyle();
-      
+      pr.canvas.pushStyle();
+      pr.canvas.stroke(255, 0, 0);
+      pr.canvas.strokeCap(PApplet.SQUARE);
+      pr.canvas.strokeWeight(1f);
+      pr.canvas.line(p.X - pSize, p.Y, p.X + pSize, p.Y);
+      pr.canvas.line(p.X, p.Y - pSize, p.X, p.Y + pSize);
+      pr.canvas.popStyle();
       
       // The BlankCanvas trace works by creating a scaled canvas on which
       // we draw, if we try and draw text to it though this will also be
       // scaled and looks ugly. For a hack we can undo this scaling then
       // draw the text, easy...
-      canvas.pushMatrix();  
+      pr.canvas.pushMatrix();  
       // -1 for the y is needed here as the coordinate system in Blank canvas is
       // flipped to be like a normal graph, rather than screen coordinates
-      canvas.scale(1 / sx, -1 / sy);
-      canvas.textFont(myFont);
-      canvas.text(String.format("(%.1f, %.1f)", p.X, p.Y), p.X * sx + 5, -(p.Y * sy - 5));
-      canvas.popMatrix();
+      pr.canvas.scale(1, -1f);
+      pr.canvas.textFont(myFont);
+      pr.canvas.text(String.format("(%.1f, %.1f)", p.X, p.Y), p.X + 5, -(p.Y - 5));
+      pr.canvas.popMatrix();
     }
 
-    @Override public void TraceDraw(PGraphics canvas) {
+    @Override public void TraceDraw(PlotRenderer p) {
       if (_data != null) {
         for (int i = 0; i < _data.size(); i++) {
-          drawPoint((Point2D) _data.get(i), canvas);
+          drawPoint((Point2D) _data.get(i), p);
         }
       }
     }

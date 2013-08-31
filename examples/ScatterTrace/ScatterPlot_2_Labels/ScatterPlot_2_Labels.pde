@@ -12,7 +12,7 @@ import org.gwoptics.graphics.graph2D.LabelPos;
 Graph2D grph;
 
 void setup(){
-  size(600,600);
+  size(600,600,P2D);
 
   // Creating the Graph2D object:
   // arguments are the parent object, xsize, ysize, cross axes at zero point
@@ -38,13 +38,13 @@ void setup(){
   // Available points: ScatterTrace.Circle
   //                   ScatterTrace.Ring
   //                   ScatterTrace.Cross
-  ScatterTrace t = new ScatterTrace(ScatterTrace.Circle);
+  ScatterTrace t = new ScatterTrace(ScatterTrace.Cross);
       
   // Sets the size of the point
-  t.setDefaultSize(7.5f);
+  t.setDefaultSize(20f);
   // Sets where the labels will be drawn
   // Available positions: CENTER, ABOVE, BELOW, LEFT, RIGHT
-  t.setLablePosition(ScatterTrace.LABELPOSITION.CENTER);
+  t.setLablePosition(ScatterTrace.LABELPOSITION.BELOW);
   // Create a font to use for the labels
   t.setLabelFont(createFont("Arial", 18, true));
   
@@ -64,6 +64,6 @@ void setup(){
 }
 
 void draw(){
-  background(255);
+  background(200);
   grph.draw();
 }

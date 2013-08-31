@@ -6,11 +6,12 @@
 import org.gwoptics.graphics.GWColour; 
 import org.gwoptics.graphics.graph2D.Graph2D;
 import org.gwoptics.graphics.graph2D.traces.ScatterTrace;
+import org.gwoptics.graphics.graph2D.traces.ScatterTrace;
 
 Graph2D grph;
 
 void setup(){
-  size(600,600);
+  size(600,600,P2D);
 
   // Creating the Graph2D object:
   // arguments are the parent object, xsize, ysize, cross axes at zero point
@@ -36,18 +37,21 @@ void setup(){
     // everything should be drawn to the canvas object, all the same drawing functions
     // are available to you. The position of the point is (x,y), the HashMap contains
     // various different properties telling you how to plot your point:
-    // "size" - the size of the point
+    // "size" - the size of the point in pixels
     // "colour" - the GWColour object that you need to use to colour the point
     // Of course you can also add extra information but that is covered later on
     // as well as making these more interesting!
-    public void drawPoint(float x, float y, PGraphics canvas, HashMap<String, Object> info) {
+    public void drawPoint(float x, float y, ScatterTrace.PlotRenderer pr, HashMap<String, Object> info) {
       float psize = ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
-
-      canvas.stroke(c.toInt());
-      canvas.strokeCap(PApplet.ROUND);
-      canvas.strokeWeight(0.05f);
-      canvas.rect(x - psize, y-psize, 2*psize, 2*psize);
+      
+      // Need to convert graph space x and y into screen space, i.e. pixels
+      x = pr.valToX(x);
+      y = pr.valToY(y);
+      
+      pr.canvas.stroke(c.toInt());
+      pr.canvas.strokeCap(PApplet.ROUND);
+      pr.canvas.rect(x - psize, y-psize, 2*psize, 2*psize);
     }
   };
 
@@ -55,7 +59,7 @@ void setup(){
   ScatterTrace t = new ScatterTrace(Sqaure);
   
   // Sets the size of the point
-  t.setDefaultSize(1f);
+  t.setDefaultSize(20f);
   
   //Loop 40 times and add a random point
   for(int i=0;i<40;i++){      

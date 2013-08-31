@@ -10,7 +10,7 @@ import org.gwoptics.graphics.graph2D.traces.ScatterTrace;
 Graph2D grph;
 
 void setup(){
-  size(600,600);
+  size(600,600, P2D);
 
   // Creating the Graph2D object:
   // arguments are the parent object, xsize, ysize, cross axes at zero point
@@ -39,7 +39,7 @@ void setup(){
   ScatterTrace t = new ScatterTrace(ScatterTrace.Circle);
       
   // Sets the size of the point
-  t.setDefaultSize(1f);
+  t.setDefaultSize(30f);
   
   //Loop 40 times and add a random point
   for(int i=0;i<40;i++){      

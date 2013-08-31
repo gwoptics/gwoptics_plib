@@ -34,26 +34,38 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
   protected PGraphics _backBuffer;
   protected PImage _traceImg;
   private boolean _redraw;
-  private String _renderer = PApplet.JAVA2D;
+  private String _renderer = PApplet.P2D;
   protected PlotRenderer _prenderer;
   protected IGraph2D getGraph(){ return _graphDrawable; }
   
   public class PlotRenderer {
 	public PGraphics canvas;
 	private Axis2D _x, _y;
+	private float _offx, _offy;
 	
 	public PlotRenderer(IGraph2D grph, PGraphics canvas){
 		this.canvas = canvas;
+		
 		this._x = grph.getXAxis();
 		this._y = grph.getYAxis();
 	}
 	
-	public int valToX(double value){
-		return _x.valueToPosition(value);
+	/***
+	 * Called Internally by Blank2DTrace to update the internal
+	 * variables for computing offsets.
+	 * @param offx
+	 */
+	protected void update(){
+		_offx = _x.valueToPosition(0);
+		_offy = _y.valueToPosition(0);
 	}
 	
-	public int valToY(double value){
-		return _y.valueToPosition(value);
+	public float valToX(double value){
+		return _x.valueToPosition(value) - _offx;
+	}
+	
+	public float valToY(double value){
+		return _y.valueToPosition(value) - _offy;
 	}
   }
   
@@ -63,8 +75,8 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
    * @param renderer P2D or JAVA2D
    */
   public final void setRenderer(String renderer){
-    if(!renderer.equals(PApplet.JAVA2D) & !renderer.equals(PApplet.P2D))
-      throw new RuntimeException("Renderer must be JAVA2D or P2D");
+    if(!renderer.equals(PApplet.JAVA2D) & !renderer.equals(PApplet.P2D) & !renderer.equals(PApplet.OPENGL))
+      throw new RuntimeException("Renderer must be JAVA2D, P2D or OPENGL");
     
     _renderer = renderer;
   }
@@ -110,7 +122,7 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
 
     _graphDrawable = grp;
     _backBuffer = _parent.createGraphics(grp.getXAxis().getLength(), grp.getYAxis().getLength(), _renderer);
-    
+        
     _prenderer = new PlotRenderer(grp, _backBuffer);
   }
 
@@ -118,15 +130,16 @@ public abstract class Blank2DTrace implements IGraph2DTrace {
   public void draw() {
     if (_redraw) {
       _backBuffer.beginDraw();
-
+      
+      _prenderer.update();
+      
       Axis2D ax = _graphDrawable.getXAxis();
       Axis2D ay = _graphDrawable.getYAxis();
 
       float xoff = ax.valueToPosition(0);
       float yoff = _backBuffer.height - ay.valueToPosition(0);
-
+      
       _backBuffer.translate(xoff, yoff);
-
       _backBuffer.pushMatrix();
 
       _backBuffer.scale(1f,-1f);

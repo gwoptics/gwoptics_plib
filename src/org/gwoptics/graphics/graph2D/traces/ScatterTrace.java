@@ -45,7 +45,6 @@ public class ScatterTrace extends Blank2DTrace {
   private LABELPOSITION _lblPos = LABELPOSITION.RIGHT;
 
   public enum LABELPOSITION {
-
     ABOVE, LEFT, RIGHT, BELOW, CENTER
   }
 
@@ -76,8 +75,11 @@ public class ScatterTrace extends Blank2DTrace {
       pr.canvas.stroke(c.toInt());
       pr.canvas.strokeCap(PApplet.SQUARE);
       
-      pr.canvas.line(pr.valToX(x - psize), pr.valToY(y), pr.valToX(x + psize), pr.valToY(y));
-      pr.canvas.line(pr.valToX(x), pr.valToY(y - psize), pr.valToX(x), pr.valToY(y + psize));
+      float X = pr.valToX(x);
+      float Y = pr.valToY(y);
+      
+      pr.canvas.line(X - psize, Y, X + psize, Y);
+      pr.canvas.line(X, Y - psize, X, Y + psize);
       pr.canvas.popStyle();
     }
   };
@@ -88,9 +90,12 @@ public class ScatterTrace extends Blank2DTrace {
       float psize = 0.5f * ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
 
+      x = pr.valToX(x);
+      y = pr.valToY(y);
+      
       pr.canvas.fill(c.toInt());
       pr.canvas.noStroke();
-      pr.canvas.ellipse(pr.valToX(x), pr.valToY(y), pr.valToX(psize), pr.valToX(psize));
+      pr.canvas.ellipse(x, y, psize, psize);
     }
   };
   
@@ -99,17 +104,20 @@ public class ScatterTrace extends Blank2DTrace {
     public void drawPoint(float x, float y, PlotRenderer pr, HashMap<String, Object> info) {
       float psize = 0.5f * ((Number) info.get("size")).floatValue();
       GWColour c = (GWColour) info.get("colour");
-      float stroke = 0.05f;
+      float stroke = 1f;
 
       if (info.containsKey("stroke")) {
         stroke = (Float) info.get("stroke");
       }
 
+      x = pr.valToX(x);
+      y = pr.valToY(y);
+
       pr.canvas.pushStyle();
       pr.canvas.stroke(c.toInt());
       pr.canvas.strokeWeight(stroke);
       pr.canvas.noFill();
-      pr.canvas.ellipse(pr.valToX(x), pr.valToY(y), pr.valToX(psize), pr.valToY(psize));
+      pr.canvas.ellipse(x, y, psize, psize);
       pr.canvas.popStyle();
     }
   };
@@ -246,11 +254,11 @@ public class ScatterTrace extends Blank2DTrace {
   private void drawPoint(int ix, PlotRenderer pr) {
     Point2D p = _data.get(ix);
 
-    // the scale factor is [length of axis]/([axis max] - [axis min])
-    
     pr.canvas.pushMatrix();
     pr.canvas.pushStyle();
+    
     _pt.drawPoint(p.x, p.y, pr, _info.get(ix));
+    
     pr.canvas.popMatrix();
     pr.canvas.popStyle();
     
@@ -264,7 +272,7 @@ public class ScatterTrace extends Blank2DTrace {
 
       // -1 for the y is needed here as the coordinate system in Blank canvas is
       // flipped to be like a normal graph, rather than screen coordinates
-      //pr.canvas.scale(1 / sx, -1 / sy);
+      pr.canvas.scale(1f, -1f);
       pr.canvas.textFont(_labelfont);
       pr.canvas.fill(0);
 
@@ -298,7 +306,7 @@ public class ScatterTrace extends Blank2DTrace {
       }
 
       pr.canvas.fill(c.toInt());
-      pr.canvas.text(lbl, p.x + px, -(p.y + py));
+      pr.canvas.text(lbl, pr.valToX(p.x) + px, -(pr.valToY(p.y) + py));
 
       pr.canvas.popMatrix();
       pr.canvas.popStyle();
@@ -309,7 +317,7 @@ public class ScatterTrace extends Blank2DTrace {
   public void TraceDraw(PlotRenderer p) {
     p.canvas.pushStyle();
     p.canvas.pushMatrix();
-
+    
     if (_data != null) {
       for (int i = 0; i < _data.size(); i++) {
         drawPoint(i, p);

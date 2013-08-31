@@ -11,7 +11,6 @@ import org.gwoptics.testing.Scatter_label_test.Point2D;
 
 import processing.core.PApplet;
 import processing.core.PFont;
-import processing.core.PGraphics;
 
 /**
  *

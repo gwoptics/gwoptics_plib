@@ -19,60 +19,95 @@ import org.gwoptics.graphics.camera.*;
 import org.gwoptics.graphics.graph3D.*;
 import org.gwoptics.ValueType;
 import org.gwoptics.graphics.colourmap.presets.*;
+import org.gwoptics.testing.RollingLine2DTraceTest.Point2D;
 
 
 public class RollingLine2DTraceTest extends PApplet{
         public static void main(final String[] args) {  
             PApplet.main( new String[]{RollingLine2DTraceTest.class.getName()} ); 
         }
-        
-        Camera3D cam;
-        SurfaceGraph3D g3d;
+        float t = 0f;
+        float xmin = -5f;
+        float xmax = 1f;
+        float xinc = 1;
 
-        class standingWave implements IGraph3DCallback{
-          public float computePoint(float X, float Y) {
-            return (float) 1/(1+(X*X+Y*Y));
-          }
+        class Point2D{
+          public float X,Y;
+          public Point2D(float x, float y){ X=x; Y=y;}
         }
 
-        standingWave gcb = new standingWave();
+        class ScatterTrace extends Blank2DTrace{
+          private ArrayList<Point2D> _data;
+          private float pSize = 10f;
+          
+          public ScatterTrace(){
+            _data = new ArrayList<Point2D>();
+          }
+          
+          public void addPoint(float x, float y){ _data.add(new Point2D(x,y)); } 
         
-	public void setup(){
-		
-		size(600, 600, OPENGL); 
-		  
-		  cam = new Camera3D(this);
-		  PVector cam_pos = new PVector(100f,540f,-10f);
-		  cam.setPosition(cam_pos);
+          private void drawPoint(Point2D p, Blank2DTrace.PlotRenderer pr){
+        	
+            float x = pr.valToX(p.X);
+            float y = pr.valToY(p.Y);
+            
+            pr.canvas.strokeWeight(2f);
+            pr.canvas.pushStyle();
+            pr.canvas.stroke(255,0,0);
+            pr.canvas.line(x - pSize, y, x + pSize, y);
+            pr.canvas.line(x, y - pSize, x, y + pSize);      
+            pr.canvas.popStyle();
+          }
+          
+          public void TraceDraw(Blank2DTrace.PlotRenderer pr) {
+            if(_data != null){            
+              for (int i = 0; i < _data.size(); i++) {
+                drawPoint((Point2D)_data.get(i), pr);            
+              }
+            }
+          }
+        }
+        
+        ScatterTrace sTrace;
+        Graph2D g;
+          
+        public void setup(){
+          size(600,500, OPENGL);
+              
+          sTrace  = new ScatterTrace();
+          
+          g = new Graph2D(this, 400,400, true);
+          g.setAxisColour(220, 220, 220);
+          g.setFontColour(255, 255, 255);
+              
+          g.position.y = 50;
+          g.position.x = 100;
+              
+          g.setYAxisTickSpacing(1f);
+          g.setXAxisTickSpacing(1f);
+          
+          g.setXAxisMinorTicks(1);
+          g.setYAxisMinorTicks(1);
+          
+          g.setYAxisMin(0f);
+          g.setYAxisMax(10f);
+              
+          g.setXAxisLabelAccuracy(0);
+          
+          g.addTrace(sTrace);
 
-		  // Constructor arguments are:
-		  // PApplet parent, float xLength, float yLength, float zLength
-		  // (z axis will be switched off if length is given as 0)
-		  g3d = new SurfaceGraph3D(this, 250, 250,0);		
-		  g3d.setXAxisMin(-2);		
-		  g3d.setXAxisMax(2);
-		  g3d.setZAxisMin(-1);
-		  g3d.setZAxisMax(1);		
-		  g3d.setYAxisMin(-2);		
-		  g3d.setYAxisMax(2);	
-		  g3d.setXAxisLabelType(ValueType.DECIMAL);
-		  g3d.setYAxisLabelType(ValueType.DECIMAL);
-		  
-		  // There are several colourmap presets to try such as: HotColourmap, WarmColourmap or
-		  // GrayScaleColourmap
-		  g3d.addSurfaceTrace(gcb, 100, 100, new FlipColourmap(true));
-	}
-
-	
-	public void draw(){
-		
-		  g3d.plotSurfaceTrace(0);
-		  background(204);
-		  pushMatrix();
-		  //centre the graph for rotating
-		  translate(-125,0,-125);
-		  g3d.draw();
-		  popMatrix();
-	}
-	
+          g.setXAxisMin(0);
+          g.setXAxisMax(10);
+        }
+        
+        public void draw(){
+          background(0);
+          
+          t += 1.0f/(float)frameRate;
+          
+          sTrace.addPoint(t, 5f + 3f*sin(t));
+          sTrace.generate(); // regenerate the trace for plotting
+          
+          g.draw();
+        }
 }

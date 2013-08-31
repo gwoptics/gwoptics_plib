@@ -1,3 +1,16 @@
+Version 0.5.0 (31/08/2013)
+
+o Support for Processing 2.0 added
+o ScatterTrace added for plotting normal x/y scatter plots
+o When using Blank2DTrace you can no long plot directly to the PGraphics object in the graph space.
+  You now have to convert between graph and screen space manually. TraceDraw(PGraphics) is now
+  TraceDraw(Blank2DTrace.PlotRenderer). This contains the public member canvas which is the PGraphics
+  object of the graph which can be drawn to manually using the usual processing functions. To convert
+  from graph space to screen space you must use the PlotRenderer.valToX(value) and PlotRenderer.valToY(value)
+  functions which convert the graph point to pixels for drawing. Although this adds an unnecessary layer
+  of abstraction - as before hand you could draw directly in graph space - the graphic changes in 
+  Processing 2.0 means that strokes and their weightings give ugly results and can't be corrected
+  easily.
 
 Version 0.4.4 (???)
 

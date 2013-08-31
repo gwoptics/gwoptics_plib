@@ -24,17 +24,17 @@ public class ScatterTraceTest extends PApplet {
   }
 
   @Override public void setup(){
-    size(600,600);
+    size(600,600,OPENGL);
 
     // Creating the Graph2D object:
     // arguments are the parent object, xsize, ysize, cross axes at zero point
     grph = new Graph2D(this, 450, 450, false); 
 
     // Defining the main properties of the X and Y-Axis
-    grph.setYAxisMin(-10);
-    grph.setYAxisMax(10);
-    grph.setXAxisMin(-10);
-    grph.setXAxisMax(10);
+    grph.setYAxisMin(-6);
+    grph.setYAxisMax(6);
+    grph.setXAxisMin(-6);
+    grph.setXAxisMax(6);
     grph.setXAxisLabel("X-Axis");
     grph.setYAxisLabel("Y-Axis");
     grph.setXAxisTickSpacing(2.5f);
@@ -48,29 +48,28 @@ public class ScatterTraceTest extends PApplet {
 
     // Here we create a new trace and set a colour for
     // it, along with passing the equation object to it.
-    t = new ScatterTrace(ScatterTrace.Circle);
+    t = new ScatterTrace(ScatterTrace.Ring);
         
-    t.setDefaultSize(7.5f);
-    t.setLablePosition(ScatterTrace.LABELPOSITION.CENTER);
+    t.setDefaultSize(30f);
+    t.setLablePosition(ScatterTrace.LABELPOSITION.RIGHT);
     t.setLabelFont(createFont("Arial", 18, true));
     
-    for(int i=0;i<5;i++){      
-      float x =-9f + (float)Math.random()*18f;
-      float y = -9f + (float)Math.random()*18f;
-      t.addPoint(x,y,"label",String.format("[%.1f, %.1f]", x,y),"labelcolour", new GWColour(255,255,255));
+    for(int i=-5;i<5;i++){
+      t.addPoint(i, i, "label", String.format("[%.1f, %.1f]", (float)i, (float)i), "labelcolour", new GWColour(255,255,255));
     }
+    
     // Adding the trace to the graph
     grph.addTrace(t);
-    
+
+    t.generate();
     frameRate(900);
   }
   
   ScatterTrace t;
 
   @Override public void draw(){
-    background(255);
+    background(120);
     grph.draw();
-    t.generate();
     println(frameRate);
   }
 }

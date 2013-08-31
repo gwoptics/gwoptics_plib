@@ -14,7 +14,7 @@ ScatterTrace t;
 Graph2D grph;
 
 void setup(){
-  size(600,600);
+  size(600,600,P2D);
 
   // Creating the Graph2D object:
   // arguments are the parent object, xsize, ysize, cross axes at zero point
@@ -38,7 +38,7 @@ void setup(){
   
   ScatterTrace.IScatterPoint CleverPoint = new ScatterTrace.IScatterPoint() {
     // The HashMap also contains extra information that we want to pass to the point
-    public void drawPoint(float x, float y, PGraphics canvas, HashMap<String, Object> info) {
+    public void drawPoint(float x, float y, ScatterTrace.PlotRenderer pr, HashMap<String, Object> info) {
       float psize = ((Number) info.get("size")).floatValue();
       // here we get the data we gave to the point in the addpoint command below
       // you can pass anything you want to the point for it to use, here is just
@@ -48,15 +48,19 @@ void setup(){
       float A = ((Number) info.get("A")).floatValue();
       float B = ((Number) info.get("B")).floatValue();
       
-      canvas.strokeWeight(0.05f);
+      pr.canvas.strokeWeight(2f);
       
-      canvas.stroke(0);
-      canvas.fill(ac.toInt());
-      canvas.ellipse(x, y, A*psize, A*psize);
+      // Need to convert graph space x and y into screen space, i.e. pixels
+      x = pr.valToX(x);
+      y = pr.valToY(y);
+      
+      pr.canvas.stroke(0);
+      pr.canvas.fill(ac.toInt());
+      pr.canvas.ellipse(x, y, A*psize, A*psize);
      
-      canvas.noStroke();
-      canvas.fill(bc.toInt());
-      canvas.ellipse(x, y, B*psize, B*psize);
+      pr.canvas.noStroke();
+      pr.canvas.fill(bc.toInt());
+      pr.canvas.ellipse(x, y, B*psize, B*psize);
     }
   };
 
@@ -71,7 +75,7 @@ void setup(){
   
   t.setLablePosition(ScatterTrace.LABELPOSITION.BELOW);
   t.setLabelFont(createFont("Arial", 18, true));
-  float psize =  random(0.5,2);
+  float psize =  random(20,50);
   
   // here we pass lots of extra data to our point, notice that we first give a 
   // string values for the name and then whatever it is we want to pass, this is 
@@ -90,7 +94,7 @@ void setup(){
 
   x =-9f + (float)Math.random()*18f;
   y = -9f + (float)Math.random()*18f;
-  psize =  random(0.5,2);
+  psize =  random(20,50);
   
   t.addPoint(x, y, "Label", "USA",
                    "LabelOffsetScale", psize*1.05f,

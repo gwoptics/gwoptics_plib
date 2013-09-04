@@ -1,6 +1,7 @@
-Version 0.5.0 (31/08/2013)
+Version 0.5.0 (31.08.2013)
 
-o Support for Processing 2.0 added
+o Support for Processing 2.0 added, many examples also work
+  on Android but don't support this yet
 o ScatterTrace added for plotting normal x/y scatter plots 
 o When using Blank2DTrace you can no long plot directly to the
 	PGraphics object in the graph space. You now have to convert between
@@ -21,4 +22,6 @@ Version 0.4.4
 o fixed bugs:
   - assertion error on using GaussMode 
 
-Version 0.4.3 (2010.03.17)
+Version 0.4.3 (17.03.2010)
+
+o initial public release

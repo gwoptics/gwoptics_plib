@@ -16,8 +16,11 @@ public class Graph2DTest extends PApplet{
     PApplet.main( new String[]{Graph2DTest.class.getName()} );  
   }
 
+  @Override public void settings() {
+	    size(500, 300, P3D);
+  }
+  
   @Override public void setup(){
-    size(500,270, P2D);
 
     // Creating the Graph2D object:
     // arguments are the parent object, xsize, ysize, cross axes at zero point
@@ -42,10 +45,10 @@ public class Graph2DTest extends PApplet{
     // Here we create a new trace and set a colour for
     // it, along with passing the equation object to it.
     Line2DTrace trace = new Line2DTrace(new ILine2DEquation() {
-      public double computePoint(double x, int position) {
-        return Math.sin(x);
-      }
-    });
+						      public double computePoint(double x, int position) {
+						        return Math.sin(x);
+						      }
+						    });
     
     trace.setTraceColour(255,0,0);
     // Adding the trace to the graph

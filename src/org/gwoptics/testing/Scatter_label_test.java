@@ -83,8 +83,11 @@ public class Scatter_label_test extends processing.core.PApplet {
   ScatterTrace sTrace;
   Graph2D grph;
 
+  public void settings(){
+	    size(600, 500, P2D);
+  }
+  
   public void setup() {
-    size(600, 500, P2D);
     
     myFont = createFont("Consolas", 14, true);
 

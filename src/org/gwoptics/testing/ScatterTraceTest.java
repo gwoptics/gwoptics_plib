@@ -23,8 +23,11 @@ public class ScatterTraceTest extends PApplet {
     PApplet.main( new String[]{ScatterTraceTest.class.getName()} );  
   }
 
+  public void settings() {
+	    size(600,600, P2D);
+  }
+  
   @Override public void setup(){
-    size(600,600,OPENGL);
 
     // Creating the Graph2D object:
     // arguments are the parent object, xsize, ysize, cross axes at zero point
@@ -70,6 +73,5 @@ public class ScatterTraceTest extends PApplet {
   @Override public void draw(){
     background(120);
     grph.draw();
-    println(frameRate);
   }
 }

@@ -71,8 +71,11 @@ public class RollingLine2DTraceTest extends PApplet{
         ScatterTrace sTrace;
         Graph2D g;
           
+        public void settings(){
+            size(600,500, P2D);
+        }
+        
         public void setup(){
-          size(600,500, OPENGL);
               
           sTrace  = new ScatterTrace();
           

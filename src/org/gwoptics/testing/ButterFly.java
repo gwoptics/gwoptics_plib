@@ -46,8 +46,11 @@ public class ButterFly extends PApplet{
   ButterflyTrace bTrace;
   Graph2D g;
 
+  public void settings() {
+	  size(600, 500, P3D);
+  }
+  
   public void setup(){
-  	size(600, 500, OPENGL);
 	frameRate(20);
           
   	bTrace  = new ButterflyTrace();

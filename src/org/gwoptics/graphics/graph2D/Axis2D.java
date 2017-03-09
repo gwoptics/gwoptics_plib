@@ -117,6 +117,25 @@ public class Axis2D extends Renderable implements PConstants {
       return value;
     }
   }
+  
+  /**
+   * Set the width of the Axis and Tick lines
+   * 
+   * @param width
+   */
+  public void setWidth(int width) {
+	  _axisLineWidth = width;
+	  _axisTickLineWidth = width;
+  }
+  
+  /**
+   * Set the width of the Axis line
+   * 
+   * @param width
+   */
+  public void setAxisWidth(int width) {
+	  _axisLineWidth = (float) width;
+  }
 
   /**
    * Sets the axis line colour from RGB values
@@ -146,6 +165,15 @@ public class Axis2D extends Renderable implements PConstants {
     _axisLblSize = size;
     _labelFontName = font;
     _fontLabel = _parent.createFont(_labelFontName, _axisLblSize, smooth);
+  }
+  
+  /**
+   * Set the width of the Tick line
+   * 
+   * @param width
+   */
+  void setTickWidth(int width) {
+	  _axisTickLineWidth = (float) width;
   }
   
   /**

@@ -164,6 +164,16 @@ public class Graph2D extends Renderable implements PConstants, IGraph2D {
   }
 
   /**
+   * Set the width of the Axis and Ticks lines
+   * 
+   * @param width
+   */
+  public void setGraphWidth(int width) {
+	  _ax.setWidth(width);
+	  _ay.setWidth(width);
+  }
+  
+  /**
    * Sets the colour of the X and Y axes, through RGB values*
    */
   public void setAxisColour(int R, int G, int B) {
